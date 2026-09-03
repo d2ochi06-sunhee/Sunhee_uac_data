@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const cY = isMedian ? mChina.spendMedian : (mChina.spendMean || 1850);
 
     const tX = isMedian ? mTaiwan.stayMedian : parseFloat(mTaiwan.stayMean || 5.4);
-    const tY = isMedian ? mTaiwan.spendMean || 1300;
+    const tY = isMedian ? mTaiwan.spendMedian : (mTaiwan.spendMean || 1300);
 
     const uX = isMedian ? mUsa.stayMedian : parseFloat(mUsa.stayMean || 18.5);
     const uY = isMedian ? mUsa.spendMedian : (mUsa.spendMean || 3600);
@@ -295,7 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Chart 1: Country x Age Segment (Fixed Pink Bar calculation for total country 1030 penetration)
+  // Chart 1: Country x Age Segment
   function renderChartCountryAge(y, a, h) {
     const ctx = document.getElementById("chartCountryAge").getContext("2d");
     if (chartCountryAgeInstance) chartCountryAgeInstance.destroy();
@@ -303,14 +303,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const countries = ["2", "1", "3", "11"];
     const labels = countries.map(code => COUNTRY_MAP[code]);
 
-    // Compute REAL K-culture penetration rate (%) among total 1030 tourists of each country
     const hallyuRates = countries.map(code => {
       const total1030W = getMetrics(y, code, "1030", "ALL").totW;
       const hallyu1030W = getMetrics(y, code, "1030", "1").totW;
       return total1030W > 0 ? ((hallyu1030W / total1030W) * 100).toFixed(1) : 45.0;
     });
 
-    // Compute 1030 youth proportion (%) among total country K-culture tourists
     const youthProps = countries.map(code => {
       const totHallyuW = getMetrics(y, code, "ALL", "1").totW;
       const hallyu1030W = getMetrics(y, code, "1030", "1").totW;
