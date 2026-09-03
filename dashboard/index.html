@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20260903_4c">
 </head>
 <body>
   <div class="app-container">
@@ -27,7 +27,7 @@
       </div>
     </header>
 
-    <!-- Global Filter Control Bar (Restricted to Big 4 Countries) -->
+    <!-- Global Filter Control Bar (Restricted strictly to 4 Big Countries) -->
     <section class="filter-section">
       <div class="filter-group">
         <label for="filterYear">📅 조사 연도 (Year)</label>
@@ -40,9 +40,9 @@
       </div>
 
       <div class="filter-group">
-        <label for="filterCountry">🌏 4대 타깃 국가 (Target Country)</label>
+        <label for="filterCountry">🌏 4대 타깃 국가 선택 (Target Country)</label>
         <select id="filterCountry">
-          <option value="ALL" selected>4개국 전체 (일본/중국/대만/미국)</option>
+          <option value="ALL" selected>🔥 4대 국가 전체 (일본/중국/대만/미국)</option>
           <option value="2">🇯🇵 일본 (Japan - 초단기 팬덤)</option>
           <option value="1">🇨🇳 중국 (China - 뷰티/쇼핑 고소비)</option>
           <option value="3">🇹🇼 대만 (Taiwan - K-푸드 만점 선호)</option>
@@ -341,6 +341,6 @@
   </div>
 
   <script src="travel_data_store.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=20260903_4c"></script>
 </body>
 </html>
