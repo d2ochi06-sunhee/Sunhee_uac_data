@@ -1,174 +1,157 @@
-// Interactive Dashboard Controller
-document.addEventListener('DOMContentLoaded', () => {
-  // Global Chart instances
-  let chartCountryAge = null;
-  let chartVisitSpend = null;
-  let chartAgeDistribution = null;
-  let chartClusterScatter = null;
+// Travel Agency Target Marketing & Product Planning Dashboard Controller
+document.addEventListener("DOMContentLoaded", () => {
+  const data = window.TRAVEL_DATA;
+  if (!data) {
+    console.error("TRAVEL_DATA is not loaded!");
+    return;
+  }
+
+  // Country Map & Age Map
+  const COUNTRY_MAP = {
+    "ALL": "전체 국가",
+    "2": "🇯🇵 일본",
+    "1": "🇨🇳 중국",
+    "3": "🇹🇼 대만",
+    "4": "🇭🇰 홍콩",
+    "5": "🇹🇭 태국",
+    "7": "🇸🇬 싱가포르",
+    "11": "🇺🇸 미국"
+  };
+
+  const AGE_MAP = {
+    "ALL": "전 연령대",
+    "1": "10대 (15-19세)",
+    "2": "20대",
+    "3": "30대",
+    "4": "40대",
+    "5": "50대",
+    "6": "60세 이상"
+  };
 
   // DOM Elements
-  const filterYear = document.getElementById('filterYear');
-  const filterCountry = document.getElementById('filterCountry');
-  const filterVisit = document.getElementById('filterVisit');
-  const filterAge = document.getElementById('filterAge');
-  const resetFilterBtn = document.getElementById('resetFilterBtn');
+  const filterYear = document.getElementById("filterYear");
+  const filterCountry = document.getElementById("filterCountry");
+  const filterAge = document.getElementById("filterAge");
+  const filterHallyu = document.getElementById("filterHallyu");
+  const resetFilterBtn = document.getElementById("resetFilterBtn");
 
-  // Age label mapping
-  const ageLabels = {
-    '1': '10대 (15-19세)',
-    '2': '20대',
-    '3': '30대',
-    '4': '40대',
-    '5': '50대',
-    '6': '60세 이상'
-  };
+  // KPI DOMs
+  const kpiTargetW = document.getElementById("kpiTargetW");
+  const kpiTargetRow = document.getElementById("kpiTargetRow");
+  const kpiHallyuRate = document.getElementById("kpiHallyuRate");
+  const kpiHallyuW = document.getElementById("kpiHallyuW");
+  const kpiStayDays = document.getElementById("kpiStayDays");
+  const kpiStayGap = document.getElementById("kpiStayGap");
+  const kpiExpGoods = document.getElementById("kpiExpGoods");
+  const kpiSatScore = document.getElementById("kpiSatScore");
 
-  // Country label mapping
-  const countryLabels = {
-    'ALL': '전체 국가',
-    '1': '중국 (China)',
-    '2': '일본 (Japan)',
-    '3': '대만 (Taiwan)',
-    '4': '홍콩 (Hong Kong)',
-    '5': '태국 (Thailand)',
-    '7': '싱가포르 (Singapore)',
-    '11': '미국 (USA)'
-  };
+  // Action Cards DOMs
+  const generateSpecBtn = document.getElementById("generateSpecBtn");
+  const specModal = document.getElementById("specModal");
+  const specModalBody = document.getElementById("specModalBody");
+  const closeModalBtn = document.getElementById("closeModalBtn");
+  const closeModalBtn2 = document.getElementById("closeModalBtn2");
+  const copySpecBtn = document.getElementById("copySpecBtn");
+  const exportCsvBtn = document.getElementById("exportCsvBtn");
+  const tableBody = document.getElementById("tableBody");
 
-  // Helper formatting functions
-  function formatNumber(num) {
-    return Math.round(num).toLocaleString('ko-KR');
-  }
+  // Action Cards
+  const action1Card = document.getElementById("action1Card");
+  const action2Card = document.getElementById("action2Card");
+  const action3Card = document.getElementById("action3Card");
+  const action4Card = document.getElementById("action4Card");
 
-  function formatCurrency(num) {
-    return '$' + Math.round(num).toLocaleString('en-US');
-  }
+  // Chart Instances
+  let chartCountryAgeInstance = null;
+  let chartExperienceGoodsInstance = null;
+  let chartStaySpendInstance = null;
+  let chartYearlyTrendInstance = null;
 
-  // Calculate filtered stats from WINDOW.DASHBOARD_DATA
-  function getFilteredCellData(year, country, visit, age) {
-    const dataStore = window.DASHBOARD_DATA;
-    if (!dataStore || !dataStore[year]) return null;
+  // Format Helper
+  const fmtNum = (n) => Math.round(n).toLocaleString("ko-KR");
 
-    const yrStore = dataStore[year];
-    const nKey = yrStore[country] ? country : 'ALL';
-    
-    if (yrStore[nKey]) {
-      if (yrStore[nKey][visit] && yrStore[nKey][visit][age]) {
-        return yrStore[nKey][visit][age];
-      }
-      if (yrStore[nKey][visit] && yrStore[nKey][visit]['ALL']) {
-        return yrStore[nKey][visit]['ALL'];
-      }
-      if (yrStore[nKey]['ALL'] && yrStore[nKey]['ALL'][age]) {
-        return yrStore[nKey]['ALL'][age];
-      }
-      if (yrStore[nKey]['ALL'] && yrStore[nKey]['ALL']['ALL']) {
-        return yrStore[nKey]['ALL']['ALL'];
-      }
+  // Get current metrics helper
+  function getMetrics(y = filterYear.value, c = filterCountry.value, a = filterAge.value, h = filterHallyu.value) {
+    try {
+      return data[y][c][a][h] || {
+        row: 0, totW: 0, hW: 0, hRate: 0, stayMean: 0, spendMean: 0, shopMean: 0,
+        expRate: 0, goodsRate: 0, satMean: 0, revMean: 0, recMean: 0
+      };
+    } catch (e) {
+      return {
+        row: 0, totW: 0, hW: 0, hRate: 0, stayMean: 0, spendMean: 0, shopMean: 0,
+        expRate: 0, goodsRate: 0, satMean: 0, revMean: 0, recMean: 0
+      };
     }
-    return null;
   }
 
-  // Update KPI Cards
-  function updateKPIs() {
-    const yr = filterYear.value;
-    const nat = filterCountry.value;
-    const visit = filterVisit.value;
-    const age = filterAge.value;
+  // Update Dashboard View
+  function updateDashboard() {
+    const y = filterYear.value;
+    const c = filterCountry.value;
+    const a = filterAge.value;
+    const h = filterHallyu.value;
 
-    const cell = getFilteredCellData(yr, nat, visit, age);
+    const m = getMetrics(y, c, a, h);
+    const mHallyu = getMetrics(y, c, a, "1");
+    const mNonHallyu = getMetrics(y, c, a, "0");
 
-    if (cell) {
-      document.getElementById('kpiTotalVisitors').textContent = formatNumber(cell.totW) + ' 명';
-      document.getElementById('kpiTotalRows').textContent = `표본 ${formatNumber(cell.row)} 행`;
+    // 1. KPI Cards
+    kpiTargetW.textContent = `${fmtNum(m.totW)} 명`;
+    kpiTargetRow.textContent = `표본 ${fmtNum(m.row)} 명`;
 
-      document.getElementById('kpiGoodsBuyers').textContent = formatNumber(cell.gW) + ' 명';
-      const goodsPct = cell.totW > 0 ? ((cell.gW / cell.totW) * 100).toFixed(1) : '0.0';
-      document.getElementById('kpiGoodsRate').textContent = `구매율 ${goodsPct}%`;
+    kpiHallyuRate.textContent = `${m.hRate}%`;
+    kpiHallyuW.textContent = `관여 모수 ${fmtNum(m.hW)} 명`;
 
-      document.getElementById('kpiRepeatRate').textContent = cell.totW > 0 ? ((cell.repW / cell.totW) * 100).toFixed(1) + '%' : '0.0%';
-      document.getElementById('kpiRepeatVisitors').textContent = `재방문객 ${formatNumber(cell.repW)} 명`;
+    kpiStayDays.textContent = `${m.stayMean} 일`;
+    const stayDiff = (mHallyu.stayMean - mNonHallyu.stayMean).toFixed(1);
+    kpiStayGap.textContent = `관여군 ${mHallyu.stayMean}일 vs 일반 ${mNonHallyu.stayMean}일 (${stayDiff}일 갭)`;
 
-      document.getElementById('kpiSpendMedian').textContent = formatCurrency(cell.tMed);
-      document.getElementById('kpiSpendMean').textContent = `평균 ${formatCurrency(cell.tMean)}`;
+    kpiExpGoods.textContent = `경험 ${m.expRate}% / 굿즈 ${m.goodsRate}%`;
+    kpiSatScore.textContent = `만족 ${m.satMean}점 / 재방문 ${m.revMean}점`;
 
-      document.getElementById('kpiShopMedian').textContent = formatCurrency(cell.sMed);
-      document.getElementById('kpiShopMean').textContent = `평균 ${formatCurrency(cell.sMean)}`;
-    }
+    // 2. Charts Update
+    renderChartCountryAge(y, a, h);
+    renderChartExperienceGoods(y, c, a);
+    renderChartStaySpend(y, c, a);
+    renderChartYearlyTrend(c, a, h);
 
-    // Update First vs Repeat Comparison Hero Cards
-    const firstCell = getFilteredCellData(yr, nat, 'First', age);
-    const repeatCell = getFilteredCellData(yr, nat, 'Repeat', age);
-
-    const fW = firstCell ? firstCell.totW : 0;
-    const fgW = firstCell ? firstCell.gW : 0;
-    const fRate = fW > 0 ? ((fgW / fW) * 100).toFixed(1) : '0.0';
-
-    const rW = repeatCell ? repeatCell.totW : 0;
-    const rgW = repeatCell ? repeatCell.gW : 0;
-    const rRate = rW > 0 ? ((rgW / rW) * 100).toFixed(1) : '0.0';
-
-    const diffRate = (parseFloat(rRate) - parseFloat(fRate)).toFixed(1);
-    const diffCount = Math.round(rgW - fgW);
-
-    document.getElementById('compFirstGoodsRate').textContent = `${fRate}%`;
-    document.getElementById('kpiFirstGoodsCount').textContent = `추정 ${formatNumber(fgW)} 명 (전체 ${formatNumber(fW)} 명 중)`;
-
-    document.getElementById('compRepeatGoodsRate').textContent = `${rRate}%`;
-    document.getElementById('kpiRepeatGoodsCount').textContent = `추정 ${formatNumber(rgW)} 명 (전체 ${formatNumber(rW)} 명 중)`;
-
-    const signRate = parseFloat(diffRate) >= 0 ? '+' : '';
-    const signCount = diffCount >= 0 ? '+' : '';
-    document.getElementById('compGoodsDiff').textContent = `${signRate}${diffRate}%p`;
-    document.getElementById('compGoodsCountDiff').textContent = `구매 인원 ${signCount}${formatNumber(diffCount)} 명 ${diffCount >= 0 ? '증가' : '감소'}`;
+    // 3. Table Update
+    renderTable(y, c, a, h);
   }
 
-  // Global Chart instance for comparison
-  let chartFirstVsRepeatAgeGoods = null;
+  // Chart 1: Country x Age Segment
+  function renderChartCountryAge(y, a, h) {
+    const ctx = document.getElementById("chartCountryAge").getContext("2d");
+    if (chartCountryAgeInstance) chartCountryAgeInstance.destroy();
 
-  // Render Dedicated First vs Repeat Goods Comparison Chart (Side-by-Side)
-  function renderChartFirstVsRepeatAgeGoods() {
-    const yr = filterYear.value;
-    const nat = filterCountry.value;
-
-    const ageKeys = ['1', '2', '3', '4', '5', '6'];
-    const labels = ageKeys.map(a => ageLabels[a]);
-
-    const firstRates = [];
-    const repeatRates = [];
-
-    ageKeys.forEach(a => {
-      const fCell = getFilteredCellData(yr, nat, 'First', a);
-      const rCell = getFilteredCellData(yr, nat, 'Repeat', a);
-
-      const fR = (fCell && fCell.totW > 0) ? ((fCell.gW / fCell.totW) * 100).toFixed(1) : 0;
-      const rR = (rCell && rCell.totW > 0) ? ((rCell.gW / rCell.totW) * 100).toFixed(1) : 0;
-
-      firstRates.push(fR);
-      repeatRates.push(rR);
+    const countries = ["2", "1", "3", "4", "5", "7", "11"];
+    const labels = countries.map(code => COUNTRY_MAP[code]);
+    const hallyuRates = countries.map(code => getMetrics(y, code, a, h).hRate);
+    const youthProps = countries.map(code => {
+      const tot = getMetrics(y, code, "ALL", h).totW;
+      const youth = (getMetrics(y, code, "1", h).totW || 0) + (getMetrics(y, code, "2", h).totW || 0);
+      return tot > 0 ? ((youth / tot) * 100).toFixed(1) : 0;
     });
 
-    const ctx = document.getElementById('chartFirstVsRepeatAgeGoods').getContext('2d');
-    if (chartFirstVsRepeatAgeGoods) chartFirstVsRepeatAgeGoods.destroy();
-
-    chartFirstVsRepeatAgeGoods = new Chart(ctx, {
-      type: 'bar',
+    chartCountryAgeInstance = new Chart(ctx, {
+      type: "bar",
       data: {
         labels: labels,
         datasets: [
           {
-            label: '🔴 첫 방문객 굿즈 구매율 (%)',
-            data: firstRates,
-            backgroundColor: 'rgba(236, 72, 153, 0.75)',
-            borderColor: '#ec4899',
-            borderWidth: 1.5
+            label: "K-컬처 관여율 (%)",
+            data: hallyuRates,
+            backgroundColor: "rgba(255, 42, 109, 0.85)",
+            borderColor: "#FF2A6D",
+            borderWidth: 1
           },
           {
-            label: '🔵 재방문객 굿즈 구매율 (%)',
-            data: repeatRates,
-            backgroundColor: 'rgba(59, 130, 246, 0.75)',
-            borderColor: '#3b82f6',
-            borderWidth: 1.5
+            label: "1020 청년층 비중 (%)",
+            data: youthProps,
+            backgroundColor: "rgba(5, 217, 232, 0.85)",
+            borderColor: "#05D9E8",
+            borderWidth: 1
           }
         ]
       },
@@ -176,72 +159,42 @@ document.addEventListener('DOMContentLoaded', () => {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { labels: { color: '#f8fafc', font: { family: 'Pretendard' } } },
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                return `${context.dataset.label}: ${context.raw}%`;
-              }
-            }
-          }
+          legend: { labels: { color: "#94A3B8" } }
         },
         scales: {
-          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: '구매율 (%)', color: '#94a3b8' } }
+          x: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" } },
+          y: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" }, max: 100 }
         }
       }
     });
   }
 
-  // Render Chart 1: Country Comparison Chart
-  function renderChartCountryAge() {
-    const yr = filterYear.value;
-    const visit = filterVisit.value;
-    const age = filterAge.value;
+  // Chart 2: Experience & Goods Conversion
+  function renderChartExperienceGoods(y, c, a) {
+    const ctx = document.getElementById("chartExperienceGoods").getContext("2d");
+    if (chartExperienceGoodsInstance) chartExperienceGoodsInstance.destroy();
 
-    const targetCountries = ['1', '2', '3', '4', '5', '7', '11'];
-    const labels = targetCountries.map(c => countryLabels[c].split(' ')[0]);
-    const goodsWData = [];
-    const goodsRateData = [];
+    const mH = getMetrics(y, c, a, "1");
+    const mNonH = getMetrics(y, c, a, "0");
 
-    targetCountries.forEach(c => {
-      const cell = getFilteredCellData(yr, c, visit, age);
-      if (cell) {
-        goodsWData.push(Math.round(cell.gW));
-        const rate = cell.totW > 0 ? ((cell.gW / cell.totW) * 100).toFixed(1) : 0;
-        goodsRateData.push(rate);
-      } else {
-        goodsWData.push(0);
-        goodsRateData.push(0);
-      }
-    });
-
-    const ctx = document.getElementById('chartCountryAge').getContext('2d');
-    if (chartCountryAge) chartCountryAge.destroy();
-
-    chartCountryAge = new Chart(ctx, {
-      type: 'bar',
+    chartExperienceGoodsInstance = new Chart(ctx, {
+      type: "bar",
       data: {
-        labels: labels,
+        labels: ["K-POP/촬영지 현장 경험 활동률 (%)", "K-굿즈/한류상품 구매율 (%)"],
         datasets: [
           {
-            label: 'K-굿즈 구매 인원 (명)',
-            data: goodsWData,
-            backgroundColor: 'rgba(236, 72, 153, 0.65)',
-            borderColor: '#ec4899',
-            borderWidth: 1.5,
-            yAxisID: 'y'
+            label: "🔥 K-컬처 관여층 (영향군)",
+            data: [mH.expRate, mH.goodsRate],
+            backgroundColor: "rgba(255, 42, 109, 0.85)",
+            borderColor: "#FF2A6D",
+            borderWidth: 1
           },
           {
-            label: 'K-굿즈 구매율 (%)',
-            data: goodsRateData,
-            type: 'line',
-            borderColor: '#3b82f6',
-            backgroundColor: '#3b82f6',
-            borderWidth: 3,
-            pointRadius: 5,
-            pointHoverRadius: 7,
-            yAxisID: 'y1'
+            label: "⚪ 비교층 (일반관광객)",
+            data: [mNonH.expRate, mNonH.goodsRate],
+            backgroundColor: "rgba(148, 163, 184, 0.5)",
+            borderColor: "#94A3B8",
+            borderWidth: 1
           }
         ]
       },
@@ -249,213 +202,109 @@ document.addEventListener('DOMContentLoaded', () => {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { labels: { color: '#f8fafc', font: { family: 'Pretendard' } } }
+          legend: { labels: { color: "#94A3B8" } }
         },
         scales: {
-          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          x: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" } },
+          y: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" }, max: 100 }
+        }
+      }
+    });
+  }
+
+  // Chart 3: Stay & Spend Efficiency
+  function renderChartStaySpend(y, c, a) {
+    const ctx = document.getElementById("chartStaySpend").getContext("2d");
+    if (chartStaySpendInstance) chartStaySpendInstance.destroy();
+
+    const mH = getMetrics(y, c, a, "1");
+    const mNonH = getMetrics(y, c, a, "0");
+
+    chartStaySpendInstance = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: ["평균 체재일수 (일)", "1인당 총지출액 ($)", "1인당 쇼핑비 ($)"],
+        datasets: [
+          {
+            label: "🔥 K-컬처 관여층",
+            data: [mH.stayMean, mH.spendMean, mH.shopMean],
+            backgroundColor: "rgba(0, 245, 212, 0.85)",
+            borderColor: "#00F5D4",
+            borderWidth: 1
+          },
+          {
+            label: "⚪ 비교층 / 일반관광객",
+            data: [mNonH.stayMean, mNonH.spendMean, mNonH.shopMean],
+            backgroundColor: "rgba(148, 163, 184, 0.5)",
+            borderColor: "#94A3B8",
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: "y",
+        plugins: {
+          legend: { labels: { color: "#94A3B8" } }
+        },
+        scales: {
+          x: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" } },
+          y: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" } }
+        }
+      }
+    });
+  }
+
+  // Chart 4: Yearly Trend (2023 ~ 2025)
+  function renderChartYearlyTrend(c, a, h) {
+    const ctx = document.getElementById("chartYearlyTrend").getContext("2d");
+    if (chartYearlyTrendInstance) chartYearlyTrendInstance.destroy();
+
+    const years = ["2023", "2024", "2025"];
+    const hallyuRates = years.map(yr => getMetrics(yr, c, a, h).hRate);
+    const spendMeans = years.map(yr => getMetrics(yr, c, a, h).spendMean);
+
+    chartYearlyTrendInstance = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ["2023년", "2024년", "2025년"],
+        datasets: [
+          {
+            label: "K-컬처 관여율 (%)",
+            data: hallyuRates,
+            borderColor: "#FF2A6D",
+            backgroundColor: "rgba(255, 42, 109, 0.1)",
+            tension: 0.3,
+            fill: true,
+            yAxisID: "y"
+          },
+          {
+            label: "1인당 평균 총지출 ($)",
+            data: spendMeans,
+            borderColor: "#FF9F1C",
+            backgroundColor: "transparent",
+            borderDash: [5, 5],
+            tension: 0.3,
+            yAxisID: "y1"
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: "#94A3B8" } }
+        },
+        scales: {
+          x: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" } },
           y: {
-            type: 'linear',
-            position: 'left',
-            ticks: { color: '#94a3b8' },
-            grid: { color: 'rgba(255,255,255,0.05)' },
-            title: { display: true, text: '구매 인원 (명)', color: '#ec4899' }
+            type: "linear", display: true, position: "left",
+            ticks: { color: "#FF2A6D" }, grid: { color: "#1E293B" }
           },
           y1: {
-            type: 'linear',
-            position: 'right',
-            ticks: { color: '#94a3b8' },
-            grid: { drawOnChartArea: false },
-            title: { display: true, text: '구매율 (%)', color: '#3b82f6' }
-          }
-        }
-      }
-    });
-  }
-
-  // Render Chart 2: First vs Repeat Spend Comparison
-  function renderChartVisitSpend() {
-    const yr = filterYear.value;
-    const nat = filterCountry.value;
-    const age = filterAge.value;
-
-    const firstCell = getFilteredCellData(yr, nat, 'First', age);
-    const repeatCell = getFilteredCellData(yr, nat, 'Repeat', age);
-
-    const labels = ['🔴 첫 방문객', '🔵 재방문객'];
-    const totalSpendData = [firstCell ? firstCell.tMed : 0, repeatCell ? repeatCell.tMed : 0];
-    const shopSpendData = [firstCell ? firstCell.sMed : 0, repeatCell ? repeatCell.sMed : 0];
-    const goodsSpendData = [firstCell ? firstCell.gtMed : 0, repeatCell ? repeatCell.gtMed : 0];
-
-    const ctx = document.getElementById('chartVisitSpend').getContext('2d');
-    if (chartVisitSpend) chartVisitSpend.destroy();
-
-    chartVisitSpend = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: '1인당 총 지출액 중위값 ($)',
-            data: totalSpendData,
-            backgroundColor: 'rgba(59, 130, 246, 0.75)',
-            borderColor: '#3b82f6',
-            borderWidth: 1.5
-          },
-          {
-            label: '1인당 쇼핑비 중위값 ($)',
-            data: shopSpendData,
-            backgroundColor: 'rgba(16, 185, 129, 0.75)',
-            borderColor: '#10b981',
-            borderWidth: 1.5
-          },
-          {
-            label: '굿즈 구매자 총지출 중위값 ($)',
-            data: goodsSpendData,
-            backgroundColor: 'rgba(236, 72, 153, 0.75)',
-            borderColor: '#ec4899',
-            borderWidth: 1.5
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { labels: { color: '#f8fafc', font: { family: 'Pretendard' } } }
-        },
-        scales: {
-          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: '금액 ($ USD)', color: '#94a3b8' } }
-        }
-      }
-    });
-  }
-
-  // Render Chart 3: Age Group Breakdown (10s to 60s+)
-  function renderChartAgeDistribution() {
-    const yr = filterYear.value;
-    const nat = filterCountry.value;
-    const visit = filterVisit.value;
-
-    const ageKeys = ['1', '2', '3', '4', '5', '6'];
-    const labels = ageKeys.map(a => ageLabels[a]);
-    const goodsWData = [];
-    const goodsRateData = [];
-
-    ageKeys.forEach(a => {
-      const cell = getFilteredCellData(yr, nat, visit, a);
-      if (cell) {
-        goodsWData.push(Math.round(cell.gW));
-        const rate = cell.totW > 0 ? ((cell.gW / cell.totW) * 100).toFixed(1) : 0;
-        goodsRateData.push(rate);
-      } else {
-        goodsWData.push(0);
-        goodsRateData.push(0);
-      }
-    });
-
-    const ctx = document.getElementById('chartAgeDistribution').getContext('2d');
-    if (chartAgeDistribution) chartAgeDistribution.destroy();
-
-    chartAgeDistribution = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: '연령대별 굿즈 구매 인원 (명)',
-            data: goodsWData,
-            backgroundColor: 'rgba(168, 85, 247, 0.65)',
-            borderColor: '#a855f7',
-            borderWidth: 1.5,
-            yAxisID: 'y'
-          },
-          {
-            label: '연령대 내 굿즈 구매율 (%)',
-            data: goodsRateData,
-            type: 'line',
-            borderColor: '#f59e0b',
-            backgroundColor: '#f59e0b',
-            borderWidth: 3,
-            pointRadius: 5,
-            yAxisID: 'y1'
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { labels: { color: '#f8fafc', font: { family: 'Pretendard' } } }
-        },
-        scales: {
-          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          y: {
-            type: 'linear',
-            position: 'left',
-            ticks: { color: '#94a3b8' },
-            grid: { color: 'rgba(255,255,255,0.05)' }
-          },
-          y1: {
-            type: 'linear',
-            position: 'right',
-            ticks: { color: '#94a3b8' },
-            grid: { drawOnChartArea: false }
-          }
-        }
-      }
-    });
-  }
-
-  // Render Chart 4: K-Means Scatter Plot (Spending vs Repeat Rate)
-  function renderChartClusterScatter() {
-    const clusters = [
-      { name: '클러스터 1: 단골 2030 자유여행 팬덤', x: 1145.4, y: 100.0, r: 28, color: '#ec4899', pop: '80.4만 명 (53.6%)' },
-      { name: '클러스터 2: 신규 입덕 Z세대 자유여행층', x: 989.8, y: 0.0, r: 20, color: '#f59e0b', pop: '39.4만 명 (26.2%)' },
-      { name: '클러스터 3: 패키지/에어텔 동반 팬덤층', x: 850.0, y: 65.0, r: 16, color: '#3b82f6', pop: '23.5만 명 (15.6%)' },
-      { name: '클러스터 4: 하이엔드 VVIP 고액 소비층', x: 5202.2, y: 78.3, r: 12, color: '#a855f7', pop: '6.8만 명 (4.5%)' }
-    ];
-
-    const ctx = document.getElementById('chartClusterScatter').getContext('2d');
-    if (chartClusterScatter) chartClusterScatter.destroy();
-
-    chartClusterScatter = new Chart(ctx, {
-      type: 'bubble',
-      data: {
-        datasets: clusters.map(c => ({
-          label: c.name,
-          data: [{ x: c.x, y: c.y, r: c.r }],
-          backgroundColor: c.color + 'aa',
-          borderColor: c.color,
-          borderWidth: 2
-        }))
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { labels: { color: '#f8fafc', font: { family: 'Pretendard' } } },
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                const c = clusters[context.datasetIndex];
-                return `${c.name}: 총지출 중위값 $${c.x}, 재방문율 ${c.y}%, 인원 ${c.pop}`;
-              }
-            }
-          }
-        },
-        scales: {
-          x: {
-            ticks: { color: '#94a3b8' },
-            grid: { color: 'rgba(255,255,255,0.05)' },
-            title: { display: true, text: '1인당 총지출액 중위값 ($)', color: '#94a3b8' }
-          },
-          y: {
-            ticks: { color: '#94a3b8' },
-            grid: { color: 'rgba(255,255,255,0.05)' },
-            title: { display: true, text: '재방문율 (%)', color: '#94a3b8' },
-            min: -10,
-            max: 110
+            type: "linear", display: true, position: "right",
+            ticks: { color: "#FF9F1C" }, grid: { drawOnChartArea: false }
           }
         }
       }
@@ -463,64 +312,121 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Render Table
-  function renderTable() {
-    const yr = filterYear.value;
-    const nat = filterCountry.value;
-    const tableBody = document.getElementById('tableBody');
-    tableBody.innerHTML = '';
+  function renderTable(y, c, a, h) {
+    tableBody.innerHTML = "";
+    const countries = c === "ALL" ? ["2", "1", "3", "4", "5", "7", "11"] : [c];
+    const ages = a === "ALL" ? ["1", "2", "3", "4", "5", "6"] : [a];
+    const hallyus = h === "ALL" ? ["1", "0"] : [h];
 
-    const ageKeys = ['1', '2', '3', '4', '5', '6'];
-    const visitTypes = [
-      { key: 'First', label: '첫 방문객', badgeClass: 'badge-first' },
-      { key: 'Repeat', label: '재방문객', badgeClass: 'badge-repeat' }
-    ];
-
-    ageKeys.forEach(a => {
-      visitTypes.forEach(v => {
-        const cell = getFilteredCellData(yr, nat, v.key, a);
-        if (cell && cell.row > 0) {
-          const goodsRate = cell.totW > 0 ? ((cell.gW / cell.totW) * 100).toFixed(1) : '0.0';
-          const tr = document.createElement('tr');
+    countries.forEach(codeC => {
+      ages.forEach(codeA => {
+        hallyus.forEach(codeH => {
+          const m = getMetrics(y, codeC, codeA, codeH);
+          if (m.row === 0) return;
+          const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td><strong>${ageLabels[a]}</strong></td>
-            <td><span class="${v.badgeClass}">${v.label}</span></td>
-            <td>${formatNumber(cell.row)}행</td>
-            <td>${formatNumber(cell.totW)}명</td>
-            <td>${formatNumber(cell.gW)}명</td>
-            <td><strong>${goodsRate}%</strong></td>
-            <td>${formatCurrency(cell.tMed)}</td>
-            <td>${formatCurrency(cell.sMed)}</td>
-            <td><strong>${formatCurrency(cell.gtMed)}</strong></td>
+            <td>${COUNTRY_MAP[codeC] || codeC}</td>
+            <td>${AGE_MAP[codeA] || codeA}</td>
+            <td><span class="tag ${codeH === "1" ? "pink" : ""}">${codeH === "1" ? "🔥 관여층" : "⚪ 비교층"}</span></td>
+            <td>${fmtNum(m.row)}</td>
+            <td><strong>${fmtNum(m.totW)}</strong> 명</td>
+            <td>${m.stayMean} 일</td>
+            <td>$${fmtNum(m.spendMean)}</td>
+            <td>$${fmtNum(m.shopMean)}</td>
+            <td>${m.expRate}%</td>
+            <td>${m.goodsRate}%</td>
+            <td>⭐ ${m.satMean} 점</td>
           `;
           tableBody.appendChild(tr);
-        }
+        });
       });
     });
   }
 
-  // Update All Components
-  function updateDashboard() {
-    updateKPIs();
-    renderChartFirstVsRepeatAgeGoods();
-    renderChartCountryAge();
-    renderChartVisitSpend();
-    renderChartAgeDistribution();
-    renderChartClusterScatter();
-    renderTable();
-  }
+  // Filter Event Listeners
+  [filterYear, filterCountry, filterAge, filterHallyu].forEach(select => {
+    select.addEventListener("change", updateDashboard);
+  });
 
-  // Event Listeners
-  filterYear.addEventListener('change', updateDashboard);
-  filterCountry.addEventListener('change', updateDashboard);
-  filterVisit.addEventListener('change', updateDashboard);
-  filterAge.addEventListener('change', updateDashboard);
-
-  resetFilterBtn.addEventListener('click', () => {
-    filterYear.value = '2025';
-    filterCountry.value = 'ALL';
-    filterVisit.value = 'ALL';
-    filterAge.value = 'ALL';
+  resetFilterBtn.addEventListener("click", () => {
+    filterYear.value = "ALL";
+    filterCountry.value = "ALL";
+    filterAge.value = "ALL";
+    filterHallyu.value = "ALL";
     updateDashboard();
+  });
+
+  // Action Cards Click Actions
+  action1Card.addEventListener("click", () => {
+    filterCountry.value = "2"; // 일본
+    filterAge.value = "2"; // 20대
+    filterHallyu.value = "1";
+    updateDashboard();
+  });
+
+  action2Card.addEventListener("click", () => {
+    filterCountry.value = "1"; // 중국
+    filterAge.value = "3"; // 30대
+    filterHallyu.value = "1";
+    updateDashboard();
+  });
+
+  action3Card.addEventListener("click", () => {
+    filterHallyu.value = "1";
+    updateDashboard();
+  });
+
+  action4Card.addEventListener("click", () => {
+    filterHallyu.value = "1";
+    updateDashboard();
+  });
+
+  // Generate Product Spec Modal
+  generateSpecBtn.addEventListener("click", () => {
+    const y = filterYear.value;
+    const c = filterCountry.value;
+    const a = filterAge.value;
+    const m = getMetrics(y, c, a, "1");
+
+    const countryName = COUNTRY_MAP[c] || "전체 타깃 국가";
+    const ageName = AGE_MAP[a] || "전 연령대";
+
+    const specText = `
+      <div class="modal-section">
+        <h4>1. 타깃 시장 개요 (Target Market Profile)</h4>
+        <p>• <strong>타깃 세그먼트</strong>: ${countryName} × ${ageName} K-컬처 열성 관여층</p>
+        <p>• <strong>추정 타깃 모수</strong>: 약 ${fmtNum(m.totW)} 명 (K-컬처 관여율 ${m.hRate}%)</p>
+        <p>• <strong>체재 및 소비 특성</strong>: 평균 체재일수 ${m.stayMean}일, 1인당 총지출 $${fmtNum(m.spendMean)} (쇼핑비 $${fmtNum(m.shopMean)})</p>
+      </div>
+
+      <div class="modal-section">
+        <h4>2. 추천 맞춤형 여행 패키지 상품 기획 (Actionable Product Strategy)</h4>
+        <p>• <strong>[Action 01] 2박 3일 초밀도 K-체험 코스</strong>: ${countryName} 1020/2030 세대의 짧은 체재일수(${m.stayMean}일)를 감안한 성수동 로드숍 쇼핑 + K-Pop 안무 클래스 + 인스타 핫플 포토존 밀집 코스</p>
+        <p>• <strong>[Action 02] K-뷰티 + 미식 융합 프리미엄 상품</strong>: 현장 경험 활동률(${m.expRate}%) 및 높은 쇼핑 지출액($${fmtNum(m.shopMean)})을 반영한 피부과/메이크업 체험 + 미쉐린 K-푸드 융합 패키지</p>
+        <p>• <strong>[Action 03] LCC 연계 A/B 바우처 상품</strong>: K-굿즈 구매율(${m.goodsRate}%)을 겨냥한 항공권 + K-Pop 공연 티켓 + 시내면세점 VIP 쇼핑 바우처 결합형 상품</p>
+      </div>
+
+      <div class="modal-section">
+        <h4>3. 관광 충성도 & 후속 CRM 제안 (CRM & Retention)</h4>
+        <p>• <strong>만족도 & 재방문 지표</strong>: 전반적 만족도 ${m.satMean}점 / 재방문 의향 ${m.revMean}점 / 타인 추천 ${m.recMean}점</p>
+        <p>• <strong>후속 CRM 액션</strong>: 높은 추천 및 재방문 의향을 바탕으로 귀국 후 K-굿즈 신상 쿠폰 및 2차 방한 전용 시크릿 할인 코드 제공</p>
+      </div>
+    `;
+
+    specModalBody.innerHTML = specText;
+    specModal.classList.add("active");
+  });
+
+  // Modal Close Actions
+  [closeModalBtn, closeModalBtn2].forEach(btn => {
+    btn.addEventListener("click", () => specModal.classList.remove("active"));
+  });
+
+  copySpecBtn.addEventListener("click", () => {
+    const text = specModalBody.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      alert("여행 상품 기획서 텍스트가 클립보드에 복사되었습니다!");
+    });
   });
 
   // Initial Load

@@ -3,47 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>외래관광객 K-굿즈 및 첫방문/재방문 분석 대시보드</title>
+  <title>여행사 타깃층 설정 & K-컬처 상품 기획 대시보드 (2023-2025)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app-container">
-    <!-- Top Navigation Header -->
+    <!-- Navbar Header -->
     <header class="navbar">
       <div class="brand">
-        <div class="logo-icon">📊</div>
+        <div class="logo-icon">✈️</div>
         <div class="brand-text">
-          <h1>외래관광객 K-굿즈 & 첫방문/재방문 분석 대시보드</h1>
-          <p>2023~2025년 외래관광객 실태조사 마이크로데이터 분석 시스템</p>
+          <h1>여행사 타깃층 설정 & K-컬처 상품 기획 대시보드</h1>
+          <p>2023년 ~ 2025년 외래관광객 실태조사 마이크로데이터 (여가 방한객 N=30,347) 기반</p>
         </div>
       </div>
       <div class="header-badge">
         <span class="pulse-dot"></span>
-        <span>실효 모수 가중치(weight) 100% 적용</span>
+        <span>2023-2025 3개년 검증 데이터 적용</span>
       </div>
     </header>
 
     <!-- Global Filter Control Bar -->
     <section class="filter-section">
       <div class="filter-group">
-        <label for="filterYear">📅 연도 (Year)</label>
+        <label for="filterYear">📅 조사 연도 (Year)</label>
         <select id="filterYear">
-          <option value="2025" selected>2025년 (최신 데이터)</option>
+          <option value="ALL" selected>3개년 전체 (2023~2025 통합)</option>
+          <option value="2025">2025년 (최신 데이터)</option>
           <option value="2024">2024년 데이터</option>
           <option value="2023">2023년 데이터</option>
         </select>
       </div>
 
       <div class="filter-group">
-        <label for="filterCountry">🌏 국가 (Country)</label>
+        <label for="filterCountry">🌏 타깃 국가 (Country)</label>
         <select id="filterCountry">
           <option value="ALL">전체 국가 (All Countries)</option>
-          <option value="1">🇨🇳 중국 (China)</option>
           <option value="2">🇯🇵 일본 (Japan)</option>
+          <option value="1">🇨🇳 중국 (China)</option>
           <option value="3">🇹🇼 대만 (Taiwan)</option>
           <option value="4">🇭🇰 홍콩 (Hong Kong)</option>
           <option value="5">🇹🇭 태국 (Thailand)</option>
@@ -53,114 +54,120 @@
       </div>
 
       <div class="filter-group">
-        <label for="filterVisit">🔄 방문 구분 (Visit Type)</label>
-        <select id="filterVisit">
-          <option value="ALL">전체 (첫 방문 + 재방문)</option>
-          <option value="First">🔴 첫 방문객 (First-time)</option>
-          <option value="Repeat">🔵 재방문객 (Repeat)</option>
-        </select>
-      </div>
-
-      <div class="filter-group">
         <label for="filterAge">👥 연령대 (Age Group)</label>
         <select id="filterAge">
           <option value="ALL">전 연령대 (10대 ~ 60대+)</option>
           <option value="1">10대 (15-19세)</option>
-          <option value="2">20대</option>
-          <option value="3">30대</option>
-          <option value="4">40대</option>
-          <option value="5">50대</option>
+          <option value="2">20대 (20-29세)</option>
+          <option value="3">30대 (30-39세)</option>
+          <option value="4">40대 (40-49세)</option>
+          <option value="5">50대 (50-59세)</option>
           <option value="6">60세 이상</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="filterHallyu">💖 K-컬처 관여 (Hallyu Segment)</label>
+        <select id="filterHallyu">
+          <option value="ALL">전체 관광객 (관여군 + 비교군)</option>
+          <option value="1">🔥 K-컬처 관여층 (한류관광객)</option>
+          <option value="0">⚪ 비교층 / 일반관광객</option>
         </select>
       </div>
 
       <button id="resetFilterBtn" class="btn-secondary">🔄 필터 초기화</button>
     </section>
 
-    <!-- KPI Summary Metric Cards Row -->
+    <!-- Top KPI Cards Row -->
     <section class="kpi-grid">
       <div class="kpi-card purple">
-        <div class="kpi-icon">✈️</div>
+        <div class="kpi-icon">🎯</div>
         <div class="kpi-content">
-          <span class="kpi-title">추정 방한 외래객 수</span>
-          <h2 id="kpiTotalVisitors">0 명</h2>
-          <span class="kpi-sub" id="kpiTotalRows">표본 0 행</span>
+          <span class="kpi-title">타깃 시장 추정 모수</span>
+          <h2 id="kpiTargetW">0 명</h2>
+          <span class="kpi-sub" id="kpiTargetRow">표본 0 명</span>
         </div>
       </div>
 
       <div class="kpi-card pink">
-        <div class="kpi-icon">🎧</div>
+        <div class="kpi-icon">💖</div>
         <div class="kpi-content">
-          <span class="kpi-title">K-팝 / K-드라마 굿즈 구매자</span>
-          <h2 id="kpiGoodsBuyers">0 명</h2>
-          <span class="kpi-sub" id="kpiGoodsRate">구매율 0.0%</span>
+          <span class="kpi-title">K-컬처 관여율 (침투율)</span>
+          <h2 id="kpiHallyuRate">0.0%</h2>
+          <span class="kpi-sub" id="kpiHallyuW">관여 모수 0 명</span>
         </div>
       </div>
 
       <div class="kpi-card blue">
-        <div class="kpi-icon">🔄</div>
+        <div class="kpi-icon">⏱️</div>
         <div class="kpi-content">
-          <span class="kpi-title">재방문 비율 (Repeat Rate)</span>
-          <h2 id="kpiRepeatRate">0.0%</h2>
-          <span class="kpi-sub" id="kpiRepeatVisitors">재방문객 0 명</span>
+          <span class="kpi-title">평균 체재 일수</span>
+          <h2 id="kpiStayDays">0.0 일</h2>
+          <span class="kpi-sub" id="kpiStayGap">관여군 34.6일 vs 일반 40.4일 (-5.8일 갭)</span>
         </div>
       </div>
 
       <div class="kpi-card emerald">
-        <div class="kpi-icon">💳</div>
+        <div class="kpi-icon">🛍️</div>
         <div class="kpi-content">
-          <span class="kpi-title">1인당 총 지출액 (중위값)</span>
-          <h2 id="kpiSpendMedian">$0</h2>
-          <span class="kpi-sub" id="kpiSpendMean">평균 $0</span>
+          <span class="kpi-title">현장경험 & 굿즈구매율</span>
+          <h2 id="kpiExpGoods">0.0% / 0.0%</h2>
+          <span class="kpi-sub">K-POP/촬영지 경험 26.9% vs 비교 4.4%</span>
         </div>
       </div>
 
       <div class="kpi-card amber">
-        <div class="kpi-icon">🛍️</div>
+        <div class="kpi-icon">⭐</div>
         <div class="kpi-content">
-          <span class="kpi-title">1인당 쇼핑비 (중위값)</span>
-          <h2 id="kpiShopMedian">$0</h2>
-          <span class="kpi-sub" id="kpiShopMean">평균 $0</span>
+          <span class="kpi-title">관광 만족도 & 충성도</span>
+          <h2 id="kpiSatScore">0.0 점 / 0.0 점</h2>
+          <span class="kpi-sub">만족도 4.63점 / 재방문의향 4.63점</span>
         </div>
       </div>
     </section>
 
-    <!-- Dedicated First-time vs Repeat K-Goods Comparison Hero Banner Section -->
-    <section class="comparison-hero-card">
-      <div class="hero-header">
-        <div class="hero-title-group">
-          <span class="hero-badge">🔥 핵심 비교 지표</span>
-          <h2>첫 방문 vs 재방문 K-굿즈 구매율 & 구매 인원 정밀 비교</h2>
-          <p>동일 조건(선택한 국가/연령대)에서 첫 방문과 재방문 시 K-굿즈 구매 행동이 어떻게 변화하는지 명확히 보여줍니다.</p>
+    <!-- Slide 10 Business Insight & Action Section -->
+    <section class="business-insight-section">
+      <div class="insight-header">
+        <div class="insight-title-group">
+          <span class="sub-category">BUSINESS INSIGHT & ACTION</span>
+          <h2>젊은 유입을 넘어, 관계와 소비로 확장하기</h2>
+          <p>관찰된 차이를 실행 가능한 타깃 · 상품 · CRM 전략으로 연결합니다.</p>
         </div>
+        <button id="generateSpecBtn" class="btn-primary-action">📋 선택 타깃 맞춤 상품기획서 생성</button>
       </div>
 
-      <div class="comparison-kpi-grid">
-        <div class="comp-box first">
-          <div class="comp-icon">🔴</div>
-          <div class="comp-info">
-            <span class="comp-label">첫 방문객 굿즈 구매율</span>
-            <h3 id="compFirstGoodsRate">0.0%</h3>
-            <span class="comp-sub" id="kpiFirstGoodsCount">추정 0 명 (전체 0 명 중)</span>
-          </div>
+      <div class="action-card-grid">
+        <!-- Action 01 -->
+        <div class="action-card" id="action1Card">
+          <div class="action-num">01</div>
+          <h3>국가 × 연령 × 콘텐츠</h3>
+          <p class="action-desc">일본·대만·중국 등 국가별 연령 하향 폭(-7.6세~-6.2세) 차이를 기준으로 현지 콘텐츠와 채널을 세분화합니다.</p>
+          <div class="action-tag">일본/대만 1020 2박3일 초밀도 코스</div>
         </div>
 
-        <div class="comp-box repeat">
-          <div class="comp-icon">🔵</div>
-          <div class="comp-info">
-            <span class="comp-label">재방문객 굿즈 구매율</span>
-            <h3 id="compRepeatGoodsRate">0.0%</h3>
-            <span class="comp-sub" id="kpiRepeatGoodsCount">추정 0 명 (전체 0 명 중)</span>
-          </div>
+        <!-- Action 02 -->
+        <div class="action-card" id="action2Card">
+          <div class="action-num">02</div>
+          <h3>현장 경험 강화</h3>
+          <p class="action-desc">K-POP·촬영지 활동률은 영향층 26.9%, 비교층 4.4%로 현장 경험 설계의 확실한 근거가 됩니다.</p>
+          <div class="action-tag">중국/동남아 뷰티+미식 융합 프리미엄</div>
         </div>
 
-        <div class="comp-box diff">
-          <div class="comp-icon">🚀</div>
-          <div class="comp-info">
-            <span class="comp-label">재방문 시 굿즈 구매율 격차</span>
-            <h3 id="compGoodsDiff">+0.0%p</h3>
-            <span class="comp-sub" id="compGoodsCountDiff">인원수 +0 명 증가</span>
-          </div>
+        <!-- Action 03 -->
+        <div class="action-card" id="action3Card">
+          <div class="action-num">03</div>
+          <h3>굿즈 · 패키지 전환</h3>
+          <p class="action-desc">영향층 굿즈 구매율은 20.8%로 비교층 4.4%보다 높아 패키지 전환 가능성을 보여줍니다.</p>
+          <div class="action-tag">LCC 연계 쇼핑+공연+항공 바우처</div>
+        </div>
+
+        <!-- Action 04 -->
+        <div class="action-card" id="action4Card">
+          <div class="action-num">04</div>
+          <h3>재방문 CRM</h3>
+          <p class="action-desc">재방문 의향 4.63점, 추천 의향 4.67점을 후속 혜택과 CRM 프로그램으로 연결합니다.</p>
+          <div class="action-tag">만족도 4.63점 기반 VIP 혜택 리워드</div>
         </div>
       </div>
     </section>
@@ -169,32 +176,21 @@
     <section class="chart-grid two-col">
       <div class="chart-card highlight-card">
         <div class="chart-header">
-          <h3>🎯 [첫 방문 vs 재방문] 연령대별 K-굿즈 구매율 나란히 비교 (%)</h3>
-          <span class="tag pink">First vs Repeat Comparison</span>
-        </div>
-        <div class="chart-wrapper">
-          <canvas id="chartFirstVsRepeatAgeGoods"></canvas>
-        </div>
-      </div>
-
-      <div class="chart-card">
-        <div class="chart-header">
-          <h3>🌏 [첫 방문 vs 재방문] 국가별 K-굿즈 구매율 비교 (%)</h3>
-          <span class="tag">Country Comparison</span>
+          <h3>🌏 [국가 × 연령 세분화] 국적별 1020 청년층 비중 & K-컬처 관여율 (%)</h3>
+          <span class="tag pink">Country Segment</span>
         </div>
         <div class="chart-wrapper">
           <canvas id="chartCountryAge"></canvas>
         </div>
       </div>
-    </section>
 
       <div class="chart-card">
         <div class="chart-header">
-          <h3>💳 첫 방문 vs 재방문 구매 금액 비교 (총지출 & 쇼핑비 중위값)</h3>
-          <span class="tag">Spending Comparison</span>
+          <h3>🎯 [현장경험 vs 굿즈] 영향층 vs 비교층 경험 & 굿즈 전환율 (%)</h3>
+          <span class="tag blue">Experience & Goods</span>
         </div>
         <div class="chart-wrapper">
-          <canvas id="chartVisitSpend"></canvas>
+          <canvas id="chartExperienceGoods"></canvas>
         </div>
       </div>
     </section>
@@ -203,21 +199,21 @@
     <section class="chart-grid two-col">
       <div class="chart-card">
         <div class="chart-header">
-          <h3>👥 전 연령대(10대~60대+) K-굿즈 구매율 및 구매 인원 분포</h3>
-          <span class="tag">Age Breakdown</span>
+          <h3>⏱️ [체재일수 vs 소비 지출액] 짧은 체재(-5.8일) & 일일 고지출 구조 분석</h3>
+          <span class="tag emerald">Stay & Spend Efficiency</span>
         </div>
         <div class="chart-wrapper">
-          <canvas id="chartAgeDistribution"></canvas>
+          <canvas id="chartStaySpend"></canvas>
         </div>
       </div>
 
       <div class="chart-card">
         <div class="chart-header">
-          <h3>🎯 K-Means 클러스터링 4대 군집 (지출 중위값 vs 재방문율)</h3>
-          <span class="tag">K-Means Scatter Plot</span>
+          <h3>📈 [3개년 추이 (2023~2025)] K-컬처 관여율 & 지출 시계열 변화</h3>
+          <span class="tag amber">2023-2025 Trend</span>
         </div>
         <div class="chart-wrapper">
-          <canvas id="chartClusterScatter"></canvas>
+          <canvas id="chartYearlyTrend"></canvas>
         </div>
       </div>
     </section>
@@ -226,23 +222,26 @@
     <section class="table-card">
       <div class="table-header">
         <div>
-          <h3>📋 연령대별 x 첫방문/재방문 세부 통계 명세서</h3>
-          <p>선택된 필터 기준 연령대별 표본 행수, 모수 추정 인원, K-굿즈 구매율, 중위 지출액 통계</p>
+          <h3>📋 [여행사용] 타깃 세그먼트 명세서 (국가 x 연령 x 관여여부)</h3>
+          <p>선택된 필터 조건 기준 추정 모수 인원, 평균 체재일수, 총지출액, 쇼핑비, 굿즈구매율, 만족도 통계</p>
         </div>
+        <button id="exportCsvBtn" class="btn-secondary">📥 테이블 CSV 내보내기</button>
       </div>
       <div class="table-responsive">
         <table class="data-table">
           <thead>
             <tr>
+              <th>국가 (Country)</th>
               <th>연령대 (Age)</th>
-              <th>방문 구분</th>
-              <th>표본 행수</th>
-              <th>추정 방한 인원</th>
-              <th>K-굿즈 구매 인원</th>
-              <th>K-굿즈 구매율</th>
-              <th>총지출 중위값</th>
-              <th>쇼핑비 중위값</th>
-              <th>굿즈 구매자 총지출 중위값</th>
+              <th>K-컬처 구분</th>
+              <th>표본 N</th>
+              <th>추정 모수 (명)</th>
+              <th>평균 체재일수</th>
+              <th>1인당 총지출액</th>
+              <th>1인당 쇼핑비</th>
+              <th>현장경험 비율</th>
+              <th>굿즈구매 비율</th>
+              <th>만족도 점수</th>
             </tr>
           </thead>
           <tbody id="tableBody">
@@ -253,7 +252,24 @@
     </section>
   </div>
 
-  <script src="data_store.js"></script>
+  <!-- Product Spec Modal -->
+  <div id="specModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>✈️ 여행사 맞춤형 K-컬처 타깃 상품 기획서 (Product Spec)</h2>
+        <button id="closeModalBtn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body" id="specModalBody">
+        <!-- Dynamic Product Spec Content -->
+      </div>
+      <div class="modal-footer">
+        <button id="copySpecBtn" class="btn-primary-action">📋 상품 기획서 텍스트 복사</button>
+        <button id="closeModalBtn2" class="btn-secondary">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="travel_data_store.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
