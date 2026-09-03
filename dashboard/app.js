@@ -1,4 +1,4 @@
-// Travel Agency Target Marketing & Product Planning Dashboard Controller (10s ~ 30s Focused)
+// Travel Agency Target Marketing & Product Planning Dashboard Controller (Big 4 Countries & 10s-30s Focused)
 document.addEventListener("DOMContentLoaded", () => {
   const data = window.TRAVEL_DATA;
   if (!data) {
@@ -8,14 +8,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Country Map & Age Map
   const COUNTRY_MAP = {
-    "ALL": "전체 주력 국가",
+    "ALL": "4개국 전체 (일본/중국/대만/미국)",
     "2": "🇯🇵 일본",
     "1": "🇨🇳 중국",
     "3": "🇹🇼 대만",
-    "4": "🇭🇰 홍콩",
-    "5": "🇹🇭 태국",
-    "7": "🇸🇬 싱가포르",
-    "11": "🇺🇸 미국"
+    "11": "🇺🇸 미국 등 서구권"
   };
 
   const AGE_MAP = {
@@ -45,9 +42,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const kpiShopMean = document.getElementById("kpiShopMean");
   const kpiSatScore = document.getElementById("kpiSatScore");
 
-  // 1030 Target Buttons
-  const btnSelect1020 = document.getElementById("btnSelect1020");
-  const btnSelect30 = document.getElementById("btnSelect30");
+  // Country Cards DOMs
+  const btnSelectJapan = document.getElementById("btnSelectJapan");
+  const btnSelectChina = document.getElementById("btnSelectChina");
+  const btnSelectTaiwan = document.getElementById("btnSelectTaiwan");
+  const btnSelectUsa = document.getElementById("btnSelectUsa");
 
   // Action Cards DOMs
   const generateSpecBtn = document.getElementById("generateSpecBtn");
@@ -59,12 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const exportCsvBtn = document.getElementById("exportCsvBtn");
   const tableBody = document.getElementById("tableBody");
 
-  // Action Cards
-  const action1Card = document.getElementById("action1Card");
-  const action2Card = document.getElementById("action2Card");
-  const action3Card = document.getElementById("action3Card");
-  const action4Card = document.getElementById("action4Card");
-
   // Chart Instances
   let chartCountryAgeInstance = null;
   let chartExperienceGoodsInstance = null;
@@ -74,9 +67,42 @@ document.addEventListener("DOMContentLoaded", () => {
   // Format Helper
   const fmtNum = (n) => Math.round(n).toLocaleString("ko-KR");
 
-  // Get current metrics helper (aggregates 1030 or 1020 if selected)
+  // Get current metrics helper
   function getMetrics(y = filterYear.value, c = filterCountry.value, a = filterAge.value, h = filterHallyu.value) {
     try {
+      if (c === "ALL") {
+        // Aggregate the Big 4 countries (Japan "2", China "1", Taiwan "3", USA "11")
+        const targetCountries = ["2", "1", "3", "11"];
+        let row = 0, totW = 0, hW = 0;
+        let weightedStaySum = 0, weightedSpendSum = 0, weightedShopSum = 0;
+        let weightedExpSum = 0, weightedGoodsSum = 0, weightedSatSum = 0, weightedRevSum = 0;
+
+        targetCountries.forEach(code => {
+          const sub = getMetrics(y, code, a, h);
+          row += sub.row || 0;
+          totW += sub.totW || 0;
+          hW += sub.hW || 0;
+          weightedStaySum += (sub.stayMean || 0) * (sub.row || 0);
+          weightedSpendSum += (sub.spendMean || 0) * (sub.row || 0);
+          weightedShopSum += (sub.shopMean || 0) * (sub.row || 0);
+          weightedExpSum += (sub.expRate || 0) * (sub.row || 0);
+          weightedGoodsSum += (sub.goodsRate || 0) * (sub.row || 0);
+          weightedSatSum += (sub.satMean || 0) * (sub.row || 0);
+          weightedRevSum += (sub.revMean || 0) * (sub.row || 0);
+        });
+
+        const hRate = totW > 0 ? ((hW / totW) * 100).toFixed(1) : 0;
+        const stayMean = (weightedStaySum / (row || 1)).toFixed(1);
+        const spendMean = Math.round(weightedSpendSum / (row || 1));
+        const shopMean = Math.round(weightedShopSum / (row || 1));
+        const expRate = (weightedExpSum / (row || 1)).toFixed(1);
+        const goodsRate = (weightedGoodsSum / (row || 1)).toFixed(1);
+        const satMean = (weightedSatSum / (row || 1)).toFixed(2);
+        const revMean = (weightedRevSum / (row || 1)).toFixed(2);
+
+        return { row, totW, hW, hRate, stayMean, spendMean, shopMean, expRate, goodsRate, satMean, revMean };
+      }
+
       if (a === "1030") {
         const m1 = data[y][c]["1"][h] || {};
         const m2 = data[y][c]["2"][h] || {};
@@ -134,13 +160,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 1. KPI Cards
     kpiTargetW.textContent = `${fmtNum(m.totW)} 명`;
-    kpiTargetRow.textContent = `1030 표본 ${fmtNum(m.row)} 명`;
+    kpiTargetRow.textContent = `4개국 1030 표본 ${fmtNum(m.row)} 명`;
 
     kpiHallyuRate.textContent = `${m.hRate}%`;
-    kpiHallyuW.textContent = `1030 관여 모수 ${fmtNum(m.hW)} 명`;
+    kpiHallyuW.textContent = `관여 모수 ${fmtNum(m.hW)} 명`;
 
     kpiStayDays.textContent = `${m.stayMean} 일`;
-    kpiStayGap.textContent = `1030 관여군 ${mHallyu.stayMean}일 vs 일반 ${mNonHallyu.stayMean}일 (-5.8일 갭)`;
+    kpiStayGap.textContent = `일본 3.6일 vs 중국 5.9일 vs 미국 12.4일`;
 
     kpiSpendMean.textContent = `$${fmtNum(m.spendMean)}`;
     kpiShopMean.textContent = `1인당 쇼핑비 $${fmtNum(m.shopMean)}`;
@@ -156,12 +182,12 @@ document.addEventListener("DOMContentLoaded", () => {
     renderTable(y, c, a, h);
   }
 
-  // Chart 1: Country x Age Segment (1030 Focus)
+  // Chart 1: Country x Age Segment (Restricted to Big 4 Countries)
   function renderChartCountryAge(y, a, h) {
     const ctx = document.getElementById("chartCountryAge").getContext("2d");
     if (chartCountryAgeInstance) chartCountryAgeInstance.destroy();
 
-    const countries = ["2", "1", "3", "4", "5", "7", "11"];
+    const countries = ["2", "1", "3", "11"];
     const labels = countries.map(code => COUNTRY_MAP[code]);
     const hallyuRates = countries.map(code => getMetrics(y, code, a, h).hRate);
     const youthProps = countries.map(code => {
@@ -347,10 +373,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Render Table (1030 Focus)
+  // Render Table (Big 4 Countries Focus)
   function renderTable(y, c, a, h) {
     tableBody.innerHTML = "";
-    const countries = c === "ALL" ? ["2", "1", "3", "4", "5", "7", "11"] : [c];
+    const countries = c === "ALL" ? ["2", "1", "3", "11"] : [c];
     const ages = a === "1030" ? ["1", "2", "3"] : (a === "1020" ? ["1", "2"] : (a === "ALL" ? ["1", "2", "3"] : [a]));
     const hallyus = h === "ALL" ? ["1", "0"] : [h];
 
@@ -392,94 +418,86 @@ document.addEventListener("DOMContentLoaded", () => {
     updateDashboard();
   });
 
-  // 1030 Target Buttons
-  if (btnSelect1020) {
-    btnSelect1020.addEventListener("click", () => {
-      filterAge.value = "1020";
+  // Country Cards Click Listeners
+  if (btnSelectJapan) {
+    btnSelectJapan.addEventListener("click", () => {
+      filterCountry.value = "2";
+      filterAge.value = "1030";
       filterHallyu.value = "1";
       updateDashboard();
     });
   }
 
-  if (btnSelect30) {
-    btnSelect30.addEventListener("click", () => {
-      filterAge.value = "30";
+  if (btnSelectChina) {
+    btnSelectChina.addEventListener("click", () => {
+      filterCountry.value = "1";
+      filterAge.value = "1030";
       filterHallyu.value = "1";
       updateDashboard();
     });
   }
 
-  // Action Cards Click Actions
-  action1Card.addEventListener("click", () => {
-    filterCountry.value = "2"; // 일본
-    filterAge.value = "1020"; // 1020
-    filterHallyu.value = "1";
-    updateDashboard();
-  });
+  if (btnSelectTaiwan) {
+    btnSelectTaiwan.addEventListener("click", () => {
+      filterCountry.value = "3";
+      filterAge.value = "1030";
+      filterHallyu.value = "1";
+      updateDashboard();
+    });
+  }
 
-  action2Card.addEventListener("click", () => {
-    filterCountry.value = "1"; // 중국
-    filterAge.value = "30"; // 30대
-    filterHallyu.value = "1";
-    updateDashboard();
-  });
+  if (btnSelectUsa) {
+    btnSelectUsa.addEventListener("click", () => {
+      filterCountry.value = "11";
+      filterAge.value = "1030";
+      filterHallyu.value = "1";
+      updateDashboard();
+    });
+  }
 
-  action3Card.addEventListener("click", () => {
-    filterAge.value = "1030";
-    filterHallyu.value = "1";
-    updateDashboard();
-  });
-
-  action4Card.addEventListener("click", () => {
-    filterAge.value = "1030";
-    filterHallyu.value = "1";
-    updateDashboard();
-  });
-
-  // Generate Product Spec Modal (1030 Tailored)
+  // Generate Product Spec Modal
   generateSpecBtn.addEventListener("click", () => {
     const y = filterYear.value;
     const c = filterCountry.value;
     const a = filterAge.value;
     const m = getMetrics(y, c, a, "1");
 
-    const countryName = COUNTRY_MAP[c] || "전체 주력 국가";
+    const countryName = COUNTRY_MAP[c] || "4개국 전체";
     const ageName = AGE_MAP[a] || "10대~30대 전체";
 
-    let specStrategyHTML = "";
-    if (a === "1020" || a === "1" || a === "2") {
-      specStrategyHTML = `
-        <p>• <strong>[1020 Z세대 전용] 2박 3일 초밀도 K-Pop & 성수동 쇼핑 패키지</strong>: 짧은 체재일수(${m.stayMean}일)를 고려한 LCC 항공권 + 성수동/홍대 로드숍 + K-Pop 안무 원데이 클래스 + 올리브영 쇼핑 바우처 결합 코스</p>
-      `;
-    } else if (a === "30" || a === "3") {
-      specStrategyHTML = `
-        <p>• <strong>[30대 밀레니얼 전용] 5일 강남 K-뷰티 & 미쉐린 K-푸드 럭셔리 패키지</strong>: 최고 지출액($${fmtNum(m.spendMean)}) 및 높은 쇼핑비($${fmtNum(m.shopMean)})를 반영한 강남 피부과 VIP 스킨케어 + 퍼스널 컬러 + 미쉐린 K-푸드 셰프 테이블 융합 코스</p>
-      `;
+    let countrySpecHTML = "";
+    if (c === "2") {
+      countrySpecHTML = `<p>• <strong>[🇯🇵 일본 맞춤 전략] 2박 3일 초밀도 K-Pop & 성수동 쇼핑 코스</strong>: 평균 체재일수 3.6일 짧은 일정 보완을 위해 LCC 항공권 + 성수동/홍대 로드숍 + K-Pop 안무 원데이 클래스 + 올리브영 쇼핑 바우처 결합 코스</p>`;
+    } else if (c === "1") {
+      countrySpecHTML = `<p>• <strong>[🇨🇳 중국 맞춤 전략] 5일 강남 K-뷰티 & 미쉐린 K-푸드 럭셔리 코스</strong>: 최고 지출액($${fmtNum(m.spendMean)}) 및 높은 쇼핑비($${fmtNum(m.shopMean)})를 고려한 강남 피부과 VIP 스킨케어 + 퍼스널 컬러 + 미쉐린 셰프 테이블 결합 코스</p>`;
+    } else if (c === "3") {
+      countrySpecHTML = `<p>• <strong>[🇹🇼 대만 맞춤 전략] 4박 5일 K-드라마 명소 & K-푸드 알뜰 코스</strong>: 최고 만족도(5.00점)를 바탕으로 한 경복궁 한복 체험 + 드라마 촬영지(남이섬) + 한국 길거리 미식 투어 코스</p>`;
+    } else if (c === "11") {
+      countrySpecHTML = `<p>• <strong>[🇺🇸 미국/서구권 맞춤 전략] 14일 그랜드 K-컬처 & 전국 순회 웰니스 코스</strong>: 평균 체재일수 12.4일~30일 및 높은 지출액($${fmtNum(m.spendMean)})을 고려한 서울-부산-제주 KTX 패스 + 한방 스파 + K-푸드 쿠킹 클래스 코스</p>`;
     } else {
-      specStrategyHTML = `
-        <p>• <strong>[1020 Z세대] 2박 3일 초밀도 K-Pop 코스</strong>: ${countryName} 청년층의 짧은 체재일수(${m.stayMean}일)를 감안한 성수동 쇼핑 + K-Pop 안무 클래스 코스</p>
-        <p>• <strong>[30대 밀레니얼] K-뷰티 + 미식 융합 상품</strong>: 높은 1인당 지출액($${fmtNum(m.spendMean)})을 겨냥한 피부과/메이크업 체험 + 미쉐린 K-푸드 패키지</p>
+      countrySpecHTML = `
+        <p>• <strong>[아시아 근거리 (일본/중국/대만)]</strong>: 2박 3일~5일 초밀도 K-Pop 안무, 성수동 로드숍, 강남 K-뷰티 융합 패키지</p>
+        <p>• <strong>[미주 장거리 (미국 등)]</strong>: 14일 서울-부산-제주 KTX 연계 한방 웰니스 패키지</p>
       `;
     }
 
     const specText = `
       <div class="modal-section">
-        <h4>1. 1030 타깃 시장 개요 (1030 Target Profile)</h4>
-        <p>• <strong>타깃 세그먼트</strong>: ${countryName} × ${ageName} K-컬처 열성 관여층</p>
+        <h4>1. 타깃 국가 & 1030 개요 (${countryName} Profile)</h4>
+        <p>• <strong>타깃 세그먼트</strong>: ${countryName} × ${ageName} K-컬처 관여층</p>
         <p>• <strong>추정 타깃 모수</strong>: 약 ${fmtNum(m.totW)} 명 (K-컬처 관여율 ${m.hRate}%)</p>
         <p>• <strong>체재 및 소비 특성</strong>: 평균 체재일수 ${m.stayMean}일, 1인당 총지출 $${fmtNum(m.spendMean)} (쇼핑비 $${fmtNum(m.shopMean)})</p>
       </div>
 
       <div class="modal-section">
-        <h4>2. 1030 맞춤형 여행 패키지 상품 기획 (Actionable Strategy)</h4>
-        ${specStrategyHTML}
-        <p>• <strong>LCC & 굿즈 바우처 결합</strong>: K-굿즈 구매율(${m.goodsRate}%)과 현장경험률(${m.expRate}%)을 반영한 공연 티켓 + 시내면세점/올리브영 VIP 쇼핑 바우처 결합</p>
+        <h4>2. 국가별 맞춤형 여행 상품 기획 (Actionable Strategy)</h4>
+        ${countrySpecHTML}
       </div>
 
       <div class="modal-section">
-        <h4>3. 관광 충성도 & 후속 CRM 제안 (1030 CRM & Retention)</h4>
+        <h4>3. 관광 충성도 & 후속 CRM 제안 (CRM & Retention)</h4>
         <p>• <strong>만족도 & 재방문 지표</strong>: 전반적 만족도 ${m.satMean}점 / 재방문 의향 ${m.revMean}점</p>
-        <p>• <strong>후속 CRM 액션</strong>: 1030 타깃의 높은 추천 의향(4.67점)을 바탕으로 귀국 후 K-굿즈 신상 쿠폰 및 2차 방한 전용 시크릿 할인 코드 제공</p>
+        <p>• <strong>후속 CRM 액션</strong>: 높은 추천 의향(4.67점)을 활용하여 귀국 후 K-굿즈 신상 쿠폰 및 2차 방한 전용 시크릿 할인 코드 제공</p>
       </div>
     `;
 
@@ -495,7 +513,7 @@ document.addEventListener("DOMContentLoaded", () => {
   copySpecBtn.addEventListener("click", () => {
     const text = specModalBody.innerText;
     navigator.clipboard.writeText(text).then(() => {
-      alert("10대~30대 맞춤 상품 기획서 텍스트가 클립보드에 복사되었습니다!");
+      alert("4대 국가 맞춤 상품 기획서 텍스트가 클립보드에 복사되었습니다!");
     });
   });
 
