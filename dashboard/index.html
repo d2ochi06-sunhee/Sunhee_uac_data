@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>여행사 타깃층 설정 & K-컬처 상품 기획 대시보드 (2023-2025)</title>
+  <title>여행사 K-컬처 10대~30대 타깃 상품 기획 대시보드 (2023-2025)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -15,15 +15,15 @@
     <!-- Navbar Header -->
     <header class="navbar">
       <div class="brand">
-        <div class="logo-icon">✈️</div>
+        <div class="logo-icon">🎯</div>
         <div class="brand-text">
-          <h1>여행사 타깃층 설정 & K-컬처 상품 기획 대시보드</h1>
-          <p>2023년 ~ 2025년 외래관광객 실태조사 마이크로데이터 (여가 방한객 N=30,347) 기반</p>
+          <h1>여행사 K-컬처 10대~30대 타깃 전용 상품 기획 대시보드</h1>
+          <p>2023년 ~ 2025년 외래관광객 조사 데이터 기반 (K-컬처 관여 관광객의 73.6% 집중 타깃)</p>
         </div>
       </div>
       <div class="header-badge">
         <span class="pulse-dot"></span>
-        <span>2023-2025 3개년 검증 데이터 적용</span>
+        <span>10대~30대 (15-39세) 핀포인트 타깃</span>
       </div>
     </header>
 
@@ -40,18 +40,20 @@
       </div>
 
       <div class="filter-group">
-        <label for="filterMarket">🌐 시장 유형 (Market Type)</label>
-        <select id="filterMarket">
-          <option value="ALL" selected>전체 글로벌 시장</option>
-          <option value="ASIA">🛍️ [Market A] 근거리 아시아 (일본/대만/중국/동남아)</option>
-          <option value="USA">🏛️ [Market B] 장거리 미주/서구권 (미국 등)</option>
+        <label for="filterAge">👥 핀포인트 연령 타깃 (Target Age)</label>
+        <select id="filterAge">
+          <option value="1030" selected>🔥 [추천] 10대~30대 전체 (15-39세 | K-컬처 73.6%)</option>
+          <option value="1020">💖 10대~20대 (Z세대 K-Pop & 굿즈 팬덤)</option>
+          <option value="30">💄 30대 (밀레니얼 K-뷰티 & 미식 고소비층)</option>
+          <option value="1">10대 (15-19세)</option>
+          <option value="2">20대 (20-29세)</option>
         </select>
       </div>
 
       <div class="filter-group">
         <label for="filterCountry">🌏 타깃 국가 (Country)</label>
         <select id="filterCountry">
-          <option value="ALL">전체 국가 (All Countries)</option>
+          <option value="ALL" selected>전체 주력 국가</option>
           <option value="2">🇯🇵 일본 (Japan)</option>
           <option value="1">🇨🇳 중국 (China)</option>
           <option value="3">🇹🇼 대만 (Taiwan)</option>
@@ -63,23 +65,10 @@
       </div>
 
       <div class="filter-group">
-        <label for="filterAge">👥 연령대 (Age Group)</label>
-        <select id="filterAge">
-          <option value="ALL">전 연령대 (10대 ~ 60대+)</option>
-          <option value="1">10대 (15-19세)</option>
-          <option value="2">20대 (20-29세)</option>
-          <option value="3">30대 (30-39세)</option>
-          <option value="4">40대 (40-49세)</option>
-          <option value="5">50대 (50-59세)</option>
-          <option value="6">60세 이상</option>
-        </select>
-      </div>
-
-      <div class="filter-group">
         <label for="filterHallyu">💖 K-컬처 관여 (Hallyu Segment)</label>
         <select id="filterHallyu">
+          <option value="1" selected>🔥 K-컬처 관여층 (한류관광객)</option>
           <option value="ALL">전체 관광객 (관여군 + 비교군)</option>
-          <option value="1">🔥 K-컬처 관여층 (한류관광객)</option>
           <option value="0">⚪ 비교층 / 일반관광객</option>
         </select>
       </div>
@@ -92,9 +81,9 @@
       <div class="kpi-card purple">
         <div class="kpi-icon">🎯</div>
         <div class="kpi-content">
-          <span class="kpi-title">타깃 시장 추정 모수</span>
+          <span class="kpi-title">10대~30대 타깃 추정 모수</span>
           <h2 id="kpiTargetW">0 명</h2>
-          <span class="kpi-sub" id="kpiTargetRow">표본 0 명</span>
+          <span class="kpi-sub" id="kpiTargetRow">K-컬처 관여객의 73.6% 집중</span>
         </div>
       </div>
 
@@ -112,7 +101,7 @@
         <div class="kpi-content">
           <span class="kpi-title">평균 체재 일수</span>
           <h2 id="kpiStayDays">0.0 일</h2>
-          <span class="kpi-sub" id="kpiStayGap">아시아 3.5~5.5일 vs 미국 12.4~30.6일</span>
+          <span class="kpi-sub" id="kpiStayGap">일반 관광객 대비 -5.8일 짧은 단기방한</span>
         </div>
       </div>
 
@@ -135,78 +124,76 @@
       </div>
     </section>
 
-    <!-- NEW HERO SECTION: Dual Market Strategy (Market A vs Market B) -->
+    <!-- NEW NARROWED HERO SECTION: 1030 Core Segments -->
     <section class="dual-market-section">
       <div class="insight-header">
         <div class="insight-title-group">
-          <span class="sub-category">GLOBAL MARKET SEGMENTATION</span>
-          <h2>🌐 [2대 핵심 글로벌 타깃 시장 비교] 근거리 아시아 vs 장거리 미주</h2>
-          <p>비행거리 및 방한 목적에 따라 완전히 이원화된 2대 타깃 시장별 맞춤형 세일즈 전략</p>
+          <span class="sub-category">1030 TARGET SEGMENTATION</span>
+          <h2>🎯 [10대 ~ 30대 핀포인트 세그먼트] Z세대 팬덤 vs 30대 고소비층</h2>
+          <p>K-컬처 전체 관여객의 73.6%를 차지하는 1030 핵심 연령대별 여행사 상품 셀링 전략</p>
         </div>
-        <button id="generateSpecBtn" class="btn-primary-action">📋 선택 타깃 맞춤 상품기획서 생성</button>
+        <button id="generateSpecBtn" class="btn-primary-action">📋 1030 맞춤 상품기획서 생성</button>
       </div>
 
       <div class="market-dual-grid">
-        <!-- Market A Card -->
-        <div class="market-card market-asia" id="btnSelectMarketAsia">
+        <!-- Segment 1: 1020 Z-Gen Card -->
+        <div class="market-card market-asia" id="btnSelect1020">
           <div class="market-header">
-            <span class="market-tag pink">MARKET A | 근거리 아시아</span>
-            <h3>🛍️ 일본 / 대만 / 중국 / 동남아</h3>
-            <span class="market-sub">"단기 고밀도 쇼핑 · 뷰티 · K-Pop 시장"</span>
+            <span class="market-tag pink">TARGET 1 | 10대~20대 (Z세대)</span>
+            <h3>💖 K-Pop & 굿즈 핫플 팬덤</h3>
+            <span class="market-sub">"체재는 짧지만 K-Pop 굿즈와 올리브영에 집중하는 타깃"</span>
           </div>
           <div class="market-stats">
             <div class="m-stat">
-              <span>평균 체재일수</span>
-              <strong class="txt-pink">3.5일 ~ 5.5일</strong>
+              <span>관여객 내 비중</span>
+              <strong class="txt-pink">48.0%</strong>
             </div>
             <div class="m-stat">
-              <span>1020 청년 비중</span>
-              <strong class="txt-pink">74.0%</strong>
+              <span>K-굿즈 구매율</span>
+              <strong class="txt-pink">20.8%</strong>
             </div>
             <div class="m-stat">
-              <span>쇼핑/뷰티 참여율</span>
+              <span>쇼핑/뷰티 활동</span>
               <strong class="txt-pink">79.0%</strong>
             </div>
           </div>
           <div class="market-strategy">
-            <p><strong>🎯 여행사 타깃 상품 전략</strong>:</p>
+            <p><strong>🎯 여행사 맞춤 상품 전략</strong>:</p>
             <ul>
-              <li>• <strong>[1020]</strong> 주말 활용 <strong>2박 3일 초밀도 K-Pop & 성수동 쇼핑 패키지</strong></li>
-              <li>• <strong>[2030]</strong> 강남 피부과 스킨케어 + 미쉐린 K-푸드 <strong>뷰티 힐링 5일 패키지</strong></li>
+              <li>• <strong>주말 활용 2박 3일 초밀도 K-Pop 패키지</strong> (LCC 연계 + 성수동/홍대 핫플 + K-Pop 안무 클래스 + 올리브영 쇼핑 바우처)</li>
             </ul>
           </div>
-          <button class="btn-market-select">Market A (아시아) 데이터 필터링</button>
+          <button class="btn-market-select">1020 청년층 데이터 필터링</button>
         </div>
 
-        <!-- Market B Card -->
-        <div class="market-card market-usa" id="btnSelectMarketUsa">
+        <!-- Segment 2: 30s Millennial Card -->
+        <div class="market-card market-usa" id="btnSelect30">
           <div class="market-header">
-            <span class="market-tag emerald">MARKET B | 장거리 미주 / 서구권</span>
-            <h3>🏛️ 미국 / 서구권</h3>
-            <span class="market-sub">"장기 전국 순회 K-컬처 & 웰니스 탐방 시장"</span>
+            <span class="market-tag emerald">TARGET 2 | 30대 (밀레니얼)</span>
+            <h3>💄 K-뷰티 & 미식 고소비층</h3>
+            <span class="market-sub">"스킨케어, 퍼스널컬러, 미쉐린 K-푸드 최고 지출 타깃"</span>
           </div>
           <div class="market-stats">
             <div class="m-stat">
-              <span>평균 체재일수</span>
-              <strong class="txt-emerald">12.4일 ~ 30.6일</strong>
+              <span>관여객 내 비중</span>
+              <strong class="txt-emerald">25.6%</strong>
             </div>
             <div class="m-stat">
               <span>1인당 평균 총지출</span>
-              <strong class="txt-emerald">$2,500 ~ $4,787</strong>
+              <strong class="txt-emerald">$1,850+</strong>
             </div>
             <div class="m-stat">
-              <span>자유여행(FIT) 비중</span>
-              <strong class="txt-emerald">90.0%+</strong>
+              <span>1인당 쇼핑/뷰티비</span>
+              <strong class="txt-emerald">$780+</strong>
             </div>
           </div>
           <div class="market-strategy">
-            <p><strong>🎯 여행사 타깃 상품 전략</strong>:</p>
+            <p><strong>🎯 여행사 맞춤 상품 전략</strong>:</p>
             <ul>
-              <li>• <strong>[전국순회]</strong> 서울-부산-제주 KTX 연계 <strong>14일 그랜드 K-컬처 패키지</strong></li>
-              <li>• <strong>[웰니스]</strong> 한방 스파 + K-푸드 쿠킹클래스 + 한옥 부티크 <strong>웰니스 패키지</strong></li>
+              <li>• <strong>5일 강남 K-뷰티 & 미쉐린 K-푸드 럭셔리 패키지</strong> (5성급 호텔 + 강남 피부과 VIP 스킨케어 + 셰프 테이블 식사)</li>
             </ul>
           </div>
-          <button class="btn-market-select emerald">Market B (미국) 데이터 필터링</button>
+          <button class="btn-market-select emerald">30대 밀레니얼 데이터 필터링</button>
         </div>
       </div>
     </section>
@@ -215,9 +202,9 @@
     <section class="business-insight-section">
       <div class="insight-header">
         <div class="insight-title-group">
-          <span class="sub-category">BUSINESS INSIGHT & ACTION</span>
-          <h2>젊은 유입을 넘어, 관계와 소비로 확장하기</h2>
-          <p>관찰된 차이를 실행 가능한 타깃 · 상품 · CRM 전략으로 연결합니다.</p>
+          <span class="sub-category">1030 BUSINESS ACTION</span>
+          <h2>1030 타깃의 유입을 매출과 재방문으로 연결하기</h2>
+          <p>데이터가 입증한 10대~30대 행동 특성에 맞춘 여행사 실전 실행안</p>
         </div>
       </div>
 
@@ -225,33 +212,33 @@
         <!-- Action 01 -->
         <div class="action-card" id="action1Card">
           <div class="action-num">01</div>
-          <h3>국가 × 연령 × 콘텐츠</h3>
-          <p class="action-desc">일본·대만·중국 등 국가별 연령 하향 폭(-7.6세~-6.2세) 차이를 기준으로 현지 콘텐츠와 채널을 세분화합니다.</p>
-          <div class="action-tag">일본/대만 1020 2박3일 초밀도 코스</div>
+          <h3>1020 초밀도 코스</h3>
+          <p class="action-desc">체재일수가 짧은 1020 일본/대만/중국 청년층을 위해 2박 3일 K-Pop 안무 + 성수동 핫플 코스를 전면에 배치합니다.</p>
+          <div class="action-tag">1020 2박3일 K-Pop 패키지</div>
         </div>
 
         <!-- Action 02 -->
         <div class="action-card" id="action2Card">
           <div class="action-num">02</div>
-          <h3>현장 경험 강화</h3>
-          <p class="action-desc">K-POP·촬영지 활동률은 영향층 26.9%, 비교층 4.4%로 현장 경험 설계의 확실한 근거가 됩니다.</p>
-          <div class="action-tag">중국/동남아 뷰티+미식 융합 프리미엄</div>
+          <h3>30대 K-뷰티 럭셔리</h3>
+          <p class="action-desc">1인당 지출액 $1,850 최고액을 쓰는 30대 중국/동남아 여성에게 강남 피부과 + 미쉐린 K-푸드 풀케어를 제안합니다.</p>
+          <div class="action-tag">30대 K-뷰티 & 미식 5일 패키지</div>
         </div>
 
         <!-- Action 03 -->
         <div class="action-card" id="action3Card">
           <div class="action-num">03</div>
-          <h3>굿즈 · 패키지 전환</h3>
-          <p class="action-desc">영향층 굿즈 구매율은 20.8%로 비교층 4.4%보다 높아 패키지 전환 가능성을 보여줍니다.</p>
-          <div class="action-tag">LCC 연계 쇼핑+공연+항공 바우처</div>
+          <h3>굿즈 · 바우처 결합</h3>
+          <p class="action-desc">굿즈 구매율 20.8%(일반의 5배)를 타깃으로 LCC 항공권 + K-Pop 공연 티켓 + 면세점 VIP 쇼핑 바우처를 결합합니다.</p>
+          <div class="action-tag">LCC + 굿즈 + 쇼핑 결합 패키지</div>
         </div>
 
         <!-- Action 04 -->
         <div class="action-card" id="action4Card">
           <div class="action-num">04</div>
-          <h3>재방문 CRM</h3>
-          <p class="action-desc">재방문 의향 4.63점, 추천 의향 4.67점을 후속 혜택과 CRM 프로그램으로 연결합니다.</p>
-          <div class="action-tag">만족도 4.63점 기반 VIP 혜택 리워드</div>
+          <h3>1030 재방문 CRM</h3>
+          <p class="action-desc">만족도 4.63점, 추천 의향 4.67점을 활용하여 귀국 후 K-굿즈 신상 쿠폰 및 2차 방한 시크릿 할인을 제공합니다.</p>
+          <div class="action-tag">만족도 4.63점 연계 CRM</div>
         </div>
       </div>
     </section>
@@ -260,8 +247,8 @@
     <section class="chart-grid two-col">
       <div class="chart-card highlight-card">
         <div class="chart-header">
-          <h3>🌏 [국가 × 연령 세분화] 국적별 1020 청년층 비중 & K-컬처 관여율 (%)</h3>
-          <span class="tag pink">Country Segment</span>
+          <h3>🌏 [국가별 1030 비중] 주요 국적별 10대~30대 관여율 & 비중 (%)</h3>
+          <span class="tag pink">1030 Country Segment</span>
         </div>
         <div class="chart-wrapper">
           <canvas id="chartCountryAge"></canvas>
@@ -270,7 +257,7 @@
 
       <div class="chart-card">
         <div class="chart-header">
-          <h3>🎯 [현장경험 vs 굿즈] 영향층 vs 비교층 경험 & 굿즈 전환율 (%)</h3>
+          <h3>🎯 [현장경험 vs 굿즈] 1030 관여층 vs 일반관광객 전환율 (%)</h3>
           <span class="tag blue">Experience & Goods</span>
         </div>
         <div class="chart-wrapper">
@@ -283,7 +270,7 @@
     <section class="chart-grid two-col">
       <div class="chart-card">
         <div class="chart-header">
-          <h3>⏱️ [체재일수 vs 소비 지출액] 짧은 체재(-5.8일) & 일일 고지출 구조 분석</h3>
+          <h3>⏱️ [1030 체재일수 vs 소비] 짧은 체재일수(-5.8일) 대비 일일 지출 효율</h3>
           <span class="tag emerald">Stay & Spend Efficiency</span>
         </div>
         <div class="chart-wrapper">
@@ -293,7 +280,7 @@
 
       <div class="chart-card">
         <div class="chart-header">
-          <h3>📈 [3개년 추이 (2023~2025)] K-컬처 관여율 & 지출 시계열 변화</h3>
+          <h3>📈 [3개년 추이 (2023~2025)] 1030 타깃 K-컬처 관여율 시계열 변화</h3>
           <span class="tag amber">2023-2025 Trend</span>
         </div>
         <div class="chart-wrapper">
@@ -306,8 +293,8 @@
     <section class="table-card">
       <div class="table-header">
         <div>
-          <h3>📋 [여행사용] 타깃 세그먼트 명세서 (국가 x 연령 x 관여여부)</h3>
-          <p>선택된 필터 조건 기준 추정 모수 인원, 평균 체재일수, 총지출액, 쇼핑비, 굿즈구매율, 만족도 통계</p>
+          <h3>📋 [1030 전용] 타깃 세그먼트 데이터 명세서</h3>
+          <p>10대~30대 타깃 기준 국적별 추정 모수 인원, 평균 체재일수, 총지출액, 쇼핑비, 굿즈구매율, 만족도 통계</p>
         </div>
         <button id="exportCsvBtn" class="btn-secondary">📥 테이블 CSV 내보내기</button>
       </div>
@@ -340,7 +327,7 @@
   <div id="specModal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>✈️ 여행사 맞춤형 K-컬처 타깃 상품 기획서 (Product Spec)</h2>
+        <h2>✈️ 10대~30대 맞춤형 K-컬처 여행 상품 기획서 (1030 Product Spec)</h2>
         <button id="closeModalBtn" class="close-btn">&times;</button>
       </div>
       <div class="modal-body" id="specModalBody">
