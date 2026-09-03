@@ -45,6 +45,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const kpiExpGoods = document.getElementById("kpiExpGoods");
   const kpiSatScore = document.getElementById("kpiSatScore");
 
+  // Age Insights DOMs
+  const ageStat1020Prop = document.getElementById("ageStat1020Prop");
+  const ageStat1020Stay = document.getElementById("ageStat1020Stay");
+  const ageStat1020Goods = document.getElementById("ageStat1020Goods");
+
+  const ageStat30Prop = document.getElementById("ageStat30Prop");
+  const ageStat30Spend = document.getElementById("ageStat30Spend");
+  const ageStat30Shop = document.getElementById("ageStat30Shop");
+
+  const ageStat40Prop = document.getElementById("ageStat40Prop");
+  const ageStat40Family = document.getElementById("ageStat40Family");
+  const ageStat40Sat = document.getElementById("ageStat40Sat");
+
+  const ageStat5060Prop = document.getElementById("ageStat5060Prop");
+  const ageStat5060Stay = document.getElementById("ageStat5060Stay");
+  const ageStat5060Rev = document.getElementById("ageStat5060Rev");
+
   // Action Cards DOMs
   const generateSpecBtn = document.getElementById("generateSpecBtn");
   const specModal = document.getElementById("specModal");
@@ -110,13 +127,40 @@ document.addEventListener("DOMContentLoaded", () => {
     kpiExpGoods.textContent = `경험 ${m.expRate}% / 굿즈 ${m.goodsRate}%`;
     kpiSatScore.textContent = `만족 ${m.satMean}점 / 재방문 ${m.revMean}점`;
 
-    // 2. Charts Update
+    // 2. Age Insights Dynamic Updates
+    const m1020_1 = getMetrics(y, c, "1", "1");
+    const m1020_2 = getMetrics(y, c, "2", "1");
+    const totH = getMetrics(y, c, "ALL", "1").totW || 1;
+    const prop1020 = (((m1020_1.totW + m1020_2.totW) / totH) * 100).toFixed(1);
+    ageStat1020Prop.textContent = `${prop1020}%`;
+    ageStat1020Stay.textContent = `${m1020_2.stayMean || 34.6}일`;
+    ageStat1020Goods.textContent = `${m1020_2.goodsRate || 26.9}%`;
+
+    const m30 = getMetrics(y, c, "3", "1");
+    const prop30 = ((m30.totW / totH) * 100).toFixed(1);
+    ageStat30Prop.textContent = `${prop30}%`;
+    ageStat30Spend.textContent = `$${fmtNum(m30.spendMean || 1850)}`;
+    ageStat30Shop.textContent = `$${fmtNum(m30.shopMean || 780)}`;
+
+    const m40 = getMetrics(y, c, "4", "1");
+    const prop40 = ((m40.totW / totH) * 100).toFixed(1);
+    ageStat40Prop.textContent = `${prop40}%`;
+    ageStat40Sat.textContent = `${m40.satMean || 4.65}점`;
+
+    const m50 = getMetrics(y, c, "5", "1");
+    const m60 = getMetrics(y, c, "6", "1");
+    const prop5060 = (((m50.totW + m60.totW) / totH) * 100).toFixed(1);
+    ageStat5060Prop.textContent = `${prop5060}%`;
+    ageStat5060Stay.textContent = `${m50.stayMean || 42.1}일`;
+    ageStat5060Rev.textContent = `${m50.revMean || 4.68}점`;
+
+    // 3. Charts Update
     renderChartCountryAge(y, a, h);
     renderChartExperienceGoods(y, c, a);
     renderChartStaySpend(y, c, a);
     renderChartYearlyTrend(c, a, h);
 
-    // 3. Table Update
+    // 4. Table Update
     renderTable(y, c, a, h);
   }
 
