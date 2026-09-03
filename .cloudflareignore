@@ -1,0 +1,10 @@
+# Ignore large raw data files exceeding Cloudflare Pages 25MB limit
+*.xlsx
+2019 외래관광객조사_Data.csv
+2020 외래관광객조사_Data.csv
+2021 외래관광객조사_Data.csv
+2022 외래관광객조사_Data.csv
+2023 외래관광객조사_Data.csv
+2024 외래관광객조사_Data.csv
+2025 외래관광객조사_Data.csv
+dashboard_master.csv
