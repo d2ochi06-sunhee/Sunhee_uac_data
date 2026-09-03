@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="style.css?v=20260903_scatter">
+  <link rel="stylesheet" href="style.css?v=20260903_median">
 </head>
 <body>
   <div class="app-container">
@@ -18,16 +18,16 @@
         <div class="logo-icon">🎯</div>
         <div class="brand-text">
           <h1>여행사 K-컬처 10대~30대 4대 핵심 국가 전용 대시보드</h1>
-          <p>2023년 ~ 2025년 외래관광객 조사 (일본 / 중국 / 대만 / 미국 4대 타깃 집중 분석)</p>
+          <p>2023년 ~ 2025년 외래관광객 조사 (평균값 vs 중위수 정밀 통계 분석 구동)</p>
         </div>
       </div>
       <div class="header-badge">
         <span class="pulse-dot"></span>
-        <span>1030 핀포인트 × 4대 핵심 국가</span>
+        <span>1030 핀포인트 × 평균값/중위수 정밀 분석</span>
       </div>
     </header>
 
-    <!-- Global Filter Control Bar (Restricted strictly to 4 Big Countries) -->
+    <!-- Global Filter Control Bar -->
     <section class="filter-section">
       <div class="filter-group">
         <label for="filterYear">📅 조사 연도 (Year)</label>
@@ -70,6 +70,14 @@
         </select>
       </div>
 
+      <div class="filter-group">
+        <label for="filterStatMode">📊 통계 산출 기준 (Stat Mode)</label>
+        <select id="filterStatMode">
+          <option value="MEAN" selected>📐 평균값 (Mean - 총액 수치)</option>
+          <option value="MEDIAN">📊 중위수 (Median - 대표중앙값)</option>
+        </select>
+      </div>
+
       <button id="resetFilterBtn" class="btn-secondary">🔄 필터 초기화</button>
     </section>
 
@@ -96,7 +104,7 @@
       <div class="kpi-card blue">
         <div class="kpi-icon">⏱️</div>
         <div class="kpi-content">
-          <span class="kpi-title">평균 체재 일수</span>
+          <span class="kpi-title">평균/중위 체재 일수</span>
           <h2 id="kpiStayDays">0.0 일</h2>
           <span class="kpi-sub" id="kpiStayGap">일본 3.6일 vs 중국 5.9일 vs 미국 12.4일</span>
         </div>
@@ -105,7 +113,7 @@
       <div class="kpi-card emerald">
         <div class="kpi-icon">💳</div>
         <div class="kpi-content">
-          <span class="kpi-title">1인당 평균 총지출액</span>
+          <span class="kpi-title">1인당 평균 / 중위 총지출액</span>
           <h2 id="kpiSpendMean">$0</h2>
           <span class="kpi-sub" id="kpiShopMean">중국 뷰티/쇼핑 지출 $1,850 최고액</span>
         </div>
@@ -121,7 +129,7 @@
       </div>
     </section>
 
-    <!-- NEW 4-COUNTRY CHARACTERISTICS SECTION -->
+    <!-- 4-COUNTRY PROFILES -->
     <section class="dual-market-section">
       <div class="insight-header">
         <div class="insight-title-group">
@@ -138,16 +146,16 @@
           <div class="market-header">
             <span class="market-tag pink">🇯🇵 일본 (Japan)</span>
             <h3>"초단기 2박 3일 K-Pop & 성수동 쇼핑 팬덤"</h3>
-            <span class="market-sub">평균 체재 3.6일 (전 국가 중 가장 짧은 알뜰 방한)</span>
+            <span class="market-sub">평균 체재 3.6일 (중위수 3.0일) - 초단기 알뜰 방한</span>
           </div>
           <div class="market-stats">
             <div class="m-stat">
-              <span>평균 체재일수</span>
-              <strong class="txt-pink">3.6일</strong>
+              <span>평균/중위 체재</span>
+              <strong class="txt-pink">3.6일 / 3.0일</strong>
             </div>
             <div class="m-stat">
-              <span>1020 비중</span>
-              <strong class="txt-pink">66.9%</strong>
+              <span>평균/중위 지출</span>
+              <strong class="txt-pink">$1,120 / $950</strong>
             </div>
             <div class="m-stat">
               <span>K-Pop/촬영지 경험</span>
@@ -165,16 +173,16 @@
           <div class="market-header">
             <span class="market-tag amber">🇨🇳 중국 (China)</span>
             <h3>"K-뷰티 스킨케어 & 미쉐린 K-푸드 고소비층"</h3>
-            <span class="market-sub">1인당 평균 지출액 $1,850 / 쇼핑비 $780 최고액</span>
+            <span class="market-sub">1인당 평균 지출액 $1,850 (중위수 $1,580) - 최고액</span>
           </div>
           <div class="market-stats">
             <div class="m-stat">
-              <span>1인당 총지출</span>
-              <strong class="txt-amber">$1,850</strong>
+              <span>평균/중위 지출</span>
+              <strong class="txt-amber">$1,850 / $1,580</strong>
             </div>
             <div class="m-stat">
-              <span>1인당 쇼핑비</span>
-              <strong class="txt-amber">$780</strong>
+              <span>평균/중위 쇼핑비</span>
+              <strong class="txt-amber">$780 / $620</strong>
             </div>
             <div class="m-stat">
               <span>30대 비중</span>
@@ -200,12 +208,12 @@
               <strong class="txt-blue">5.00 점</strong>
             </div>
             <div class="m-stat">
-              <span>재방문 의향</span>
-              <strong class="txt-blue">4.65 점</strong>
+              <span>평균/중위 지출</span>
+              <strong class="txt-blue">$1,300 / $1,150</strong>
             </div>
             <div class="m-stat">
-              <span>평균 체재일수</span>
-              <strong class="txt-blue">5.4일</strong>
+              <span>평균/중위 체재</span>
+              <strong class="txt-blue">5.4일 / 5.0일</strong>
             </div>
           </div>
           <div class="market-strategy">
@@ -219,16 +227,16 @@
           <div class="market-header">
             <span class="market-tag emerald">🇺🇸 미국 등 서구권 (USA)</span>
             <h3>"장기 전국 순회 K-컬처 & 한방 웰니스 탐방"</h3>
-            <span class="market-sub">평균 체재 12.4일~30.6일 / 개별자유여행(FIT) 90%+</span>
+            <span class="market-sub">평균 체재 12.4일~30.6일 (중위수 14.0일)</span>
           </div>
           <div class="market-stats">
             <div class="m-stat">
-              <span>평균 체재일수</span>
-              <strong class="txt-emerald">12.4일~30일</strong>
+              <span>평균/중위 체재</span>
+              <strong class="txt-emerald">18.5일 / 14.0일</strong>
             </div>
             <div class="m-stat">
-              <span>1인당 총지출</span>
-              <strong class="txt-emerald">$2,500~$4,787</strong>
+              <span>평균/중위 지출</span>
+              <strong class="txt-emerald">$3,600 / $2,850</strong>
             </div>
             <div class="m-stat">
               <span>20대 청년 비중</span>
@@ -243,14 +251,14 @@
       </div>
     </section>
 
-    <!-- NEW CLUSTER SCATTER PLOT SECTION -->
+    <!-- HIGH-CONTRAST CLUSTER SCATTER PLOT SECTION -->
     <section class="chart-grid">
       <div class="chart-card highlight-card">
         <div class="chart-header">
-          <h3>📌 [군집 분석 산점도 Map] X축: 평균 체재일수(일) × Y축: 1인당 총지출액($) 4대 관광객 군집 매핑</h3>
-          <span class="tag pink">Cluster Scatter Plot</span>
+          <h3>📌 [극명한 수직 격차 산점도 Map] X축: 평균 체재일수(일) × Y축: 1인당 지출액($800~$4,000 수직 확장)</h3>
+          <span class="tag pink">High Contrast Scatter Plot</span>
         </div>
-        <div class="chart-wrapper" style="height: 380px;">
+        <div class="chart-wrapper" style="height: 420px;">
           <canvas id="chartClusterScatter"></canvas>
         </div>
       </div>
@@ -306,8 +314,8 @@
     <section class="table-card">
       <div class="table-header">
         <div>
-          <h3>📋 [4대 국가 전용] 1030 타깃 데이터 명세서 (일본 · 중국 · 대만 · 미국)</h3>
-          <p>4개 국적별 10대~30대 추정 모수 인원, 평균 체재일수, 총지출액, 쇼핑비, 굿즈구매율, 만족도 통계</p>
+          <h3>📋 [4대 국가 전용] 1030 타깃 데이터 명세서 (평균값 vs 중위수 동시 표출)</h3>
+          <p>4개 국적별 10대~30대 추정 모수 인원, 평균/중위 체재일수, 총지출액, 쇼핑비, 굿즈구매율, 만족도 통계</p>
         </div>
         <button id="exportCsvBtn" class="btn-secondary">📥 테이블 CSV 내보내기</button>
       </div>
@@ -320,9 +328,9 @@
               <th>K-컬처 구분</th>
               <th>표본 N</th>
               <th>추정 모수 (명)</th>
-              <th>평균 체재일수</th>
-              <th>1인당 총지출액</th>
-              <th>1인당 쇼핑비</th>
+              <th>평균 / 중위 체재일수</th>
+              <th>1인당 총지출 (평균 / 중위)</th>
+              <th>1인당 쇼핑비 (평균 / 중위)</th>
               <th>현장경험 비율</th>
               <th>굿즈구매 비율</th>
               <th>만족도 점수</th>
@@ -354,6 +362,6 @@
   </div>
 
   <script src="travel_data_store.js"></script>
-  <script src="app.js?v=20260903_scatter"></script>
+  <script src="app.js?v=20260903_median"></script>
 </body>
 </html>

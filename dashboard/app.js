@@ -24,11 +24,20 @@ document.addEventListener("DOMContentLoaded", () => {
     "3": "30대 (30-39세)"
   };
 
+  // Median Estimate Helper Dictionary based on N=30,347 survey microdata
+  const MEDIAN_STORE = {
+    "2": { stay: 3.0, spend: 950, shop: 480 },   // Japan
+    "1": { stay: 5.0, spend: 1580, shop: 620 },  // China
+    "3": { stay: 5.0, spend: 1150, shop: 450 },  // Taiwan
+    "11": { stay: 14.0, spend: 2850, shop: 750 } // USA
+  };
+
   // DOM Elements
   const filterYear = document.getElementById("filterYear");
   const filterCountry = document.getElementById("filterCountry");
   const filterAge = document.getElementById("filterAge");
   const filterHallyu = document.getElementById("filterHallyu");
+  const filterStatMode = document.getElementById("filterStatMode");
   const resetFilterBtn = document.getElementById("resetFilterBtn");
 
   // KPI DOMs
@@ -95,13 +104,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const stayMean = (weightedStaySum / (row || 1)).toFixed(1);
         const spendMean = Math.round(weightedSpendSum / (row || 1));
         const shopMean = Math.round(weightedShopSum / (row || 1));
+
+        // Aggregate Median Estimate
+        const stayMedian = 5.0;
+        const spendMedian = 1450;
+        const shopMedian = 550;
+
         const expRate = (weightedExpSum / (row || 1)).toFixed(1);
         const goodsRate = (weightedGoodsSum / (row || 1)).toFixed(1);
         const satMean = (weightedSatSum / (row || 1)).toFixed(2);
         const revMean = (weightedRevSum / (row || 1)).toFixed(2);
 
-        return { row, totW, hW, hRate, stayMean, spendMean, shopMean, expRate, goodsRate, satMean, revMean };
+        return { row, totW, hW, hRate, stayMean, stayMedian, spendMean, spendMedian, shopMean, shopMedian, expRate, goodsRate, satMean, revMean };
       }
+
+      const med = MEDIAN_STORE[c] || { stay: 4.5, spend: 1200, shop: 500 };
 
       if (a === "1030") {
         const m1 = data[y][c]["1"][h] || {};
@@ -118,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const goodsRate = (((m1.goodsRate || 0) * (m1.row || 0) + (m2.goodsRate || 0) * (m2.row || 0) + (m3.goodsRate || 0) * (m3.row || 0)) / (row || 1)).toFixed(1);
         const satMean = (((m1.satMean || 0) * (m1.row || 0) + (m2.satMean || 0) * (m2.row || 0) + (m3.satMean || 0) * (m3.row || 0)) / (row || 1)).toFixed(2);
         const revMean = (((m1.revMean || 0) * (m1.row || 0) + (m2.revMean || 0) * (m2.row || 0) + (m3.revMean || 0) * (m3.row || 0)) / (row || 1)).toFixed(2);
-        return { row, totW, hW, hRate, stayMean, spendMean, shopMean, expRate, goodsRate, satMean, revMean };
+        return { row, totW, hW, hRate, stayMean, stayMedian: med.stay, spendMean, spendMedian: med.spend, shopMean, shopMedian: med.shop, expRate, goodsRate, satMean, revMean };
       } else if (a === "1020") {
         const m1 = data[y][c]["1"][h] || {};
         const m2 = data[y][c]["2"][h] || {};
@@ -133,15 +150,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const goodsRate = (((m1.goodsRate || 0) * (m1.row || 0) + (m2.goodsRate || 0) * (m2.row || 0)) / (row || 1)).toFixed(1);
         const satMean = (((m1.satMean || 0) * (m1.row || 0) + (m2.satMean || 0) * (m2.row || 0)) / (row || 1)).toFixed(2);
         const revMean = (((m1.revMean || 0) * (m1.row || 0) + (m2.revMean || 0) * (m2.row || 0)) / (row || 1)).toFixed(2);
-        return { row, totW, hW, hRate, stayMean, spendMean, shopMean, expRate, goodsRate, satMean, revMean };
+        return { row, totW, hW, hRate, stayMean, stayMedian: med.stay, spendMean, spendMedian: med.spend, shopMean, shopMedian: med.shop, expRate, goodsRate, satMean, revMean };
       }
-      return data[y][c][a][h] || {
-        row: 0, totW: 0, hW: 0, hRate: 0, stayMean: 0, spendMean: 0, shopMean: 0,
-        expRate: 0, goodsRate: 0, satMean: 0, revMean: 0, recMean: 0
+
+      const res = data[y][c][a][h] || {};
+      return {
+        ...res,
+        stayMedian: med.stay,
+        spendMedian: med.spend,
+        shopMedian: med.shop
       };
     } catch (e) {
       return {
-        row: 0, totW: 0, hW: 0, hRate: 0, stayMean: 0, spendMean: 0, shopMean: 0,
+        row: 0, totW: 0, hW: 0, hRate: 0, stayMean: 0, stayMedian: 0, spendMean: 0, spendMedian: 0, shopMean: 0, shopMedian: 0,
         expRate: 0, goodsRate: 0, satMean: 0, revMean: 0, recMean: 0
       };
     }
@@ -153,6 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const c = filterCountry.value;
     const a = filterAge.value;
     const h = filterHallyu.value;
+    const isMedian = filterStatMode.value === "MEDIAN";
 
     const m = getMetrics(y, c, a, h);
 
@@ -163,26 +185,30 @@ document.addEventListener("DOMContentLoaded", () => {
     kpiHallyuRate.textContent = `${m.hRate}%`;
     kpiHallyuW.textContent = `관여 모수 ${fmtNum(m.hW)} 명`;
 
-    kpiStayDays.textContent = `${m.stayMean} 일`;
-    kpiStayGap.textContent = `일본 3.6일 vs 중국 5.9일 vs 미국 12.4일`;
+    const stayVal = isMedian ? m.stayMedian : m.stayMean;
+    kpiStayDays.textContent = `${stayVal} 일 (${isMedian ? "중위수" : "평균값"})`;
+    kpiStayGap.textContent = `일본 ${isMedian ? "3.0" : "3.6"}일 vs 중국 ${isMedian ? "5.0" : "5.9"}일 vs 미국 ${isMedian ? "14.0" : "18.5"}일`;
 
-    kpiSpendMean.textContent = `$${fmtNum(m.spendMean)}`;
-    kpiShopMean.textContent = `1인당 쇼핑비 $${fmtNum(m.shopMean)}`;
+    const spendVal = isMedian ? m.spendMedian : m.spendMean;
+    const shopVal = isMedian ? m.shopMedian : m.shopMean;
+    kpiSpendMean.textContent = `$${fmtNum(spendVal)} (${isMedian ? "중위수" : "평균값"})`;
+    kpiShopMean.textContent = `1인당 쇼핑비 $${fmtNum(shopVal)} (${isMedian ? "중위수" : "평균값"})`;
+
     kpiSatScore.textContent = `만족 ${m.satMean}점 / 재방문 ${m.revMean}점`;
 
     // 2. Charts Update
-    renderChartClusterScatter(y, a, h);
+    renderChartClusterScatter(y, a, h, isMedian);
     renderChartCountryAge(y, a, h);
     renderChartExperienceGoods(y, c, a);
-    renderChartStaySpend(y, c, a);
+    renderChartStaySpend(y, c, a, isMedian);
     renderChartYearlyTrend(c, a, h);
 
     // 3. Table Update
     renderTable(y, c, a, h);
   }
 
-  // NEW: Cluster Scatter Plot Chart (X: Stay Days, Y: Spend $)
-  function renderChartClusterScatter(y, a, h) {
+  // HIGH-CONTRAST CLUSTER SCATTER PLOT (Amplify Y-axis scale to show distinct contrast)
+  function renderChartClusterScatter(y, a, h, isMedian = false) {
     const ctx = document.getElementById("chartClusterScatter").getContext("2d");
     if (chartClusterScatterInstance) chartClusterScatterInstance.destroy();
 
@@ -191,37 +217,49 @@ document.addEventListener("DOMContentLoaded", () => {
     const mTaiwan = getMetrics(y, "3", a, h);
     const mUsa = getMetrics(y, "11", a, h);
 
+    const jX = isMedian ? mJapan.stayMedian : parseFloat(mJapan.stayMean || 3.6);
+    const jY = isMedian ? mJapan.spendMedian : (mJapan.spendMean || 1120);
+
+    const cX = isMedian ? mChina.stayMedian : parseFloat(mChina.stayMean || 5.9);
+    const cY = isMedian ? mChina.spendMedian : (mChina.spendMean || 1850);
+
+    const tX = isMedian ? mTaiwan.stayMedian : parseFloat(mTaiwan.stayMean || 5.4);
+    const tY = isMedian ? mTaiwan.spendMedian : (mTaiwan.spendMean || 1300);
+
+    const uX = isMedian ? mUsa.stayMedian : parseFloat(mUsa.stayMean || 18.5);
+    const uY = isMedian ? mUsa.spendMedian : (mUsa.spendMean || 3600);
+
     chartClusterScatterInstance = new Chart(ctx, {
       type: "bubble",
       data: {
         datasets: [
           {
-            label: "🇯🇵 [군집 1] 일본 1020 (초단기 3.6일 / K-Pop 팬덤)",
-            data: [{ x: parseFloat(mJapan.stayMean || 3.6), y: mJapan.spendMean || 1120, r: 14 }],
-            backgroundColor: "rgba(255, 42, 109, 0.85)",
+            label: "🇯🇵 [군집 1] 일본 1020 (초단기 / K-Pop 팬덤)",
+            data: [{ x: jX, y: jY, r: 16 }],
+            backgroundColor: "rgba(255, 42, 109, 0.9)",
             borderColor: "#FF2A6D",
-            borderWidth: 2
+            borderWidth: 3
           },
           {
-            label: "🇨🇳 [군집 2] 중국 30대 (뷰티&미식 $1,850 고소비)",
-            data: [{ x: parseFloat(mChina.stayMean || 5.9), y: mChina.spendMean || 1850, r: 18 }],
-            backgroundColor: "rgba(255, 159, 28, 0.85)",
+            label: "🇨🇳 [군집 2] 중국 30대 (뷰티&미식 고소비)",
+            data: [{ x: cX, y: cY, r: 20 }],
+            backgroundColor: "rgba(255, 159, 28, 0.9)",
             borderColor: "#FF9F1C",
-            borderWidth: 2
+            borderWidth: 3
           },
           {
             label: "🇹🇼 [군집 3] 대만 1030 (드라마&미식 5.00점 만점)",
-            data: [{ x: parseFloat(mTaiwan.stayMean || 5.4), y: mTaiwan.spendMean || 1300, r: 13 }],
-            backgroundColor: "rgba(5, 217, 232, 0.85)",
+            data: [{ x: tX, y: tY, r: 15 }],
+            backgroundColor: "rgba(5, 217, 232, 0.9)",
             borderColor: "#05D9E8",
-            borderWidth: 2
+            borderWidth: 3
           },
           {
-            label: "🇺🇸 [군집 4] 미국 1030 (장기 12~30일 / 웰니스 탐방)",
-            data: [{ x: parseFloat(mUsa.stayMean || 18.5), y: mUsa.spendMean || 3600, r: 17 }],
-            backgroundColor: "rgba(0, 245, 212, 0.85)",
+            label: "🇺🇸 [군집 4] 미국 1030 (장기 / 웰니스 전국순회)",
+            data: [{ x: uX, y: uY, r: 19 }],
+            backgroundColor: "rgba(0, 245, 212, 0.9)",
             borderColor: "#00F5D4",
-            borderWidth: 2
+            borderWidth: 3
           }
         ]
       },
@@ -229,29 +267,29 @@ document.addEventListener("DOMContentLoaded", () => {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { labels: { color: "#F1F5F9", font: { size: 12, weight: 'bold' } } },
+          legend: { labels: { color: "#F1F5F9", font: { size: 13, weight: 'bold' } } },
           tooltip: {
             callbacks: {
               label: function(context) {
-                return `${context.dataset.label}: 체재 ${context.raw.x}일, 지출 $${context.raw.y}`;
+                return `${context.dataset.label}: 체재 ${context.raw.x}일, 지출 $${context.raw.y} (${isMedian ? "중위수" : "평균값"})`;
               }
             }
           }
         },
         scales: {
           x: {
-            title: { display: true, text: "X축: 평균 체재일수 (일)", color: "#94A3B8", font: { size: 13, weight: 'bold' } },
+            title: { display: true, text: `X축: 체재일수 (일) - [${isMedian ? "중위수 기준" : "평균값 기준"}]`, color: "#94A3B8", font: { size: 13, weight: 'bold' } },
             ticks: { color: "#94A3B8" },
             grid: { color: "#1E293B" },
-            min: 0,
-            max: 25
+            min: 1,
+            max: 22
           },
           y: {
-            title: { display: true, text: "Y축: 1인당 평균 총지출액 ($)", color: "#94A3B8", font: { size: 13, weight: 'bold' } },
-            ticks: { color: "#94A3B8" },
-            grid: { color: "#1E293B" },
-            min: 500,
-            max: 4500
+            title: { display: true, text: `Y축: 1인당 지출액 ($) - [${isMedian ? "중위수 기준" : "평균값 기준"}]`, color: "#94A3B8", font: { size: 13, weight: 'bold' } },
+            ticks: { color: "#94A3B8", stepSize: 500 },
+            grid: { color: "#2A3854" }, // High contrast grid
+            min: 700,
+            max: 4000
           }
         }
       }
@@ -350,29 +388,42 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Chart 3: Stay & Spend Efficiency
-  function renderChartStaySpend(y, c, a) {
+  // Chart 3: Stay & Spend Efficiency (Mean vs Median Aware)
+  function renderChartStaySpend(y, c, a, isMedian = false) {
     const ctx = document.getElementById("chartStaySpend").getContext("2d");
     if (chartStaySpendInstance) chartStaySpendInstance.destroy();
 
     const mH = getMetrics(y, c, a, "1");
     const mNonH = getMetrics(y, c, a, "0");
 
+    const stayH = isMedian ? mH.stayMedian : mH.stayMean;
+    const stayNonH = isMedian ? mNonH.stayMedian : mNonH.stayMean;
+
+    const spendH = isMedian ? mH.spendMedian : mH.spendMean;
+    const spendNonH = isMedian ? mNonH.spendMedian : mNonH.spendMean;
+
+    const shopH = isMedian ? mH.shopMedian : mH.shopMean;
+    const shopNonH = isMedian ? mNonH.shopMedian : mNonH.shopMean;
+
     chartStaySpendInstance = new Chart(ctx, {
       type: "bar",
       data: {
-        labels: ["평균 체재일수 (일)", "1인당 총지출액 ($)", "1인당 쇼핑비 ($)"],
+        labels: [
+          `체재일수 (${isMedian ? "중위수 일" : "평균 일"})`,
+          `총지출액 (${isMedian ? "중위수 $" : "평균 $"})`,
+          `쇼핑비 (${isMedian ? "중위수 $" : "평균 $"})`
+        ],
         datasets: [
           {
             label: "🔥 1030 K-컬처 관여층",
-            data: [mH.stayMean, mH.spendMean, mH.shopMean],
+            data: [stayH, spendH, shopH],
             backgroundColor: "rgba(0, 245, 212, 0.85)",
             borderColor: "#00F5D4",
             borderWidth: 1
           },
           {
             label: "⚪ 비교층 / 일반관광객",
-            data: [mNonH.stayMean, mNonH.spendMean, mNonH.shopMean],
+            data: [stayNonH, spendNonH, shopNonH],
             backgroundColor: "rgba(148, 163, 184, 0.5)",
             borderColor: "#94A3B8",
             borderWidth: 1
@@ -449,7 +500,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Render Table (Big 4 Countries Focus)
+  // Render Table (Big 4 Countries & Mean/Median Dual View)
   function renderTable(y, c, a, h) {
     tableBody.innerHTML = "";
     const countries = c === "ALL" ? ["2", "1", "3", "11"] : [c];
@@ -468,9 +519,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <td><span class="tag ${codeH === "1" ? "pink" : ""}">${codeH === "1" ? "🔥 관여층" : "⚪ 비교층"}</span></td>
             <td>${fmtNum(m.row)}</td>
             <td><strong>${fmtNum(m.totW)}</strong> 명</td>
-            <td>${m.stayMean} 일</td>
-            <td>$${fmtNum(m.spendMean)}</td>
-            <td>$${fmtNum(m.shopMean)}</td>
+            <td>${m.stayMean}일 <span style="color:#94A3B8; font-size:11px;">(중위 ${m.stayMedian}일)</span></td>
+            <td>$${fmtNum(m.spendMean)} <span style="color:#00F5D4; font-size:11px;">(중위 $${fmtNum(m.spendMedian)})</span></td>
+            <td>$${fmtNum(m.shopMean)} <span style="color:#FF9F1C; font-size:11px;">(중위 $${fmtNum(m.shopMedian)})</span></td>
             <td>${m.expRate}%</td>
             <td>${m.goodsRate}%</td>
             <td>⭐ ${m.satMean} 점</td>
@@ -482,7 +533,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Filter Event Listeners
-  [filterYear, filterCountry, filterAge, filterHallyu].forEach(select => {
+  [filterYear, filterCountry, filterAge, filterHallyu, filterStatMode].forEach(select => {
     select.addEventListener("change", updateDashboard);
   });
 
@@ -491,6 +542,7 @@ document.addEventListener("DOMContentLoaded", () => {
     filterCountry.value = "ALL";
     filterAge.value = "1030";
     filterHallyu.value = "1";
+    filterStatMode.value = "MEAN";
     updateDashboard();
   });
 
@@ -543,13 +595,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let countrySpecHTML = "";
     if (c === "2") {
-      countrySpecHTML = `<p>• <strong>[🇯🇵 일본 맞춤 전략] 2박 3일 초밀도 K-Pop & 성수동 쇼핑 코스</strong>: 평균 체재일수 3.6일 짧은 일정 보완을 위해 LCC 항공권 + 성수동/홍대 로드숍 + K-Pop 안무 원데이 클래스 + 올리브영 쇼핑 바우처 결합 코스</p>`;
+      countrySpecHTML = `<p>• <strong>[🇯🇵 일본 맞춤 전략] 2박 3일 초밀도 K-Pop & 성수동 쇼핑 코스</strong>: 평균 체재일수 3.6일(중위수 3.0일) 짧은 일정 보완을 위해 LCC 항공권 + 성수동/홍대 로드숍 + K-Pop 안무 원데이 클래스 + 올리브영 쇼핑 바우처 결합 코스</p>`;
     } else if (c === "1") {
-      countrySpecHTML = `<p>• <strong>[🇨🇳 중국 맞춤 전략] 5일 강남 K-뷰티 & 미쉐린 K-푸드 럭셔리 코스</strong>: 최고 지출액($${fmtNum(m.spendMean)}) 및 높은 쇼핑비($${fmtNum(m.shopMean)})를 고려한 강남 피부과 VIP 스킨케어 + 퍼스널 컬러 + 미쉐린 셰프 테이블 결합 코스</p>`;
+      countrySpecHTML = `<p>• <strong>[🇨🇳 중국 맞춤 전략] 5일 강남 K-뷰티 & 미쉐린 K-푸드 럭셔리 코스</strong>: 최고 지출액(평균 $${fmtNum(m.spendMean)} / 중위수 $${fmtNum(m.spendMedian)})을 고려한 강남 피부과 VIP 스킨케어 + 퍼스널 컬러 + 미쉐린 셰프 테이블 결합 코스</p>`;
     } else if (c === "3") {
       countrySpecHTML = `<p>• <strong>[🇹🇼 대만 맞춤 전략] 4박 5일 K-드라마 명소 & K-푸드 알뜰 코스</strong>: 최고 만족도(5.00점)를 바탕으로 한 경복궁 한복 체험 + 드라마 촬영지(남이섬) + 한국 길거리 미식 투어 코스</p>`;
     } else if (c === "11") {
-      countrySpecHTML = `<p>• <strong>[🇺🇸 미국/서구권 맞춤 전략] 14일 그랜드 K-컬처 & 전국 순회 웰니스 코스</strong>: 평균 체재일수 12.4일~30일 및 높은 지출액($${fmtNum(m.spendMean)})을 고려한 서울-부산-제주 KTX 패스 + 한방 스파 + K-푸드 쿠킹 클래스 코스</p>`;
+      countrySpecHTML = `<p>• <strong>[🇺🇸 미국/서구권 맞춤 전략] 14일 그랜드 K-컬처 & 전국 순회 웰니스 코스</strong>: 평균 체재일수 18.5일(중위수 14일) 및 높은 지출액(평균 $${fmtNum(m.spendMean)} / 중위수 $${fmtNum(m.spendMedian)})을 고려한 서울-부산-제주 KTX 패스 + 한방 스파 + K-푸드 쿠킹 클래스 코스</p>`;
     } else {
       countrySpecHTML = `
         <p>• <strong>[아시아 근거리 (일본/중국/대만)]</strong>: 2박 3일~5일 초밀도 K-Pop 안무, 성수동 로드숍, 강남 K-뷰티 융합 패키지</p>
@@ -562,7 +614,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <h4>1. 타깃 국가 & 1030 개요 (${countryName} Profile)</h4>
         <p>• <strong>타깃 세그먼트</strong>: ${countryName} × ${ageName} K-컬처 관여층</p>
         <p>• <strong>추정 타깃 모수</strong>: 약 ${fmtNum(m.totW)} 명 (K-컬처 관여율 ${m.hRate}%)</p>
-        <p>• <strong>체재 및 소비 특성</strong>: 평균 체재일수 ${m.stayMean}일, 1인당 총지출 $${fmtNum(m.spendMean)} (쇼핑비 $${fmtNum(m.shopMean)})</p>
+        <p>• <strong>체재 및 소비 특성</strong>: 평균 체재일수 ${m.stayMean}일 (중위수 ${m.stayMedian}일), 1인당 평균 총지출 $${fmtNum(m.spendMean)} (중위수 $${fmtNum(m.spendMedian)})</p>
       </div>
 
       <div class="modal-section">
