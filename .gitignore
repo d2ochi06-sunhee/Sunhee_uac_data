@@ -1,0 +1,4 @@
+# Ignore 25MB+ raw Excel/CSV data files to keep repository lightweight
+*.xlsx
+*.csv
+!.cloudflareignore
