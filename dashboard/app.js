@@ -1,4 +1,4 @@
-// Travel Agency Target Marketing & Product Planning Dashboard Controller (Big 4 Countries & 10s-30s Focused)
+// Travel Agency Target Marketing & Product Planning Dashboard Controller (4 Signature Personas Focused)
 document.addEventListener("DOMContentLoaded", () => {
   const data = window.TRAVEL_DATA;
   if (!data) {
@@ -6,13 +6,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Country Map & Age Map
+  // Persona Map & Age Map
   const COUNTRY_MAP = {
-    "ALL": "4개국 전체 (일본/중국/대만/미국)",
-    "2": "🇯🇵 일본",
-    "1": "🇨🇳 중국",
-    "3": "🇹🇼 대만",
-    "11": "🇺🇸 미국 등 서구권"
+    "ALL": "4대 페르소나 전체",
+    "2": "🇯🇵 [체크인 팝스타] 일본",
+    "1": "🇨🇳 [VIP 뷰티 퀸] 중국",
+    "3": "🇹🇼 [만점 식도락가] 대만",
+    "11": "🇺🇸 [그랜드 트래블러] 미국"
   };
 
   const AGE_MAP = {
@@ -105,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const spendMean = Math.round(weightedSpendSum / (row || 1));
         const shopMean = Math.round(weightedShopSum / (row || 1));
 
-        // Aggregate Median Estimate
         const stayMedian = 5.0;
         const spendMedian = 1450;
         const shopMedian = 550;
@@ -180,14 +179,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 1. KPI Cards
     kpiTargetW.textContent = `${fmtNum(m.totW)} 명`;
-    kpiTargetRow.textContent = `4개국 1030 표본 ${fmtNum(m.row)} 명`;
+    kpiTargetRow.textContent = `4대 페르소나 표본 ${fmtNum(m.row)} 명`;
 
     kpiHallyuRate.textContent = `${m.hRate}%`;
     kpiHallyuW.textContent = `관여 모수 ${fmtNum(m.hW)} 명`;
 
     const stayVal = isMedian ? m.stayMedian : m.stayMean;
     kpiStayDays.textContent = `${stayVal} 일 (${isMedian ? "중위수" : "평균값"})`;
-    kpiStayGap.textContent = `일본 ${isMedian ? "3.0" : "3.6"}일 vs 중국 ${isMedian ? "5.0" : "5.9"}일 vs 미국 ${isMedian ? "14.0" : "18.5"}일`;
+    kpiStayGap.textContent = `팝스타 3.6일 vs 뷰티퀸 5.9일 vs 트래블러 18.5일`;
 
     const spendVal = isMedian ? m.spendMedian : m.spendMean;
     const shopVal = isMedian ? m.shopMedian : m.shopMean;
@@ -207,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderTable(y, c, a, h);
   }
 
-  // HIGH-CONTRAST CLUSTER SCATTER PLOT (Amplify Y-axis scale to show distinct contrast)
+  // HIGH-CONTRAST PERSONA SCATTER MAP (Stretched X & Y Axes for Maximum Difference)
   function renderChartClusterScatter(y, a, h, isMedian = false) {
     const ctx = document.getElementById("chartClusterScatter").getContext("2d");
     if (chartClusterScatterInstance) chartClusterScatterInstance.destroy();
@@ -234,28 +233,28 @@ document.addEventListener("DOMContentLoaded", () => {
       data: {
         datasets: [
           {
-            label: "🇯🇵 [군집 1] 일본 1020 (초단기 / K-Pop 팬덤)",
+            label: "💗 [체크인 팝스타] 일본 1020 (초단기 3.6일 / K-Pop 팬덤)",
             data: [{ x: jX, y: jY, r: 16 }],
             backgroundColor: "rgba(255, 42, 109, 0.9)",
             borderColor: "#FF2A6D",
             borderWidth: 3
           },
           {
-            label: "🇨🇳 [군집 2] 중국 30대 (뷰티&미식 고소비)",
+            label: "🛍️ [VIP 뷰티 퀸] 중국 30대 (럭셔리 스킨케어 $1,850 고소비)",
             data: [{ x: cX, y: cY, r: 20 }],
             backgroundColor: "rgba(255, 159, 28, 0.9)",
             borderColor: "#FF9F1C",
             borderWidth: 3
           },
           {
-            label: "🇹🇼 [군집 3] 대만 1030 (드라마&미식 5.00점 만점)",
+            label: "🎬 [만점 식도락가] 대만 1030 (드라마&미식 5.00점 만점)",
             data: [{ x: tX, y: tY, r: 15 }],
             backgroundColor: "rgba(5, 217, 232, 0.9)",
             borderColor: "#05D9E8",
             borderWidth: 3
           },
           {
-            label: "🇺🇸 [군집 4] 미국 1030 (장기 / 웰니스 전국순회)",
+            label: "🌿 [그랜드 트래블러] 미국 1030 (장기 18.5일 / 웰니스 전국순회)",
             data: [{ x: uX, y: uY, r: 19 }],
             backgroundColor: "rgba(0, 245, 212, 0.9)",
             borderColor: "#00F5D4",
@@ -278,16 +277,16 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         scales: {
           x: {
-            title: { display: true, text: `X축: 체재일수 (일) - [${isMedian ? "중위수 기준" : "평균값 기준"}]`, color: "#94A3B8", font: { size: 13, weight: 'bold' } },
-            ticks: { color: "#94A3B8" },
-            grid: { color: "#1E293B" },
-            min: 1,
-            max: 22
+            title: { display: true, text: `X축: 체재일수 (2일 ~ 20일 시각적 확대) - [${isMedian ? "중위수 기준" : "평균값 기준"}]`, color: "#94A3B8", font: { size: 13, weight: 'bold' } },
+            ticks: { color: "#94A3B8", stepSize: 3 },
+            grid: { color: "#2A3854" }, // High contrast grid
+            min: 2,
+            max: 20
           },
           y: {
-            title: { display: true, text: `Y축: 1인당 지출액 ($) - [${isMedian ? "중위수 기준" : "평균값 기준"}]`, color: "#94A3B8", font: { size: 13, weight: 'bold' } },
+            title: { display: true, text: `Y축: 1인당 지출액 ($800 ~ $4,000 수직 확대) - [${isMedian ? "중위수 기준" : "평균값 기준"}]`, color: "#94A3B8", font: { size: 13, weight: 'bold' } },
             ticks: { color: "#94A3B8", stepSize: 500 },
-            grid: { color: "#2A3854" }, // High contrast grid
+            grid: { color: "#2A3854" },
             min: 700,
             max: 4000
           }
@@ -388,7 +387,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Chart 3: Stay & Spend Efficiency (Mean vs Median Aware)
+  // Chart 3: Stay & Spend Efficiency
   function renderChartStaySpend(y, c, a, isMedian = false) {
     const ctx = document.getElementById("chartStaySpend").getContext("2d");
     if (chartStaySpendInstance) chartStaySpendInstance.destroy();
@@ -500,7 +499,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Render Table (Big 4 Countries & Mean/Median Dual View)
+  // Render Table (Persona Names View)
   function renderTable(y, c, a, h) {
     tableBody.innerHTML = "";
     const countries = c === "ALL" ? ["2", "1", "3", "11"] : [c];
@@ -590,35 +589,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const a = filterAge.value;
     const m = getMetrics(y, c, a, "1");
 
-    const countryName = COUNTRY_MAP[c] || "4개국 전체";
+    const countryName = COUNTRY_MAP[c] || "4대 페르소나 전체";
     const ageName = AGE_MAP[a] || "10대~30대 전체";
 
     let countrySpecHTML = "";
     if (c === "2") {
-      countrySpecHTML = `<p>• <strong>[🇯🇵 일본 맞춤 전략] 2박 3일 초밀도 K-Pop & 성수동 쇼핑 코스</strong>: 평균 체재일수 3.6일(중위수 3.0일) 짧은 일정 보완을 위해 LCC 항공권 + 성수동/홍대 로드숍 + K-Pop 안무 원데이 클래스 + 올리브영 쇼핑 바우처 결합 코스</p>`;
+      countrySpecHTML = `<p>• <strong>[🇯🇵 체크인 팝스타 맞춤 전략] 2박 3일 초밀도 K-Pop & 성수동 쇼핑 코스</strong>: 평균 체재일수 3.6일(중위수 3.0일) 짧은 일정 보완을 위해 LCC 항공권 + 성수동/홍대 로드숍 + K-Pop 안무 원데이 클래스 + 올리브영 쇼핑 바우처 결합 코스</p>`;
     } else if (c === "1") {
-      countrySpecHTML = `<p>• <strong>[🇨🇳 중국 맞춤 전략] 5일 강남 K-뷰티 & 미쉐린 K-푸드 럭셔리 코스</strong>: 최고 지출액(평균 $${fmtNum(m.spendMean)} / 중위수 $${fmtNum(m.spendMedian)})을 고려한 강남 피부과 VIP 스킨케어 + 퍼스널 컬러 + 미쉐린 셰프 테이블 결합 코스</p>`;
+      countrySpecHTML = `<p>• <strong>[🇨🇳 VIP 뷰티 퀸 맞춤 전략] 5일 강남 K-뷰티 & 미쉐린 K-푸드 럭셔리 코스</strong>: 최고 지출액(평균 $${fmtNum(m.spendMean)} / 중위수 $${fmtNum(m.spendMedian)})을 고려한 강남 피부과 VIP 스킨케어 + 퍼스널 컬러 + 미쉐린 셰프 테이블 결합 코스</p>`;
     } else if (c === "3") {
-      countrySpecHTML = `<p>• <strong>[🇹🇼 대만 맞춤 전략] 4박 5일 K-드라마 명소 & K-푸드 알뜰 코스</strong>: 최고 만족도(5.00점)를 바탕으로 한 경복궁 한복 체험 + 드라마 촬영지(남이섬) + 한국 길거리 미식 투어 코스</p>`;
+      countrySpecHTML = `<p>• <strong>[🇹🇼 만점 식도락가 맞춤 전략] 4박 5일 K-드라마 명소 & K-푸드 알뜰 코스</strong>: 최고 만족도(5.00점)를 바탕으로 한 경복궁 한복 체험 + 드라마 촬영지(남이섬) + 한국 길거리 미식 투어 코스</p>`;
     } else if (c === "11") {
-      countrySpecHTML = `<p>• <strong>[🇺🇸 미국/서구권 맞춤 전략] 14일 그랜드 K-컬처 & 전국 순회 웰니스 코스</strong>: 평균 체재일수 18.5일(중위수 14일) 및 높은 지출액(평균 $${fmtNum(m.spendMean)} / 중위수 $${fmtNum(m.spendMedian)})을 고려한 서울-부산-제주 KTX 패스 + 한방 스파 + K-푸드 쿠킹 클래스 코스</p>`;
+      countrySpecHTML = `<p>• <strong>[🇺🇸 그랜드 트래블러 맞춤 전략] 14일 그랜드 K-컬처 & 전국 순회 웰니스 코스</strong>: 평균 체재일수 18.5일(중위수 14일) 및 높은 지출액(평균 $${fmtNum(m.spendMean)} / 중위수 $${fmtNum(m.spendMedian)})을 고려한 서울-부산-제주 KTX 패스 + 한방 스파 + K-푸드 쿠킹 클래스 코스</p>`;
     } else {
       countrySpecHTML = `
-        <p>• <strong>[아시아 근거리 (일본/중국/대만)]</strong>: 2박 3일~5일 초밀도 K-Pop 안무, 성수동 로드숍, 강남 K-뷰티 융합 패키지</p>
-        <p>• <strong>[미주 장거리 (미국 등)]</strong>: 14일 서울-부산-제주 KTX 연계 한방 웰니스 패키지</p>
+        <p>• <strong>[아시아 근거리 (체크인 팝스타/VIP 뷰티퀸/만점 식도락가)]</strong>: 2박 3일~5일 초밀도 K-Pop 안무, 성수동 로드숍, 강남 K-뷰티 융합 패키지</p>
+        <p>• <strong>[미주 장거리 (그랜드 트래블러)]</strong>: 14일 서울-부산-제주 KTX 연계 한방 웰니스 패키지</p>
       `;
     }
 
     const specText = `
       <div class="modal-section">
-        <h4>1. 타깃 국가 & 1030 개요 (${countryName} Profile)</h4>
+        <h4>1. 타깃 페르소나 & 1030 개요 (${countryName} Profile)</h4>
         <p>• <strong>타깃 세그먼트</strong>: ${countryName} × ${ageName} K-컬처 관여층</p>
         <p>• <strong>추정 타깃 모수</strong>: 약 ${fmtNum(m.totW)} 명 (K-컬처 관여율 ${m.hRate}%)</p>
         <p>• <strong>체재 및 소비 특성</strong>: 평균 체재일수 ${m.stayMean}일 (중위수 ${m.stayMedian}일), 1인당 평균 총지출 $${fmtNum(m.spendMean)} (중위수 $${fmtNum(m.spendMedian)})</p>
       </div>
 
       <div class="modal-section">
-        <h4>2. 국가별 맞춤형 여행 상품 기획 (Actionable Strategy)</h4>
+        <h4>2. 페르소나별 맞춤형 여행 상품 기획 (Actionable Strategy)</h4>
         ${countrySpecHTML}
       </div>
 
@@ -641,7 +640,7 @@ document.addEventListener("DOMContentLoaded", () => {
   copySpecBtn.addEventListener("click", () => {
     const text = specModalBody.innerText;
     navigator.clipboard.writeText(text).then(() => {
-      alert("4대 국가 맞춤 상품 기획서 텍스트가 클립보드에 복사되었습니다!");
+      alert("4대 페르소나 맞춤 상품 기획서 텍스트가 클립보드에 복사되었습니다!");
     });
   });
 

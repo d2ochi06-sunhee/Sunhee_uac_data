@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>여행사 K-컬처 10대~30대 타깃 4대 핵심 국가 대시보드 (2023-2025)</title>
+  <title>여행사 K-컬처 10대~30대 타깃 4대 핵심 페르소나 대시보드 (2023-2025)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="style.css?v=20260903_median">
+  <link rel="stylesheet" href="style.css?v=20260903_naming">
 </head>
 <body>
   <div class="app-container">
@@ -17,13 +17,13 @@
       <div class="brand">
         <div class="logo-icon">🎯</div>
         <div class="brand-text">
-          <h1>여행사 K-컬처 10대~30대 4대 핵심 국가 전용 대시보드</h1>
-          <p>2023년 ~ 2025년 외래관광객 조사 (평균값 vs 중위수 정밀 통계 분석 구동)</p>
+          <h1>여행사 K-컬처 10대~30대 4대 시그니처 페르소나 대시보드</h1>
+          <p>2023년 ~ 2025년 외래관광객 조사 (체크인 팝스타 · VIP 뷰티퀸 · 만점 식도락가 · 그랜드 트래블러)</p>
         </div>
       </div>
       <div class="header-badge">
         <span class="pulse-dot"></span>
-        <span>1030 핀포인트 × 평균값/중위수 정밀 분석</span>
+        <span>1030 핀포인트 × 4대 시그니처 페르소나</span>
       </div>
     </header>
 
@@ -40,13 +40,13 @@
       </div>
 
       <div class="filter-group">
-        <label for="filterCountry">🌏 4대 타깃 국가 선택 (Target Country)</label>
+        <label for="filterCountry">🌏 4대 시그니처 페르소나 선택</label>
         <select id="filterCountry">
-          <option value="ALL" selected>🔥 4대 국가 전체 (일본/중국/대만/미국)</option>
-          <option value="2">🇯🇵 일본 (Japan - 초단기 팬덤)</option>
-          <option value="1">🇨🇳 중국 (China - 뷰티/쇼핑 고소비)</option>
-          <option value="3">🇹🇼 대만 (Taiwan - K-푸드 만점 선호)</option>
-          <option value="11">🇺🇸 미국 등 서구권 (USA - 장기 웰니스/전국순회)</option>
+          <option value="ALL" selected>🔥 4대 페르소나 전체 보기</option>
+          <option value="2">🇯🇵 [체크인 팝스타] 일본 (2박 3일 핫플 팬덤)</option>
+          <option value="1">🇨🇳 [VIP 뷰티 퀸] 중국 (럭셔리 스킨케어족)</option>
+          <option value="3">🇹🇼 [만점 식도락가] 대만 (K-드라마 카페 메이트)</option>
+          <option value="11">🇺🇸 [그랜드 트래블러] 미국 (2주 전국 웰니스족)</option>
         </select>
       </div>
 
@@ -86,7 +86,7 @@
       <div class="kpi-card purple">
         <div class="kpi-icon">🎯</div>
         <div class="kpi-content">
-          <span class="kpi-title">4개국 1030 추정 모수</span>
+          <span class="kpi-title">4대 페르소나 1030 추정 모수</span>
           <h2 id="kpiTargetW">0 명</h2>
           <span class="kpi-sub" id="kpiTargetRow">K-컬처 관여객의 73.6% 집중</span>
         </div>
@@ -106,7 +106,7 @@
         <div class="kpi-content">
           <span class="kpi-title">평균/중위 체재 일수</span>
           <h2 id="kpiStayDays">0.0 일</h2>
-          <span class="kpi-sub" id="kpiStayGap">일본 3.6일 vs 중국 5.9일 vs 미국 12.4일</span>
+          <span class="kpi-sub" id="kpiStayGap">체크인 팝스타 3.6일 vs 그랜드 트래블러 18.5일</span>
         </div>
       </div>
 
@@ -115,7 +115,7 @@
         <div class="kpi-content">
           <span class="kpi-title">1인당 평균 / 중위 총지출액</span>
           <h2 id="kpiSpendMean">$0</h2>
-          <span class="kpi-sub" id="kpiShopMean">중국 뷰티/쇼핑 지출 $1,850 최고액</span>
+          <span class="kpi-sub" id="kpiShopMean">VIP 뷰티 퀸 지출 $1,850 최고액</span>
         </div>
       </div>
 
@@ -124,29 +124,29 @@
         <div class="kpi-content">
           <span class="kpi-title">관광 만족도 & 충성도</span>
           <h2 id="kpiSatScore">0.0 점 / 0.0 점</h2>
-          <span class="kpi-sub">대만 5.00점 / 미국 4.96점 최상위</span>
+          <span class="kpi-sub">만점 식도락가 5.00점 최상위</span>
         </div>
       </div>
     </section>
 
-    <!-- 4-COUNTRY PROFILES -->
+    <!-- 4 SIGNATURE PERSONAS PROFILES -->
     <section class="dual-market-section">
       <div class="insight-header">
         <div class="insight-title-group">
-          <span class="sub-category">4 BIG COUNTRIES PROFILES</span>
-          <h2>🌏 [4대 핵심 국가 1030 특징] 일본 · 중국 · 대만 · 미국 세그먼트</h2>
-          <p>비행거리, 소비 규모, 목적에 따라 명확히 구분되는 4개국별 핵심 행동 특징 및 여행사 세일즈 포인트</p>
+          <span class="sub-category">4 SIGNATURE PERSONAS PROFILES</span>
+          <h2>🌏 [4대 시그니처 페르소나] 체크인 팝스타 · VIP 뷰티퀸 · 만점 식도락가 · 그랜드 트래블러</h2>
+          <p>취향과 방한 스타일에 따라 선명하게 갈리는 여행사 핵심 타깃 페르소나 및 세일즈 포인트</p>
         </div>
-        <button id="generateSpecBtn" class="btn-primary-action">📋 선택 국가 맞춤 상품기획서 생성</button>
+        <button id="generateSpecBtn" class="btn-primary-action">📋 선택 페르소나 맞춤 상품기획서 생성</button>
       </div>
 
       <div class="market-dual-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
-        <!-- 1. Japan Card -->
+        <!-- 1. Japan Persona Card -->
         <div class="market-card market-asia" id="btnSelectJapan" style="cursor:pointer;">
           <div class="market-header">
-            <span class="market-tag pink">🇯🇵 일본 (Japan)</span>
-            <h3>"초단기 2박 3일 K-Pop & 성수동 쇼핑 팬덤"</h3>
-            <span class="market-sub">평균 체재 3.6일 (중위수 3.0일) - 초단기 알뜰 방한</span>
+            <span class="market-tag pink">🇯🇵 [체크인 팝스타] 일본 1020</span>
+            <h3>"2박 3일 핫플 & K-Pop 안무 팬덤"</h3>
+            <span class="market-sub">"주말 연차 내고 오자마자 성수동과 안무실로 직행하는 Z세대"</span>
           </div>
           <div class="market-stats">
             <div class="m-stat">
@@ -163,17 +163,17 @@
             </div>
           </div>
           <div class="market-strategy">
-            <p>• <strong>특징</strong>: 금요일 퇴근 후 오거나 주말 활용 2박 3일 단기 방한. K-Pop 안무 클래스, 성수동 로드숍, 올리브영 굿즈 쇼핑 집중.</p>
+            <p>• <strong>행동 특징</strong>: 금요일 퇴근 후 오거나 주말 활용 2박 3일 단기 방한. K-Pop 안무 클래스, 성수동 로드숍, 올리브영 굿즈 쇼핑 집중.</p>
             <p>• <strong>추천 상품</strong>: <code>2박 3일 초밀도 K-Pop & 성수동 쇼핑 패키지</code></p>
           </div>
         </div>
 
-        <!-- 2. China Card -->
+        <!-- 2. China Persona Card -->
         <div class="market-card market-asia" id="btnSelectChina" style="border-top-color: #FF9F1C; cursor:pointer;">
           <div class="market-header">
-            <span class="market-tag amber">🇨🇳 중국 (China)</span>
-            <h3>"K-뷰티 스킨케어 & 미쉐린 K-푸드 고소비층"</h3>
-            <span class="market-sub">1인당 평균 지출액 $1,850 (중위수 $1,580) - 최고액</span>
+            <span class="market-tag amber">🇨🇳 [VIP 뷰티 퀸] 중국 30대</span>
+            <h3>"럭셔리 스킨케어 & 미쉐린 K-푸드족"</h3>
+            <span class="market-sub">"강남 피부과 결제하고 미쉐린 맛집 도장 깨는 최고 지출족"</span>
           </div>
           <div class="market-stats">
             <div class="m-stat">
@@ -190,22 +190,22 @@
             </div>
           </div>
           <div class="market-strategy">
-            <p>• <strong>특징</strong>: 강남 피부과 스킨케어, 퍼스널 컬러, 고급 메이크업, 미쉐린 K-푸드 맛집 탐방에 지출이 극도로 집중됨.</p>
+            <p>• <strong>행동 특징</strong>: 강남 피부과 스킨케어, 퍼스널 컬러, 고급 메이크업, 미쉐린 K-푸드 맛집 탐방에 지출이 극도로 집중됨.</p>
             <p>• <strong>추천 상품</strong>: <code>5일 강남 K-뷰티 & 미쉐린 K-푸드 럭셔리 패키지</code></p>
           </div>
         </div>
 
-        <!-- 3. Taiwan Card -->
+        <!-- 3. Taiwan Persona Card -->
         <div class="market-card market-asia" id="btnSelectTaiwan" style="border-top-color: #05D9E8; cursor:pointer;">
           <div class="market-header">
-            <span class="market-tag blue">🇹🇼 대만 (Taiwan)</span>
-            <h3>"K-드라마 명소 & K-푸드 식도락 만점 만족층"</h3>
-            <span class="market-sub">전반적 관광 만족도 5.00점 만점 최상위</span>
+            <span class="market-tag blue">🇹🇼 [만점 식도락가] 대만 1030</span>
+            <h3>"K-드라마 카페 메이트 & 감성 미식가"</h3>
+            <span class="market-sub">"경복궁 한복 입고 한국 길거리 미식에 5점 만점 주는 찐팬"</span>
           </div>
           <div class="market-stats">
             <div class="m-stat">
               <span>관광 만족도</span>
-              <strong class="txt-blue">5.00 점</strong>
+              <strong class="txt-blue">5.00 점 만점</strong>
             </div>
             <div class="m-stat">
               <span>평균/중위 지출</span>
@@ -217,17 +217,17 @@
             </div>
           </div>
           <div class="market-strategy">
-            <p>• <strong>특징</strong>: K-드라마 촬영지(남이섬/경복궁), 한국 길거리 미식, 감성 카페 투어 선호. 알찬 가성비 여행 중시.</p>
+            <p>• <strong>행동 특징</strong>: K-드라마 촬영지(남이섬/경복궁), 한국 길거리 미식, 감성 카페 투어 선호. 알찬 가성비 여행 중시.</p>
             <p>• <strong>추천 상품</strong>: <code>4박 5일 K-드라마 명소 & K-푸드 알뜰 패키지</code></p>
           </div>
         </div>
 
-        <!-- 4. USA Card -->
+        <!-- 4. USA Persona Card -->
         <div class="market-card market-usa" id="btnSelectUsa" style="cursor:pointer;">
           <div class="market-header">
-            <span class="market-tag emerald">🇺🇸 미국 등 서구권 (USA)</span>
-            <h3>"장기 전국 순회 K-컬처 & 한방 웰니스 탐방"</h3>
-            <span class="market-sub">평균 체재 12.4일~30.6일 (중위수 14.0일)</span>
+            <span class="market-tag emerald">🇺🇸 [그랜드 트래블러] 미국 1030</span>
+            <h3>"2주 전국 순회 한방 웰니스족"</h3>
+            <span class="market-sub">"서울에서 KTX 타고 부산·제주까지 한방 스파 힐링하는 백패커"</span>
           </div>
           <div class="market-stats">
             <div class="m-stat">
@@ -244,19 +244,19 @@
             </div>
           </div>
           <div class="market-strategy">
-            <p>• <strong>특징</strong>: 2주 이상 머물며 서울-부산-제주 KTX 전국 순회. 한방 스파, K-푸드 쿠킹 클래스 등 문화 체험 선호.</p>
+            <p>• <strong>행동 특징</strong>: 2주 이상 머물며 서울-부산-제주 KTX 전국 순회. 한방 스파, K-푸드 쿠킹 클래스 등 문화 체험 선호.</p>
             <p>• <strong>추천 상품</strong>: <code>14일 그랜드 K-컬처 & 서울-부산-제주 연계 패키지</code></p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- HIGH-CONTRAST CLUSTER SCATTER PLOT SECTION -->
+    <!-- HIGH-CONTRAST SCATTER PLOT SECTION (Amped X & Y Axes) -->
     <section class="chart-grid">
       <div class="chart-card highlight-card">
         <div class="chart-header">
-          <h3>📌 [극명한 수직 격차 산점도 Map] X축: 평균 체재일수(일) × Y축: 1인당 지출액($800~$4,000 수직 확장)</h3>
-          <span class="tag pink">High Contrast Scatter Plot</span>
+          <h3>📌 [4대 시그니처 페르소나 Map] X축: 체재일수(2~20일 확대) × Y축: 1인당 지출액($800~$4,000 수직 확대)</h3>
+          <span class="tag pink">Persona Scatter Map</span>
         </div>
         <div class="chart-wrapper" style="height: 420px;">
           <canvas id="chartClusterScatter"></canvas>
@@ -268,8 +268,8 @@
     <section class="chart-grid two-col">
       <div class="chart-card">
         <div class="chart-header">
-          <h3>🌏 [4개국 1030 비교] 일본 · 중국 · 대만 · 미국 1030 비중 & K-컬처 관여율 (%)</h3>
-          <span class="tag pink">4 Big Countries Segment</span>
+          <h3>🌏 [4대 페르소나 비교] 국적별 1030 관여율 & 비중 (%)</h3>
+          <span class="tag pink">4 Persona Segment</span>
         </div>
         <div class="chart-wrapper">
           <canvas id="chartCountryAge"></canvas>
@@ -278,7 +278,7 @@
 
       <div class="chart-card">
         <div class="chart-header">
-          <h3>🎯 [현장경험 vs 굿즈] 1030 관여층 vs 일반관광객 전환율 (%)</h3>
+          <h3>🎯 [현장경험 vs 굿즈] 4대 페르소나 관여층 vs 일반관광객 전환율 (%)</h3>
           <span class="tag blue">Experience & Goods</span>
         </div>
         <div class="chart-wrapper">
@@ -291,7 +291,7 @@
     <section class="chart-grid two-col">
       <div class="chart-card">
         <div class="chart-header">
-          <h3>⏱️ [4개국 체재일수 vs 소비] 일본(3.6일) vs 중국($1,850) vs 미국(12.4일)</h3>
+          <h3>⏱️ [체재일수 vs 소비] 체크인 팝스타(3.6일) vs VIP 뷰티퀸($1,850) vs 그랜드 트래블러(18.5일)</h3>
           <span class="tag emerald">Stay & Spend Efficiency</span>
         </div>
         <div class="chart-wrapper">
@@ -301,7 +301,7 @@
 
       <div class="chart-card">
         <div class="chart-header">
-          <h3>📈 [3개년 추이 (2023~2025)] 4개국 1030 관여율 시계열 변화</h3>
+          <h3>📈 [3개년 추이 (2023~2025)] 4대 페르소나 K-컬처 관여율 시계열 변화</h3>
           <span class="tag amber">2023-2025 Trend</span>
         </div>
         <div class="chart-wrapper">
@@ -314,8 +314,8 @@
     <section class="table-card">
       <div class="table-header">
         <div>
-          <h3>📋 [4대 국가 전용] 1030 타깃 데이터 명세서 (평균값 vs 중위수 동시 표출)</h3>
-          <p>4개 국적별 10대~30대 추정 모수 인원, 평균/중위 체재일수, 총지출액, 쇼핑비, 굿즈구매율, 만족도 통계</p>
+          <h3>📋 [4대 시그니처 페르소나] 1030 타깃 데이터 명세서 (평균값 vs 중위수 표출)</h3>
+          <p>4대 국적 페르소나별 10대~30대 추정 모수 인원, 평균/중위 체재일수, 총지출액, 쇼핑비, 굿즈구매율, 만족도 통계</p>
         </div>
         <button id="exportCsvBtn" class="btn-secondary">📥 테이블 CSV 내보내기</button>
       </div>
@@ -323,7 +323,7 @@
         <table class="data-table">
           <thead>
             <tr>
-              <th>국가 (Country)</th>
+              <th>시그니처 페르소나</th>
               <th>연령대 (Age)</th>
               <th>K-컬처 구분</th>
               <th>표본 N</th>
@@ -348,7 +348,7 @@
   <div id="specModal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>✈️ 4대 핵심 국가 1030 맞춤형 K-컬처 여행 상품 기획서 (Product Spec)</h2>
+        <h2>✈️ 4대 시그니처 페르소나 맞춤형 K-컬처 여행 상품 기획서 (Product Spec)</h2>
         <button id="closeModalBtn" class="close-btn">&times;</button>
       </div>
       <div class="modal-body" id="specModalBody">
@@ -362,6 +362,6 @@
   </div>
 
   <script src="travel_data_store.js"></script>
-  <script src="app.js?v=20260903_median"></script>
+  <script src="app.js?v=20260903_naming"></script>
 </body>
 </html>
