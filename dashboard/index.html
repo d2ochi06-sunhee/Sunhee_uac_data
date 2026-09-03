@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="style.css?v=20260903_4c">
+  <link rel="stylesheet" href="style.css?v=20260903_scatter">
 </head>
 <body>
   <div class="app-container">
@@ -243,9 +243,22 @@
       </div>
     </section>
 
+    <!-- NEW CLUSTER SCATTER PLOT SECTION -->
+    <section class="chart-grid">
+      <div class="chart-card highlight-card">
+        <div class="chart-header">
+          <h3>📌 [군집 분석 산점도 Map] X축: 평균 체재일수(일) × Y축: 1인당 총지출액($) 4대 관광객 군집 매핑</h3>
+          <span class="tag pink">Cluster Scatter Plot</span>
+        </div>
+        <div class="chart-wrapper" style="height: 380px;">
+          <canvas id="chartClusterScatter"></canvas>
+        </div>
+      </div>
+    </section>
+
     <!-- Visual Charts Grid Row 1 -->
     <section class="chart-grid two-col">
-      <div class="chart-card highlight-card">
+      <div class="chart-card">
         <div class="chart-header">
           <h3>🌏 [4개국 1030 비교] 일본 · 중국 · 대만 · 미국 1030 비중 & K-컬처 관여율 (%)</h3>
           <span class="tag pink">4 Big Countries Segment</span>
@@ -341,6 +354,6 @@
   </div>
 
   <script src="travel_data_store.js"></script>
-  <script src="app.js?v=20260903_4c"></script>
+  <script src="app.js?v=20260903_scatter"></script>
 </body>
 </html>

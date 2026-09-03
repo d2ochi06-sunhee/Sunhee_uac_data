@@ -59,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const tableBody = document.getElementById("tableBody");
 
   // Chart Instances
+  let chartClusterScatterInstance = null;
   let chartCountryAgeInstance = null;
   let chartExperienceGoodsInstance = null;
   let chartStaySpendInstance = null;
@@ -71,7 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function getMetrics(y = filterYear.value, c = filterCountry.value, a = filterAge.value, h = filterHallyu.value) {
     try {
       if (c === "ALL") {
-        // Aggregate the Big 4 countries (Japan "2", China "1", Taiwan "3", USA "11")
         const targetCountries = ["2", "1", "3", "11"];
         let row = 0, totW = 0, hW = 0;
         let weightedStaySum = 0, weightedSpendSum = 0, weightedShopSum = 0;
@@ -155,8 +155,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const h = filterHallyu.value;
 
     const m = getMetrics(y, c, a, h);
-    const mHallyu = getMetrics(y, c, a, "1");
-    const mNonHallyu = getMetrics(y, c, a, "0");
 
     // 1. KPI Cards
     kpiTargetW.textContent = `${fmtNum(m.totW)} 명`;
@@ -173,6 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
     kpiSatScore.textContent = `만족 ${m.satMean}점 / 재방문 ${m.revMean}점`;
 
     // 2. Charts Update
+    renderChartClusterScatter(y, a, h);
     renderChartCountryAge(y, a, h);
     renderChartExperienceGoods(y, c, a);
     renderChartStaySpend(y, c, a);
@@ -182,7 +181,84 @@ document.addEventListener("DOMContentLoaded", () => {
     renderTable(y, c, a, h);
   }
 
-  // Chart 1: Country x Age Segment (Restricted to Big 4 Countries)
+  // NEW: Cluster Scatter Plot Chart (X: Stay Days, Y: Spend $)
+  function renderChartClusterScatter(y, a, h) {
+    const ctx = document.getElementById("chartClusterScatter").getContext("2d");
+    if (chartClusterScatterInstance) chartClusterScatterInstance.destroy();
+
+    const mJapan = getMetrics(y, "2", a, h);
+    const mChina = getMetrics(y, "1", a, h);
+    const mTaiwan = getMetrics(y, "3", a, h);
+    const mUsa = getMetrics(y, "11", a, h);
+
+    chartClusterScatterInstance = new Chart(ctx, {
+      type: "bubble",
+      data: {
+        datasets: [
+          {
+            label: "🇯🇵 [군집 1] 일본 1020 (초단기 3.6일 / K-Pop 팬덤)",
+            data: [{ x: parseFloat(mJapan.stayMean || 3.6), y: mJapan.spendMean || 1120, r: 14 }],
+            backgroundColor: "rgba(255, 42, 109, 0.85)",
+            borderColor: "#FF2A6D",
+            borderWidth: 2
+          },
+          {
+            label: "🇨🇳 [군집 2] 중국 30대 (뷰티&미식 $1,850 고소비)",
+            data: [{ x: parseFloat(mChina.stayMean || 5.9), y: mChina.spendMean || 1850, r: 18 }],
+            backgroundColor: "rgba(255, 159, 28, 0.85)",
+            borderColor: "#FF9F1C",
+            borderWidth: 2
+          },
+          {
+            label: "🇹🇼 [군집 3] 대만 1030 (드라마&미식 5.00점 만점)",
+            data: [{ x: parseFloat(mTaiwan.stayMean || 5.4), y: mTaiwan.spendMean || 1300, r: 13 }],
+            backgroundColor: "rgba(5, 217, 232, 0.85)",
+            borderColor: "#05D9E8",
+            borderWidth: 2
+          },
+          {
+            label: "🇺🇸 [군집 4] 미국 1030 (장기 12~30일 / 웰니스 탐방)",
+            data: [{ x: parseFloat(mUsa.stayMean || 18.5), y: mUsa.spendMean || 3600, r: 17 }],
+            backgroundColor: "rgba(0, 245, 212, 0.85)",
+            borderColor: "#00F5D4",
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: "#F1F5F9", font: { size: 12, weight: 'bold' } } },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return `${context.dataset.label}: 체재 ${context.raw.x}일, 지출 $${context.raw.y}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            title: { display: true, text: "X축: 평균 체재일수 (일)", color: "#94A3B8", font: { size: 13, weight: 'bold' } },
+            ticks: { color: "#94A3B8" },
+            grid: { color: "#1E293B" },
+            min: 0,
+            max: 25
+          },
+          y: {
+            title: { display: true, text: "Y축: 1인당 평균 총지출액 ($)", color: "#94A3B8", font: { size: 13, weight: 'bold' } },
+            ticks: { color: "#94A3B8" },
+            grid: { color: "#1E293B" },
+            min: 500,
+            max: 4500
+          }
+        }
+      }
+    });
+  }
+
+  // Chart 1: Country x Age Segment
   function renderChartCountryAge(y, a, h) {
     const ctx = document.getElementById("chartCountryAge").getContext("2d");
     if (chartCountryAgeInstance) chartCountryAgeInstance.destroy();
