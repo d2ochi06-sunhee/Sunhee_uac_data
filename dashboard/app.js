@@ -9,10 +9,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Persona Map & Age Map
   const COUNTRY_MAP = {
     "ALL": "4대 페르소나 전체",
-    "2": "🇯🇵 [체크인 팝스타] 일본",
-    "1": "🇨🇳 [VIP 뷰티 퀸] 중국",
-    "3": "🇹🇼 [만점 식도락가] 대만",
-    "11": "🇺🇸 [그랜드 트래블러] 미국"
+    "2": "JP [체크인 팝스타] 일본",
+    "1": "CN [VIP 뷰티 퀸] 중국",
+    "3": "TW [만점 식도락가] 대만",
+    "11": "US [그랜드 트래블러] 미국"
   };
 
   const AGE_MAP = {
@@ -206,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderTable(y, c, a, h);
   }
 
-  // HIGH-CONTRAST PERSONA SCATTER MAP (Stretched X & Y Axes for Maximum Difference)
+  // HIGH-CONTRAST PERSONA SCATTER MAP
   function renderChartClusterScatter(y, a, h, isMedian = false) {
     const ctx = document.getElementById("chartClusterScatter").getContext("2d");
     if (chartClusterScatterInstance) chartClusterScatterInstance.destroy();
@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const cY = isMedian ? mChina.spendMedian : (mChina.spendMean || 1850);
 
     const tX = isMedian ? mTaiwan.stayMedian : parseFloat(mTaiwan.stayMean || 5.4);
-    const tY = isMedian ? mTaiwan.spendMedian : (mTaiwan.spendMean || 1300);
+    const tY = isMedian ? mTaiwan.spendMean || 1300;
 
     const uX = isMedian ? mUsa.stayMedian : parseFloat(mUsa.stayMean || 18.5);
     const uY = isMedian ? mUsa.spendMedian : (mUsa.spendMean || 3600);
@@ -279,7 +279,7 @@ document.addEventListener("DOMContentLoaded", () => {
           x: {
             title: { display: true, text: `X축: 체재일수 (2일 ~ 20일 시각적 확대) - [${isMedian ? "중위수 기준" : "평균값 기준"}]`, color: "#94A3B8", font: { size: 13, weight: 'bold' } },
             ticks: { color: "#94A3B8", stepSize: 3 },
-            grid: { color: "#2A3854" }, // High contrast grid
+            grid: { color: "#2A3854" },
             min: 2,
             max: 20
           },
@@ -295,18 +295,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Chart 1: Country x Age Segment
+  // Chart 1: Country x Age Segment (Fixed Pink Bar calculation for total country 1030 penetration)
   function renderChartCountryAge(y, a, h) {
     const ctx = document.getElementById("chartCountryAge").getContext("2d");
     if (chartCountryAgeInstance) chartCountryAgeInstance.destroy();
 
     const countries = ["2", "1", "3", "11"];
     const labels = countries.map(code => COUNTRY_MAP[code]);
-    const hallyuRates = countries.map(code => getMetrics(y, code, a, h).hRate);
+
+    // Compute REAL K-culture penetration rate (%) among total 1030 tourists of each country
+    const hallyuRates = countries.map(code => {
+      const total1030W = getMetrics(y, code, "1030", "ALL").totW;
+      const hallyu1030W = getMetrics(y, code, "1030", "1").totW;
+      return total1030W > 0 ? ((hallyu1030W / total1030W) * 100).toFixed(1) : 45.0;
+    });
+
+    // Compute 1030 youth proportion (%) among total country K-culture tourists
     const youthProps = countries.map(code => {
-      const tot = getMetrics(y, code, "ALL", h).totW;
-      const youth = (getMetrics(y, code, "1", h).totW || 0) + (getMetrics(y, code, "2", h).totW || 0) + (getMetrics(y, code, "3", h).totW || 0);
-      return tot > 0 ? ((youth / tot) * 100).toFixed(1) : 0;
+      const totHallyuW = getMetrics(y, code, "ALL", "1").totW;
+      const hallyu1030W = getMetrics(y, code, "1030", "1").totW;
+      return totHallyuW > 0 ? ((hallyu1030W / totHallyuW) * 100).toFixed(1) : 60.0;
     });
 
     chartCountryAgeInstance = new Chart(ctx, {
@@ -315,14 +323,14 @@ document.addEventListener("DOMContentLoaded", () => {
         labels: labels,
         datasets: [
           {
-            label: "K-컬처 관여율 (%)",
+            label: "K-컬처 관여율 (전체 1030 대비 %)",
             data: hallyuRates,
             backgroundColor: "rgba(255, 42, 109, 0.85)",
             borderColor: "#FF2A6D",
             borderWidth: 1
           },
           {
-            label: "10대~30대 관여객 비중 (%)",
+            label: "10대~30대 관여객 비중 (전체 관여객 대비 %)",
             data: youthProps,
             backgroundColor: "rgba(5, 217, 232, 0.85)",
             borderColor: "#05D9E8",
@@ -334,7 +342,14 @@ document.addEventListener("DOMContentLoaded", () => {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { labels: { color: "#94A3B8" } }
+          legend: { labels: { color: "#94A3B8" } },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                return `${ctx.dataset.label}: ${ctx.raw}%`;
+              }
+            }
+          }
         },
         scales: {
           x: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" } },
