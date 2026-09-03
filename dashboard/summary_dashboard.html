@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>외래관광객 K-굿즈 소비 트렌드 & AI 프롬프트 센터 대시보드</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="summary_style.css">
+</head>
+<body>
+  <div class="summary-container">
+    <!-- Top Navigation Header -->
+    <header class="summary-navbar">
+      <div class="brand">
+        <div class="logo-icon">🎧</div>
+        <div class="brand-text">
+          <h1>외래관광객 K-팝/드라마 굿즈 소비 트렌드 리포트</h1>
+          <p>2023~2025년 외래관광객 실태조사 5대 핵심 인사이트 & AI 프롬프트 센터</p>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a href="index.html" class="nav-btn">📊 인터랙티브 데이터 탐색기 이동</a>
+        <div class="live-badge"><span class="pulse"></span> 48,523개 표본 모수 가중치 적용</div>
+      </div>
+    </header>
+
+    <!-- Key Metrics Highlight Ribbon -->
+    <section class="metrics-ribbon">
+      <div class="ribbon-card pink">
+        <span class="r-label">2년 간 재방문 굿즈 구매 증가율</span>
+        <div class="r-val-group">
+          <h2 class="r-val">6.6배 폭증</h2>
+          <span class="r-trend">▲ 19.8만 명 ➔ 130.1만 명</span>
+        </div>
+      </div>
+
+      <div class="ribbon-card blue">
+        <span class="r-label">2025년 중국 재방문 굿즈 구매율</span>
+        <div class="r-val-group">
+          <h2 class="r-val">21.0%</h2>
+          <span class="r-trend">▲ 첫 방문(15.8%) 대비 +5.2%p</span>
+        </div>
+      </div>
+
+      <div class="ribbon-card purple">
+        <span class="r-label">일본 재방문 굿즈 구매자 중 중장년(4060+) 비중</span>
+        <div class="r-val-group">
+          <h2 class="r-val">36.6%</h2>
+          <span class="r-trend">12.4만 명 (3명 중 1명 이상)</span>
+        </div>
+      </div>
+
+      <div class="ribbon-card emerald">
+        <span class="r-label">중국·대만 10대 재방문 외래객 굿즈 구매율</span>
+        <div class="r-val-group">
+          <h2 class="r-val">60.3%</h2>
+          <span class="r-trend">10명 중 6명 구매 (팬덤 집착도 1위)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 1: 5 Key Trends Grid -->
+    <section class="section-block">
+      <div class="section-title">
+        <h2>🔥 5대 핵심 인사이트 (Executive Key Findings)</h2>
+        <p>48,523개 마이크로데이터 검증을 통해 발견된 외래관광객 굿즈 소비의 결정적 구조 변화입니다.</p>
+      </div>
+
+      <div class="trend-grid">
+        <!-- Trend Card 1 -->
+        <div class="trend-card">
+          <div class="t-badge pink">트렌드 ①</div>
+          <h3>🚀 재방문 외래객의 K-굿즈 구매 6.6배 폭증</h3>
+          <p>2023년 19.8만 명(3.6%)에 불과했던 재방문 외래객의 굿즈 구매 인원이 2025년 **130.1만 명(14.5%)**으로 2년 만에 6.6배 급증했습니다.</p>
+          <div class="t-chart-wrapper">
+            <canvas id="chartTrend3Years"></canvas>
+          </div>
+        </div>
+
+        <!-- Trend Card 2 -->
+        <div class="trend-card">
+          <div class="t-badge blue">트렌드 ②</div>
+          <h3>🌏 첫 방문 vs 재방문: 굿즈 구매율 & 지출액 동반 상승</h3>
+          <p>중국·일본·대만 모두 첫 방문 때보다 **재방문 시 굿즈 구매 비율 및 1인당 소비액(중위값 기준 +12~37만 원)**이 대폭 높아집니다.</p>
+          <div class="t-chart-wrapper">
+            <canvas id="chartFirstVsRepeatGoods"></canvas>
+          </div>
+        </div>
+
+        <!-- Trend Card 3 -->
+        <div class="trend-card">
+          <div class="t-badge purple">트렌드 ③</div>
+          <h3>👥 연령대 다변화: 일본 중장년 36.6% & 10대 팬덤 60%</h3>
+          <p>일본 재방문 굿즈 구매자의 **36.6%(12.4만 명)**가 40~60대+ 중장년층이며, 중국·대만 10대 재방문객의 **60%**가 굿즈를 구입합니다.</p>
+          <div class="t-chart-wrapper">
+            <canvas id="chartAgeDiversification"></canvas>
+          </div>
+        </div>
+
+        <!-- Trend Card 4 -->
+        <div class="trend-card">
+          <div class="t-badge amber">트렌드 ④</div>
+          <h3>🎯 K-Means 머신러닝으로 본 굿즈 구매자 4대 타깃 군집</h3>
+          <p>전체 굿즈 시장의 53.6%를 차지하는 **'단골 2030 자유여행 팬덤'**과 1인당 $5,202(약 690만 원)를 쓰는 **'VVIP 고액 소비층'**으로 세분화됩니다.</p>
+          <div class="t-chart-wrapper">
+            <canvas id="chartKMeansScatter"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Copyable AI Prompts Center -->
+    <section class="section-block prompt-section">
+      <div class="section-title">
+        <h2>💡 AI 프롬프트 센터 (Copyable Prompt Templates)</h2>
+        <p>아래 카드의 프롬프트를 복사하여 ChatGPT, Claude, Gemini 등에 전달하면 고도화된 보고서 및 전략을 즉시 생성할 수 있습니다.</p>
+      </div>
+
+      <div class="prompt-grid">
+        <div class="prompt-card">
+          <div class="p-header">
+            <span class="p-category">🎯 마케팅 전략</span>
+            <h4>일본 405060 중장년 한류 팬덤 굿즈 마케팅 전략</h4>
+          </div>
+          <p class="p-desc">일본 재방문 굿즈 구매자의 36.6%(12.4만 명)를 차지하는 중장년층 타깃 마케팅 가이드 작성용 프롬프트</p>
+          <div class="p-code-box" id="promptText1">
+[데이터 맥락] 2025년 외래관광객 실태조사 분석 결과, 일본인 재방문 K-굿즈 구매자의 36.6%(12.4만 명)가 40대·50대·60대 이상 중장년층으로 확인되었습니다.
+[요청 사항] 2030 중심의 기존 K-팝 굿즈 마케팅에서 벗어나, 구매력이 뛰어난 일본 405060 중장년 한류 팬덤(K-드라마, 배우, 트로트, 웰니스)을 타깃으로 한 맞춤형 굿즈 상품 기획 및 오프라인 팝업스토어 운영 전략을 작성해줘.
+          </div>
+          <button class="copy-btn" onclick="copyPrompt('promptText1', this)">📋 프롬프트 복사하기</button>
+        </div>
+
+        <div class="prompt-card">
+          <div class="p-header">
+            <span class="p-category">🛍️ 상권 & MD 기획</span>
+            <h4>중국 2030 단골 팬덤 대상 성수/홍대 팝업 기획</h4>
+          </div>
+          <p class="p-desc">중국 재방문객 굿즈 구매율 21.0%(51.3만 명, 지출 중위값 $1,362) 활용 상권 전략</p>
+          <div class="p-code-box" id="promptText2">
+[데이터 맥락] 중국인 재방문 외래객 중 K-굿즈 구매 비율은 21.0%(51.3만 명)이며, 1인당 지출 중위값은 $1,362(약 182만 원)로 첫 방문자 대비 37만 원 높습니다. 이들의 95.6%가 샤오홍슈/위챗 정보를 활용하는 개별자유여행자(FIT)입니다.
+[요청 사항] 성수동·홍대 상권에서 중국 2030 단골 자유여행객을 사로잡을 수 있는 체험형 K-팝 한정판 MD 팝업스토어 및 모바일 간편결제 연계 마케팅 계획을 수립해줘.
+          </div>
+          <button class="copy-btn" onclick="copyPrompt('promptText2', this)">📋 프롬프트 복사하기</button>
+        </div>
+
+        <div class="prompt-card">
+          <div class="p-header">
+            <span class="p-category">🌟 Z세대 유입</span>
+            <h4>중국·대만 10대 청소년(구매율 60%) 입덕 관광 상품</h4>
+          </div>
+          <p class="p-desc">한국 재방문 10대 외래객 10명 중 6명이 굿즈를 구매하는 특성 반영</p>
+          <div class="p-code-box" id="promptText3">
+[데이터 맥락] 중국 및 대만 10대(15-19세) 재방문 외래객의 경우, 무려 59.5%~60.3%가 K-팝/드라마 굿즈를 구매하는 독보적 팬덤 집착도를 보입니다.
+[요청 사항] 10대 청소년 한류 팬들이 첫 방문 후 '재방문 팬덤'으로 진화하도록 돕는 SNS 연계 K-팝 아티스트 공식 굿즈 투어 및 챌린지 관광 마케팅 아이디어 5가지를 제시해줘.
+          </div>
+          <button class="copy-btn" onclick="copyPrompt('promptText3', this)">📋 프롬프트 복사하기</button>
+        </div>
+
+        <div class="prompt-card">
+          <div class="p-header">
+            <span class="p-category">💎 VVIP 마케팅</span>
+            <h4>K-Means 클러스터 4 (인당 $5,202 고액 소비층) 타깃팅</h4>
+          </div>
+          <p class="p-desc">전체 굿즈 구매자의 4.5%(6.8만 명)이지만 인당 690만 원 이상 소비하는 큰손 그룹</p>
+          <div class="p-code-box" id="promptText4">
+[데이터 맥락] K-Means 군집 분석 결과, K-굿즈 구매자 중 '클러스터 4(하이엔드 VVIP 고액 소비층)'는 6.8만 명(4.5%) 규모이며, 1인당 총지출 중위값 $5,202(약 690만 원), 쇼핑비 중위값 $1,396(약 186만 원)을 지출하는 큰손입니다.
+[요청 사항] 이들 VVIP 한류 팬덤을 대상으로 럭셔리 호텔 숙박, 한정판 프라이빗 아티스트 MD, 1:1 뷰티/클리닉이 결합된 하이엔드 프리미엄 투어 패키지 기획안을 작성해줘.
+          </div>
+          <button class="copy-btn" onclick="copyPrompt('promptText4', this)">📋 프롬프트 복사하기</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Table Section -->
+    <section class="section-block">
+      <div class="section-title">
+        <h2>📊 주요 국가별 굿즈 소비 3개년 집계 요약표</h2>
+      </div>
+
+      <div class="table-card">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>국가명</th>
+              <th>2023년 굿즈 구매율 (인원)</th>
+              <th>2024년 굿즈 구매율 (인원)</th>
+              <th>2025년 굿즈 구매율 (인원)</th>
+              <th>2025년 재방문 굿즈 구매율</th>
+              <th>2025년 지출액 중위값</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🇨🇳 <strong>중국 (China)</strong></td>
+              <td>2.4% (4.5만 명)</td>
+              <td>14.0% (52.7만 명)</td>
+              <td><strong>18.6% (83.8만 명)</strong> 🚀</td>
+              <td><strong class="highlight-pink">21.0% (51.3만 명)</strong></td>
+              <td>$1,251.90 (쇼핑 $357.5)</td>
+            </tr>
+            <tr>
+              <td>🇯🇵 <strong>일본 (Japan)</strong></td>
+              <td>3.2% (7.1만 명)</td>
+              <td>14.4% (43.5만 명)</td>
+              <td><strong>12.4% (42.3만 명)</strong></td>
+              <td><strong class="highlight-blue">13.1% (33.8만 명)</strong></td>
+              <td>$828.75 (쇼핑 $180.5)</td>
+            </tr>
+            <tr>
+              <td>🇹🇼 <strong>대만 (Taiwan)</strong></td>
+              <td>4.0% (3.5만 명)</td>
+              <td>12.1% (16.1만 명)</td>
+              <td><strong>14.1% (23.9만 명)</strong> 🚀</td>
+              <td><strong class="highlight-emerald">16.9% (15.8만 명)</strong></td>
+              <td>$1,142.30 (쇼핑 $272.2)</td>
+            </tr>
+            <tr>
+              <td>🇹🇭 <strong>태국 (Thailand)</strong></td>
+              <td>4.7% (1.8만 명)</td>
+              <td>15.0% (7.9만 명)</td>
+              <td><strong>17.4% (10.0만 명)</strong> 🚀</td>
+              <td><strong>18.2% (7.6만 명)</strong></td>
+              <td>$1,349.25 (쇼핑 $310.0)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script src="summary_app.js"></script>
+</body>
+</html>

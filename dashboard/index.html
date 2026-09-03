@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>외래관광객 K-굿즈 및 첫방문/재방문 분석 대시보드</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Navigation Header -->
+    <header class="navbar">
+      <div class="brand">
+        <div class="logo-icon">📊</div>
+        <div class="brand-text">
+          <h1>외래관광객 K-굿즈 & 첫방문/재방문 분석 대시보드</h1>
+          <p>2023~2025년 외래관광객 실태조사 마이크로데이터 분석 시스템</p>
+        </div>
+      </div>
+      <div class="header-badge">
+        <span class="pulse-dot"></span>
+        <span>실효 모수 가중치(weight) 100% 적용</span>
+      </div>
+    </header>
+
+    <!-- Global Filter Control Bar -->
+    <section class="filter-section">
+      <div class="filter-group">
+        <label for="filterYear">📅 연도 (Year)</label>
+        <select id="filterYear">
+          <option value="2025" selected>2025년 (최신 데이터)</option>
+          <option value="2024">2024년 데이터</option>
+          <option value="2023">2023년 데이터</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="filterCountry">🌏 국가 (Country)</label>
+        <select id="filterCountry">
+          <option value="ALL">전체 국가 (All Countries)</option>
+          <option value="1">🇨🇳 중국 (China)</option>
+          <option value="2">🇯🇵 일본 (Japan)</option>
+          <option value="3">🇹🇼 대만 (Taiwan)</option>
+          <option value="4">🇭🇰 홍콩 (Hong Kong)</option>
+          <option value="5">🇹🇭 태국 (Thailand)</option>
+          <option value="7">🇸🇬 싱가포르 (Singapore)</option>
+          <option value="11">🇺🇸 미국 (USA)</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="filterVisit">🔄 방문 구분 (Visit Type)</label>
+        <select id="filterVisit">
+          <option value="ALL">전체 (첫 방문 + 재방문)</option>
+          <option value="First">🔴 첫 방문객 (First-time)</option>
+          <option value="Repeat">🔵 재방문객 (Repeat)</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="filterAge">👥 연령대 (Age Group)</label>
+        <select id="filterAge">
+          <option value="ALL">전 연령대 (10대 ~ 60대+)</option>
+          <option value="1">10대 (15-19세)</option>
+          <option value="2">20대</option>
+          <option value="3">30대</option>
+          <option value="4">40대</option>
+          <option value="5">50대</option>
+          <option value="6">60세 이상</option>
+        </select>
+      </div>
+
+      <button id="resetFilterBtn" class="btn-secondary">🔄 필터 초기화</button>
+    </section>
+
+    <!-- KPI Summary Metric Cards Row -->
+    <section class="kpi-grid">
+      <div class="kpi-card purple">
+        <div class="kpi-icon">✈️</div>
+        <div class="kpi-content">
+          <span class="kpi-title">추정 방한 외래객 수</span>
+          <h2 id="kpiTotalVisitors">0 명</h2>
+          <span class="kpi-sub" id="kpiTotalRows">표본 0 행</span>
+        </div>
+      </div>
+
+      <div class="kpi-card pink">
+        <div class="kpi-icon">🎧</div>
+        <div class="kpi-content">
+          <span class="kpi-title">K-팝 / K-드라마 굿즈 구매자</span>
+          <h2 id="kpiGoodsBuyers">0 명</h2>
+          <span class="kpi-sub" id="kpiGoodsRate">구매율 0.0%</span>
+        </div>
+      </div>
+
+      <div class="kpi-card blue">
+        <div class="kpi-icon">🔄</div>
+        <div class="kpi-content">
+          <span class="kpi-title">재방문 비율 (Repeat Rate)</span>
+          <h2 id="kpiRepeatRate">0.0%</h2>
+          <span class="kpi-sub" id="kpiRepeatVisitors">재방문객 0 명</span>
+        </div>
+      </div>
+
+      <div class="kpi-card emerald">
+        <div class="kpi-icon">💳</div>
+        <div class="kpi-content">
+          <span class="kpi-title">1인당 총 지출액 (중위값)</span>
+          <h2 id="kpiSpendMedian">$0</h2>
+          <span class="kpi-sub" id="kpiSpendMean">평균 $0</span>
+        </div>
+      </div>
+
+      <div class="kpi-card amber">
+        <div class="kpi-icon">🛍️</div>
+        <div class="kpi-content">
+          <span class="kpi-title">1인당 쇼핑비 (중위값)</span>
+          <h2 id="kpiShopMedian">$0</h2>
+          <span class="kpi-sub" id="kpiShopMean">평균 $0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dedicated First-time vs Repeat K-Goods Comparison Hero Banner Section -->
+    <section class="comparison-hero-card">
+      <div class="hero-header">
+        <div class="hero-title-group">
+          <span class="hero-badge">🔥 핵심 비교 지표</span>
+          <h2>첫 방문 vs 재방문 K-굿즈 구매율 & 구매 인원 정밀 비교</h2>
+          <p>동일 조건(선택한 국가/연령대)에서 첫 방문과 재방문 시 K-굿즈 구매 행동이 어떻게 변화하는지 명확히 보여줍니다.</p>
+        </div>
+      </div>
+
+      <div class="comparison-kpi-grid">
+        <div class="comp-box first">
+          <div class="comp-icon">🔴</div>
+          <div class="comp-info">
+            <span class="comp-label">첫 방문객 굿즈 구매율</span>
+            <h3 id="compFirstGoodsRate">0.0%</h3>
+            <span class="comp-sub" id="kpiFirstGoodsCount">추정 0 명 (전체 0 명 중)</span>
+          </div>
+        </div>
+
+        <div class="comp-box repeat">
+          <div class="comp-icon">🔵</div>
+          <div class="comp-info">
+            <span class="comp-label">재방문객 굿즈 구매율</span>
+            <h3 id="compRepeatGoodsRate">0.0%</h3>
+            <span class="comp-sub" id="kpiRepeatGoodsCount">추정 0 명 (전체 0 명 중)</span>
+          </div>
+        </div>
+
+        <div class="comp-box diff">
+          <div class="comp-icon">🚀</div>
+          <div class="comp-info">
+            <span class="comp-label">재방문 시 굿즈 구매율 격차</span>
+            <h3 id="compGoodsDiff">+0.0%p</h3>
+            <span class="comp-sub" id="compGoodsCountDiff">인원수 +0 명 증가</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visual Charts Grid Row 1 -->
+    <section class="chart-grid two-col">
+      <div class="chart-card highlight-card">
+        <div class="chart-header">
+          <h3>🎯 [첫 방문 vs 재방문] 연령대별 K-굿즈 구매율 나란히 비교 (%)</h3>
+          <span class="tag pink">First vs Repeat Comparison</span>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="chartFirstVsRepeatAgeGoods"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>🌏 [첫 방문 vs 재방문] 국가별 K-굿즈 구매율 비교 (%)</h3>
+          <span class="tag">Country Comparison</span>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="chartCountryAge"></canvas>
+        </div>
+      </div>
+    </section>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>💳 첫 방문 vs 재방문 구매 금액 비교 (총지출 & 쇼핑비 중위값)</h3>
+          <span class="tag">Spending Comparison</span>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="chartVisitSpend"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visual Charts Grid Row 2 -->
+    <section class="chart-grid two-col">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>👥 전 연령대(10대~60대+) K-굿즈 구매율 및 구매 인원 분포</h3>
+          <span class="tag">Age Breakdown</span>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="chartAgeDistribution"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>🎯 K-Means 클러스터링 4대 군집 (지출 중위값 vs 재방문율)</h3>
+          <span class="tag">K-Means Scatter Plot</span>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="chartClusterScatter"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Data Detail Table Section -->
+    <section class="table-card">
+      <div class="table-header">
+        <div>
+          <h3>📋 연령대별 x 첫방문/재방문 세부 통계 명세서</h3>
+          <p>선택된 필터 기준 연령대별 표본 행수, 모수 추정 인원, K-굿즈 구매율, 중위 지출액 통계</p>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>연령대 (Age)</th>
+              <th>방문 구분</th>
+              <th>표본 행수</th>
+              <th>추정 방한 인원</th>
+              <th>K-굿즈 구매 인원</th>
+              <th>K-굿즈 구매율</th>
+              <th>총지출 중위값</th>
+              <th>쇼핑비 중위값</th>
+              <th>굿즈 구매자 총지출 중위값</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <!-- Dynamic JS rendering -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script src="data_store.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
