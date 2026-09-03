@@ -1,0 +1,2 @@
+# Cloudflare Pages Redirect Rules
+/    /dashboard/index.html    302
