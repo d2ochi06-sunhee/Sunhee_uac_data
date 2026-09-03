@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // DOM Elements
   const filterYear = document.getElementById("filterYear");
+  const filterMarket = document.getElementById("filterMarket");
   const filterCountry = document.getElementById("filterCountry");
   const filterAge = document.getElementById("filterAge");
   const filterHallyu = document.getElementById("filterHallyu");
@@ -42,25 +43,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const kpiHallyuW = document.getElementById("kpiHallyuW");
   const kpiStayDays = document.getElementById("kpiStayDays");
   const kpiStayGap = document.getElementById("kpiStayGap");
-  const kpiExpGoods = document.getElementById("kpiExpGoods");
+  const kpiSpendMean = document.getElementById("kpiSpendMean");
+  const kpiShopMean = document.getElementById("kpiShopMean");
   const kpiSatScore = document.getElementById("kpiSatScore");
 
-  // Age Insights DOMs
-  const ageStat1020Prop = document.getElementById("ageStat1020Prop");
-  const ageStat1020Stay = document.getElementById("ageStat1020Stay");
-  const ageStat1020Goods = document.getElementById("ageStat1020Goods");
-
-  const ageStat30Prop = document.getElementById("ageStat30Prop");
-  const ageStat30Spend = document.getElementById("ageStat30Spend");
-  const ageStat30Shop = document.getElementById("ageStat30Shop");
-
-  const ageStat40Prop = document.getElementById("ageStat40Prop");
-  const ageStat40Family = document.getElementById("ageStat40Family");
-  const ageStat40Sat = document.getElementById("ageStat40Sat");
-
-  const ageStat5060Prop = document.getElementById("ageStat5060Prop");
-  const ageStat5060Stay = document.getElementById("ageStat5060Stay");
-  const ageStat5060Rev = document.getElementById("ageStat5060Rev");
+  // Dual Market Buttons
+  const btnSelectMarketAsia = document.getElementById("btnSelectMarketAsia");
+  const btnSelectMarketUsa = document.getElementById("btnSelectMarketUsa");
 
   // Action Cards DOMs
   const generateSpecBtn = document.getElementById("generateSpecBtn");
@@ -105,9 +94,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // Update Dashboard View
   function updateDashboard() {
     const y = filterYear.value;
-    const c = filterCountry.value;
+    const mkt = filterMarket.value;
+    let c = filterCountry.value;
     const a = filterAge.value;
     const h = filterHallyu.value;
+
+    if (mkt === "ASIA" && c === "ALL") c = "2"; // Default Japan for Asia market
+    if (mkt === "USA" && c === "ALL") c = "11"; // Default USA for USA market
 
     const m = getMetrics(y, c, a, h);
     const mHallyu = getMetrics(y, c, a, "1");
@@ -121,46 +114,24 @@ document.addEventListener("DOMContentLoaded", () => {
     kpiHallyuW.textContent = `관여 모수 ${fmtNum(m.hW)} 명`;
 
     kpiStayDays.textContent = `${m.stayMean} 일`;
-    const stayDiff = (mHallyu.stayMean - mNonHallyu.stayMean).toFixed(1);
-    kpiStayGap.textContent = `관여군 ${mHallyu.stayMean}일 vs 일반 ${mNonHallyu.stayMean}일 (${stayDiff}일 갭)`;
+    if (c === "11") {
+      kpiStayGap.textContent = `미국 장기 방한 (평균 ${m.stayMean}일 체재)`;
+    } else {
+      const stayDiff = (mHallyu.stayMean - mNonHallyu.stayMean).toFixed(1);
+      kpiStayGap.textContent = `관여군 ${mHallyu.stayMean}일 vs 일반 ${mNonHallyu.stayMean}일 (${stayDiff}일 갭)`;
+    }
 
-    kpiExpGoods.textContent = `경험 ${m.expRate}% / 굿즈 ${m.goodsRate}%`;
+    kpiSpendMean.textContent = `$${fmtNum(m.spendMean)}`;
+    kpiShopMean.textContent = `1인당 쇼핑비 $${fmtNum(m.shopMean)}`;
     kpiSatScore.textContent = `만족 ${m.satMean}점 / 재방문 ${m.revMean}점`;
 
-    // 2. Age Insights Dynamic Updates
-    const m1020_1 = getMetrics(y, c, "1", "1");
-    const m1020_2 = getMetrics(y, c, "2", "1");
-    const totH = getMetrics(y, c, "ALL", "1").totW || 1;
-    const prop1020 = (((m1020_1.totW + m1020_2.totW) / totH) * 100).toFixed(1);
-    ageStat1020Prop.textContent = `${prop1020}%`;
-    ageStat1020Stay.textContent = `${m1020_2.stayMean || 34.6}일`;
-    ageStat1020Goods.textContent = `${m1020_2.goodsRate || 26.9}%`;
-
-    const m30 = getMetrics(y, c, "3", "1");
-    const prop30 = ((m30.totW / totH) * 100).toFixed(1);
-    ageStat30Prop.textContent = `${prop30}%`;
-    ageStat30Spend.textContent = `$${fmtNum(m30.spendMean || 1850)}`;
-    ageStat30Shop.textContent = `$${fmtNum(m30.shopMean || 780)}`;
-
-    const m40 = getMetrics(y, c, "4", "1");
-    const prop40 = ((m40.totW / totH) * 100).toFixed(1);
-    ageStat40Prop.textContent = `${prop40}%`;
-    ageStat40Sat.textContent = `${m40.satMean || 4.65}점`;
-
-    const m50 = getMetrics(y, c, "5", "1");
-    const m60 = getMetrics(y, c, "6", "1");
-    const prop5060 = (((m50.totW + m60.totW) / totH) * 100).toFixed(1);
-    ageStat5060Prop.textContent = `${prop5060}%`;
-    ageStat5060Stay.textContent = `${m50.stayMean || 42.1}일`;
-    ageStat5060Rev.textContent = `${m50.revMean || 4.68}점`;
-
-    // 3. Charts Update
+    // 2. Charts Update
     renderChartCountryAge(y, a, h);
     renderChartExperienceGoods(y, c, a);
     renderChartStaySpend(y, c, a);
     renderChartYearlyTrend(c, a, h);
 
-    // 4. Table Update
+    // 3. Table Update
     renderTable(y, c, a, h);
   }
 
@@ -388,15 +359,33 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Filter Event Listeners
-  [filterYear, filterCountry, filterAge, filterHallyu].forEach(select => {
+  [filterYear, filterMarket, filterCountry, filterAge, filterHallyu].forEach(select => {
     select.addEventListener("change", updateDashboard);
   });
 
   resetFilterBtn.addEventListener("click", () => {
     filterYear.value = "ALL";
+    filterMarket.value = "ALL";
     filterCountry.value = "ALL";
     filterAge.value = "ALL";
     filterHallyu.value = "ALL";
+    updateDashboard();
+  });
+
+  // Dual Market Buttons
+  btnSelectMarketAsia.addEventListener("click", () => {
+    filterMarket.value = "ASIA";
+    filterCountry.value = "2"; // 日本
+    filterAge.value = "2"; // 20대
+    filterHallyu.value = "1";
+    updateDashboard();
+  });
+
+  btnSelectMarketUsa.addEventListener("click", () => {
+    filterMarket.value = "USA";
+    filterCountry.value = "11"; // 미국
+    filterAge.value = "ALL";
+    filterHallyu.value = "1";
     updateDashboard();
   });
 
@@ -435,6 +424,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const countryName = COUNTRY_MAP[c] || "전체 타깃 국가";
     const ageName = AGE_MAP[a] || "전 연령대";
 
+    let marketSpecStrategy = "";
+    if (c === "11") {
+      marketSpecStrategy = `
+        <p>• <strong>[Market B: 미주 장거리 특화 전략] 14일 그랜드 K-컬처 & 웰니스 투어</strong>: 평균 체재일수 ${m.stayMean}일 및 높은 총지출($${fmtNum(m.spendMean)})을 고려하여 서울-부산-제주 KTX 연계 교통권 + 한방 스파 + K-푸드 쿠킹클래스 융합 상품</p>
+      `;
+    } else {
+      marketSpecStrategy = `
+        <p>• <strong>[Market A: 아시아 근거리 특화 전략] 2박 3일 초밀도 K-체험 코스</strong>: ${countryName} 세대의 짧은 체재일수(${m.stayMean}일)를 감안한 성수동 로드숍 쇼핑 + K-Pop 안무 클래스 + 올리브영 쇼핑 바우처 결합 코스</p>
+        <p>• <strong>[Market A 프리미엄] K-뷰티 + 미식 융합 상품</strong>: 높은 쇼핑 지출액($${fmtNum(m.shopMean)})을 겨냥한 강남 피부과/메이크업 체험 + 미쉐린 K-푸드 패키지</p>
+      `;
+    }
+
     const specText = `
       <div class="modal-section">
         <h4>1. 타깃 시장 개요 (Target Market Profile)</h4>
@@ -444,10 +445,9 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
 
       <div class="modal-section">
-        <h4>2. 추천 맞춤형 여행 패키지 상품 기획 (Actionable Product Strategy)</h4>
-        <p>• <strong>[Action 01] 2박 3일 초밀도 K-체험 코스</strong>: ${countryName} 1020/2030 세대의 짧은 체재일수(${m.stayMean}일)를 감안한 성수동 로드숍 쇼핑 + K-Pop 안무 클래스 + 인스타 핫플 포토존 밀집 코스</p>
-        <p>• <strong>[Action 02] K-뷰티 + 미식 융합 프리미엄 상품</strong>: 현장 경험 활동률(${m.expRate}%) 및 높은 쇼핑 지출액($${fmtNum(m.shopMean)})을 반영한 피부과/메이크업 체험 + 미쉐린 K-푸드 융합 패키지</p>
-        <p>• <strong>[Action 03] LCC 연계 A/B 바우처 상품</strong>: K-굿즈 구매율(${m.goodsRate}%)을 겨냥한 항공권 + K-Pop 공연 티켓 + 시내면세점 VIP 쇼핑 바우처 결합형 상품</p>
+        <h4>2. 맞춤형 여행 패키지 상품 기획 (Market Strategy)</h4>
+        ${marketSpecStrategy}
+        <p>• <strong>LCC & 항공 결합 바우처</strong>: K-굿즈 구매율(${m.goodsRate}%) 및 현장경험률(${m.expRate}%)을 반영한 공연 티켓 + 시내면세점 VIP 쇼핑 바우처 결합</p>
       </div>
 
       <div class="modal-section">

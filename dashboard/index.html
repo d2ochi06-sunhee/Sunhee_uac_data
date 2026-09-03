@@ -40,6 +40,15 @@
       </div>
 
       <div class="filter-group">
+        <label for="filterMarket">🌐 시장 유형 (Market Type)</label>
+        <select id="filterMarket">
+          <option value="ALL" selected>전체 글로벌 시장</option>
+          <option value="ASIA">🛍️ [Market A] 근거리 아시아 (일본/대만/중국/동남아)</option>
+          <option value="USA">🏛️ [Market B] 장거리 미주/서구권 (미국 등)</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
         <label for="filterCountry">🌏 타깃 국가 (Country)</label>
         <select id="filterCountry">
           <option value="ALL">전체 국가 (All Countries)</option>
@@ -103,16 +112,16 @@
         <div class="kpi-content">
           <span class="kpi-title">평균 체재 일수</span>
           <h2 id="kpiStayDays">0.0 일</h2>
-          <span class="kpi-sub" id="kpiStayGap">관여군 34.6일 vs 일반 40.4일 (-5.8일 갭)</span>
+          <span class="kpi-sub" id="kpiStayGap">아시아 3.5~5.5일 vs 미국 12.4~30.6일</span>
         </div>
       </div>
 
       <div class="kpi-card emerald">
-        <div class="kpi-icon">🛍️</div>
+        <div class="kpi-icon">💳</div>
         <div class="kpi-content">
-          <span class="kpi-title">현장경험 & 굿즈구매율</span>
-          <h2 id="kpiExpGoods">0.0% / 0.0%</h2>
-          <span class="kpi-sub">K-POP/촬영지 경험 26.9% vs 비교 4.4%</span>
+          <span class="kpi-title">1인당 평균 총지출액</span>
+          <h2 id="kpiSpendMean">$0</h2>
+          <span class="kpi-sub" id="kpiShopMean">쇼핑비 $0</span>
         </div>
       </div>
 
@@ -126,6 +135,82 @@
       </div>
     </section>
 
+    <!-- NEW HERO SECTION: Dual Market Strategy (Market A vs Market B) -->
+    <section class="dual-market-section">
+      <div class="insight-header">
+        <div class="insight-title-group">
+          <span class="sub-category">GLOBAL MARKET SEGMENTATION</span>
+          <h2>🌐 [2대 핵심 글로벌 타깃 시장 비교] 근거리 아시아 vs 장거리 미주</h2>
+          <p>비행거리 및 방한 목적에 따라 완전히 이원화된 2대 타깃 시장별 맞춤형 세일즈 전략</p>
+        </div>
+        <button id="generateSpecBtn" class="btn-primary-action">📋 선택 타깃 맞춤 상품기획서 생성</button>
+      </div>
+
+      <div class="market-dual-grid">
+        <!-- Market A Card -->
+        <div class="market-card market-asia" id="btnSelectMarketAsia">
+          <div class="market-header">
+            <span class="market-tag pink">MARKET A | 근거리 아시아</span>
+            <h3>🛍️ 일본 / 대만 / 중국 / 동남아</h3>
+            <span class="market-sub">"단기 고밀도 쇼핑 · 뷰티 · K-Pop 시장"</span>
+          </div>
+          <div class="market-stats">
+            <div class="m-stat">
+              <span>평균 체재일수</span>
+              <strong class="txt-pink">3.5일 ~ 5.5일</strong>
+            </div>
+            <div class="m-stat">
+              <span>1020 청년 비중</span>
+              <strong class="txt-pink">74.0%</strong>
+            </div>
+            <div class="m-stat">
+              <span>쇼핑/뷰티 참여율</span>
+              <strong class="txt-pink">79.0%</strong>
+            </div>
+          </div>
+          <div class="market-strategy">
+            <p><strong>🎯 여행사 타깃 상품 전략</strong>:</p>
+            <ul>
+              <li>• <strong>[1020]</strong> 주말 활용 <strong>2박 3일 초밀도 K-Pop & 성수동 쇼핑 패키지</strong></li>
+              <li>• <strong>[2030]</strong> 강남 피부과 스킨케어 + 미쉐린 K-푸드 <strong>뷰티 힐링 5일 패키지</strong></li>
+            </ul>
+          </div>
+          <button class="btn-market-select">Market A (아시아) 데이터 필터링</button>
+        </div>
+
+        <!-- Market B Card -->
+        <div class="market-card market-usa" id="btnSelectMarketUsa">
+          <div class="market-header">
+            <span class="market-tag emerald">MARKET B | 장거리 미주 / 서구권</span>
+            <h3>🏛️ 미국 / 서구권</h3>
+            <span class="market-sub">"장기 전국 순회 K-컬처 & 웰니스 탐방 시장"</span>
+          </div>
+          <div class="market-stats">
+            <div class="m-stat">
+              <span>평균 체재일수</span>
+              <strong class="txt-emerald">12.4일 ~ 30.6일</strong>
+            </div>
+            <div class="m-stat">
+              <span>1인당 평균 총지출</span>
+              <strong class="txt-emerald">$2,500 ~ $4,787</strong>
+            </div>
+            <div class="m-stat">
+              <span>자유여행(FIT) 비중</span>
+              <strong class="txt-emerald">90.0%+</strong>
+            </div>
+          </div>
+          <div class="market-strategy">
+            <p><strong>🎯 여행사 타깃 상품 전략</strong>:</p>
+            <ul>
+              <li>• <strong>[전국순회]</strong> 서울-부산-제주 KTX 연계 <strong>14일 그랜드 K-컬처 패키지</strong></li>
+              <li>• <strong>[웰니스]</strong> 한방 스파 + K-푸드 쿠킹클래스 + 한옥 부티크 <strong>웰니스 패키지</strong></li>
+            </ul>
+          </div>
+          <button class="btn-market-select emerald">Market B (미국) 데이터 필터링</button>
+        </div>
+      </div>
+    </section>
+
     <!-- Slide 10 Business Insight & Action Section -->
     <section class="business-insight-section">
       <div class="insight-header">
@@ -134,7 +219,6 @@
           <h2>젊은 유입을 넘어, 관계와 소비로 확장하기</h2>
           <p>관찰된 차이를 실행 가능한 타깃 · 상품 · CRM 전략으로 연결합니다.</p>
         </div>
-        <button id="generateSpecBtn" class="btn-primary-action">📋 선택 타깃 맞춤 상품기획서 생성</button>
       </div>
 
       <div class="action-card-grid">
@@ -168,111 +252,6 @@
           <h3>재방문 CRM</h3>
           <p class="action-desc">재방문 의향 4.63점, 추천 의향 4.67점을 후속 혜택과 CRM 프로그램으로 연결합니다.</p>
           <div class="action-tag">만족도 4.63점 기반 VIP 혜택 리워드</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- NEW Section: Detailed Age Group Target Insights & Action -->
-    <section class="age-insights-section">
-      <div class="insight-header">
-        <div class="insight-title-group">
-          <span class="sub-category">AGE SEGMENTation INSIGHTS</span>
-          <h2>👥 [연령별 세부 인사이트] Age Target Strategy & Action</h2>
-          <p>K-컬처 외래관광객의 연령대별 소비 패턴, 활동 특성 및 맞춤형 여행상품 제언</p>
-        </div>
-      </div>
-
-      <div class="age-card-grid">
-        <!-- 1020 Age Card -->
-        <div class="age-card pink-border">
-          <div class="age-badge pink">10대~20대 (15-29세) | K-Pop & 굿즈 핫플 팬덤</div>
-          <div class="age-stat-row">
-            <div>
-              <span class="stat-lbl">K-컬처 관여 비중</span>
-              <strong id="ageStat1020Prop" class="txt-pink">48.0%</strong>
-            </div>
-            <div>
-              <span class="stat-lbl">평균 체재일수</span>
-              <strong id="ageStat1020Stay">34.6일</strong>
-            </div>
-            <div>
-              <span class="stat-lbl">굿즈/체험 구매율</span>
-              <strong id="ageStat1020Goods">26.9%</strong>
-            </div>
-          </div>
-          <p class="age-desc">
-            • <strong>행동 특성</strong>: K-Pop 안무 클래스, 성수/홍대 로드숍 쇼핑, 굿즈 샵, 인스타 포토존에 열광함.<br>
-            • <strong>여행사 상품 전략</strong>: 근거리(일본/대만) 주말 활용 <strong>'2박 3일 초밀도 K-컬처 체험 패키지'</strong>
-          </p>
-        </div>
-
-        <!-- 30대 Age Card -->
-        <div class="age-card blue-border">
-          <div class="age-badge blue">30대 (30-39세) | K-뷰티 & 미식 고소비층</div>
-          <div class="age-stat-row">
-            <div>
-              <span class="stat-lbl">K-컬처 관여 비중</span>
-              <strong id="ageStat30Prop" class="txt-blue">25.6%</strong>
-            </div>
-            <div>
-              <span class="stat-lbl">1인당 평균 총지출</span>
-              <strong id="ageStat30Spend">$1,850</strong>
-            </div>
-            <div>
-              <span class="stat-lbl">쇼핑/뷰티 비중</span>
-              <strong id="ageStat30Shop">$780</strong>
-            </div>
-          </div>
-          <p class="age-desc">
-            • <strong>행동 특성</strong>: 피부과 스킨케어, 퍼스널 컬러/메이크업, 미쉐린 K-푸드 맛집 탐방 선호.<br>
-            • <strong>여행사 상품 전략</strong>: <strong>'K-뷰티 힐링 + 미식 프리미엄 컨시어지 패키지'</strong>
-          </p>
-        </div>
-
-        <!-- 40대 Age Card -->
-        <div class="age-card emerald-border">
-          <div class="age-badge emerald">40대 (40-49세) | 가족 동반 & K-드라마 탐방</div>
-          <div class="age-stat-row">
-            <div>
-              <span class="stat-lbl">K-컬처 관여 비중</span>
-              <strong id="ageStat40Prop" class="txt-emerald">15.6%</strong>
-            </div>
-            <div>
-              <span class="stat-lbl">가족 동반 비율</span>
-              <strong id="ageStat40Family">64.2%</strong>
-            </div>
-            <div>
-              <span class="stat-lbl">만족도 점수</span>
-              <strong id="ageStat40Sat">4.65점</strong>
-            </div>
-          </div>
-          <p class="age-desc">
-            • <strong>행동 특성</strong>: 자녀/가족 동반 여행 비중이 높으며, K-드라마 촬영지, 백화점 쇼핑 및 안전한 숙소 선호.<br>
-            • <strong>여행사 상품 전략</strong>: <strong>'가족 동반 K-드라마 촬영지 + 시내면세점 프리미엄 세미패키지'</strong>
-          </p>
-        </div>
-
-        <!-- 5060대 Age Card -->
-        <div class="age-card amber-border">
-          <div class="age-badge amber">50대~60대+ | 한방 웰니스 & K-푸드 미식투어</div>
-          <div class="age-stat-row">
-            <div>
-              <span class="stat-lbl">K-컬처 관여 비중</span>
-              <strong id="ageStat5060Prop" class="txt-amber">10.8%</strong>
-            </div>
-            <div>
-              <span class="stat-lbl">평균 체재일수</span>
-              <strong id="ageStat5060Stay">42.1일</strong>
-            </div>
-            <div>
-              <span class="stat-lbl">재방문 의향</span>
-              <strong id="ageStat5060Rev">4.68점</strong>
-            </div>
-          </div>
-          <p class="age-desc">
-            • <strong>행동 특성</strong>: 상대적으로 체재일수가 길며, 한방 스파, 전통 문화 체험, 건강 한식 탐방에 높은 만족도를 보임.<br>
-            • <strong>여행사 상품 전략</strong>: <strong>'한방 웰니스 스파 + K-푸드 힐링 미식 투어'</strong>
-          </p>
         </div>
       </div>
     </section>
