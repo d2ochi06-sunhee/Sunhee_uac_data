@@ -607,37 +607,65 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let countrySpecHTML = "";
     if (c === "2") {
-      countrySpecHTML = `<p>• <strong>[🇯🇵 체크인 팝스타 맞춤 전략] 2박 3일 초밀도 K-Pop & 성수동 쇼핑 코스</strong>: 평균 체재일수 3.6일(중위수 3.0일) 짧은 일정 보완을 위해 LCC 항공권 + 성수동/홍대 로드숍 + K-Pop 안무 원데이 클래스 + 올리브영 쇼핑 바우처 결합 코스</p>`;
+      countrySpecHTML = `
+        <div class="spec-card-box">
+          <p>• <strong>[🇯🇵 체크인 팝스타 맞춤 상품] 2박 3일 초밀도 K-Pop & 성수동 굿즈 쇼핑 패키지</strong></p>
+          <p>• <strong>핵심 일정</strong>: 금요일 퇴근 후 LCC 탑승 ➔ 성수동 로드숍 & 올리브영 굿즈 쇼핑 ➔ K-Pop 전문 댄스 스튜디오 원데이 클래스 ➔ 핫플 카페 투어 (평균 체재 3.6일 보완)</p>
+          <p>• <strong>🎁 K-굿즈 & 바우처 혜택</strong>: K-Pop 아티스트 공식 굿즈 $50 기프트카드 + 올리브영 성수 플래그십 VIP 패스 + K-Pop 댄스 수료 인증 한정판 굿즈 키트</p>
+        </div>
+      `;
     } else if (c === "1") {
-      countrySpecHTML = `<p>• <strong>[🇨🇳 VIP 뷰티 퀸 맞춤 전략] 5일 강남 K-뷰티 & 미쉐린 K-푸드 럭셔리 코스</strong>: 최고 지출액(평균 $${fmtNum(m.spendMean)} / 중위수 $${fmtNum(m.spendMedian)})을 고려한 강남 피부과 VIP 스킨케어 + 퍼스널 컬러 + 미쉐린 셰프 테이블 결합 코스</p>`;
+      countrySpecHTML = `
+        <div class="spec-card-box">
+          <p>• <strong>[🇨🇳 VIP 뷰티 퀸 맞춤 상품] 5일 강남 VIP K-뷰티 & 미쉐린 K-푸드 럭셔리 패키지</strong></p>
+          <p>• <strong>핵심 일정</strong>: 강남 전문 피부과 VIP 스킨케어 ➔ 퍼스널 컬러 & 프로 메이크업 ➔ 미쉐린 K-푸드 셰프 테이블 ➔ 럭셔리 백화점 쇼핑 (최고 지출액 평균 $${fmtNum(m.spendMean)} / 중위수 $${fmtNum(m.spendMedian)})</p>
+          <p>• <strong>🎁 K-굿즈 & 바우처 혜택</strong>: 맞춤형 럭셔리 K-뷰티 화장품 굿즈 풀세트 + 강남 뷰티 클리닉 웰컴 키트 + 백화점 VIP 쇼핑 바우처</p>
+        </div>
+      `;
     } else if (c === "3") {
-      countrySpecHTML = `<p>• <strong>[🇹🇼 만점 식도락가 맞춤 전략] 4박 5일 K-드라마 명소 & K-푸드 알뜰 코스</strong>: 최고 만족도(5.00점)를 바탕으로 한 경복궁 한복 체험 + 드라마 촬영지(남이섬) + 한국 길거리 미식 투어 코스</p>`;
+      countrySpecHTML = `
+        <div class="spec-card-box">
+          <p>• <strong>[🇹🇼 만점 식도락가 맞춤 상품] 4박 5일 K-드라마 명소 & K-푸드 길거리 미식 패키지</strong></p>
+          <p>• <strong>핵심 일정</strong>: 경복궁 프리미엄 한복 체험 ➔ K-드라마 주요 촬영지(남이섬/성수) ➔ K-푸드 야시장 & 편의점 꿀조합 미식 투어 (최고 만족도 5.00점 기반)</p>
+          <p>• <strong>🎁 K-굿즈 & 바우처 혜택</strong>: K-드라마 스페셜 한복 촬영 액자 굿즈 + 편의점/길거리 미식 전용 K-Food 굿즈 카드 + 한정판 드라마 기념품</p>
+        </div>
+      `;
     } else if (c === "11") {
-      countrySpecHTML = `<p>• <strong>[🇺🇸 그랜드 트래블러 맞춤 전략] 14일 그랜드 K-컬처 & 전국 순회 웰니스 코스</strong>: 평균 체재일수 18.5일(중위수 14일) 및 높은 지출액(평균 $${fmtNum(m.spendMean)} / 중위수 $${fmtNum(m.spendMedian)})을 고려한 서울-부산-제주 KTX 패스 + 한방 스파 + K-푸드 쿠킹 클래스 코스</p>`;
+      countrySpecHTML = `
+        <div class="spec-card-box">
+          <p>• <strong>[🇺🇸 그랜드 트래블러 맞춤 상품] 14일 그랜드 K-컬처 & 전국 순회 KTX 웰니스 패키지</strong></p>
+          <p>• <strong>핵심 일정</strong>: 서울 K-컬처 핫플 ➔ KTX 연계 부산·제주 전국 순회 ➔ 한방 스파 웰니스 ➔ K-푸드 쿠킹 클래스 (평균 체재 18.5일 및 고지출 반영)</p>
+          <p>• <strong>🎁 K-굿즈 & 바우처 혜택</strong>: K-컬처 전국 순회 패스 패브릭 굿즈 + 한방 웰니스 뷰티 굿즈 세트 + 전통 공예 명품 기념품</p>
+        </div>
+      `;
     } else {
       countrySpecHTML = `
-        <p>• <strong>[아시아 근거리 (체크인 팝스타/VIP 뷰티퀸/만점 식도락가)]</strong>: 2박 3일~5일 초밀도 K-Pop 안무, 성수동 로드숍, 강남 K-뷰티 융합 패키지</p>
-        <p>• <strong>[미주 장거리 (그랜드 트래블러)]</strong>: 14일 서울-부산-제주 KTX 연계 한방 웰니스 패키지</p>
+        <div class="spec-card-box">
+          <p>• <strong>[🇯🇵 일본 1020 팝스타]</strong>: K-Pop 굿즈 $50 바우처 + 성수동 굿즈 쇼핑 2박 3일 코스</p>
+          <p>• <strong>[🇨🇳 중국 30대 뷰티퀸]</strong>: 럭셔리 K-뷰티 화장품 굿즈 세트 + 강남 스킨케어 5일 코스</p>
+          <p>• <strong>[🇹🇼 대만 1030 식도락가]</strong>: K-드라마 촬영지 굿즈 + 길거리 미식 4박 5일 코스</p>
+          <p>• <strong>[🇺🇸 미국 1030 트래블러]</strong>: 전국 KTX 웰니스 굿즈 패키지 14일 순회 코스</p>
+        </div>
       `;
     }
 
     const specText = `
       <div class="modal-section">
         <h4>1. 타깃 페르소나 & 1030 개요 (${countryName} Profile)</h4>
-        <p>• <strong>타깃 세그먼트</strong>: ${countryName} × ${ageName} K-컬처 관여층</p>
+        <p>• <strong>타깃 세그먼트</strong>: ${countryName} × ${ageName} K-컬처·굿즈 고관여층</p>
         <p>• <strong>추정 타깃 모수</strong>: 약 ${fmtNum(m.totW)} 명 (K-컬처 관여율 ${m.hRate}%)</p>
         <p>• <strong>체재 및 소비 특성</strong>: 평균 체재일수 ${m.stayMean}일 (중위수 ${m.stayMedian}일), 1인당 평균 총지출 $${fmtNum(m.spendMean)} (중위수 $${fmtNum(m.spendMedian)})</p>
       </div>
 
       <div class="modal-section">
-        <h4>2. 페르소나별 맞춤형 여행 상품 기획 (Actionable Strategy)</h4>
+        <h4>2. K-컬처 & K-굿즈 특화 맞춤 여행 상품 기획 (1-Click Action Spec)</h4>
         ${countrySpecHTML}
       </div>
 
       <div class="modal-section">
-        <h4>3. 관광 충성도 & 후속 CRM 제안 (CRM & Retention)</h4>
+        <h4>3. 관광 충성도 & K-굿즈 FanPass CRM 전략 (CRM & Retention)</h4>
         <p>• <strong>만족도 & 재방문 지표</strong>: 전반적 만족도 ${m.satMean}점 / 재방문 의향 ${m.revMean}점</p>
-        <p>• <strong>후속 CRM 액션</strong>: 높은 추천 의향(4.67점)을 활용하여 귀국 후 K-굿즈 신상 쿠폰 및 2차 방한 전용 시크릿 할인 코드 제공</p>
+        <p>• <strong>🎁 FanPass CRM 혜택</strong>: 귀국 직후 K-Goods 역직구몰 20% 전용 할인 쿠폰 및 6~12개월 내 재방문 예약 시 <strong>'K-컬처 시크릿 굿즈 웰컴박스'</strong> 증정</p>
       </div>
     `;
 
