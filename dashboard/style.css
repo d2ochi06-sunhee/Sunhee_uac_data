@@ -673,3 +673,132 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* 2 KEY REVERSAL INSIGHT CARDS STYLING */
+.reversal-insights-section {
+  background: linear-gradient(135deg, #131A29 0%, #0F172A 100%);
+  border: 1px solid rgba(255, 42, 109, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.reversal-header {
+  margin-bottom: 20px;
+}
+
+.reversal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.reversal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.card-reversal-1 {
+  border-top: 4px solid var(--neon-pink);
+}
+
+.card-reversal-2 {
+  border-top: 4px solid var(--neon-amber);
+}
+
+.reversal-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+.reversal-badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.card-reversal-1 .reversal-badge {
+  background: rgba(255, 42, 109, 0.2);
+  color: var(--neon-pink);
+  border: 1px solid var(--neon-pink);
+}
+
+.card-reversal-2 .reversal-badge {
+  background: rgba(255, 159, 28, 0.2);
+  color: var(--neon-amber);
+  border: 1px solid var(--neon-amber);
+}
+
+.reversal-card h3 {
+  font-size: 17px;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1.4;
+}
+
+.reversal-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: #090E17;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rev-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.rev-stat-item span {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.rev-stat-item strong {
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.rev-stat-item strong small {
+  font-size: 11px;
+  font-weight: 600;
+  display: block;
+}
+
+.rev-stat-vs {
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--text-muted);
+  padding: 0 8px;
+}
+
+.highlight-pink { color: var(--neon-pink); }
+.highlight-emerald { color: var(--neon-emerald); }
+.highlight-amber { color: var(--neon-amber); }
+.highlight-cyan { color: var(--neon-blue); }
+
+.reversal-desc {
+  font-size: 13px;
+  color: var(--text-main);
+  line-height: 1.5;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+}
+
