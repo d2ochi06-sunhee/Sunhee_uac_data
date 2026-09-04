@@ -26,6 +26,11 @@ def standardize(df):
     if 'M일HAP' in df.columns: cols['M일HAP'] = 'STAY_DAYS'
     if '총액1인MIS' in df.columns: cols['총액1인MIS'] = 'TOTAL_SPEND'
     if '쇼핑비1인대체' in df.columns: cols['쇼핑비1인대체'] = 'SHOP_SPEND'
+    if '숙박비1인대체' in df.columns: cols['숙박비1인대체'] = 'LODGE_SPEND'
+    if '음식점1인대체' in df.columns: cols['음식점1인대체'] = 'FOOD_SPEND'
+    if '여행사1인대체' in df.columns: cols['여행사1인대체'] = 'TOUR_SPEND'
+    if '문화서1인대체' in df.columns: cols['문화서1인대체'] = 'CULTURE_SPEND'
+    if '미용서1인대체' in df.columns: cols['미용서1인대체'] = 'BEAUTY_SPEND'
     if 'Q11' in df.columns: cols['Q11'] = 'SATISFACTION'
     if 'Q13' in df.columns: cols['Q13'] = 'REVISIT_INTENT'
     if 'Q14' in df.columns: cols['Q14'] = 'RECOMMEND_INTENT'
@@ -81,6 +86,11 @@ df_mok['WEIGHT'] = pd.to_numeric(df_mok['WEIGHT'], errors='coerce').fillna(1.0)
 df_mok['STAY_DAYS'] = pd.to_numeric(df_mok['STAY_DAYS'], errors='coerce').fillna(7.0)
 df_mok['TOTAL_SPEND'] = pd.to_numeric(df_mok['TOTAL_SPEND'], errors='coerce').fillna(1500.0)
 df_mok['SHOP_SPEND'] = pd.to_numeric(df_mok['SHOP_SPEND'], errors='coerce').fillna(500.0)
+df_mok['LODGE_SPEND'] = pd.to_numeric(df_mok['LODGE_SPEND'], errors='coerce').fillna(0.0)
+df_mok['FOOD_SPEND'] = pd.to_numeric(df_mok['FOOD_SPEND'], errors='coerce').fillna(0.0)
+df_mok['TOUR_SPEND'] = pd.to_numeric(df_mok['TOUR_SPEND'], errors='coerce').fillna(0.0)
+df_mok['CULTURE_SPEND'] = pd.to_numeric(df_mok['CULTURE_SPEND'], errors='coerce').fillna(0.0)
+df_mok['BEAUTY_SPEND'] = pd.to_numeric(df_mok['BEAUTY_SPEND'], errors='coerce').fillna(0.0)
 df_mok['SATISFACTION'] = pd.to_numeric(df_mok['SATISFACTION'], errors='coerce').fillna(4.6)
 df_mok['REVISIT_INTENT'] = pd.to_numeric(df_mok['REVISIT_INTENT'], errors='coerce').fillna(4.6)
 df_mok['RECOMMEND_INTENT'] = pd.to_numeric(df_mok['RECOMMEND_INTENT'], errors='coerce').fillna(4.65)
@@ -132,6 +142,7 @@ for y in years:
                     store[y][c][a][h] = {
                         'row': 0, 'totW': 0, 'hW': 0, 'hRate': 0,
                         'stayMean': 0, 'spendMean': 0, 'shopMean': 0,
+                        'lodgeMean': 0, 'foodMean': 0, 'tourMean': 0, 'cultureMean': 0, 'beautyMean': 0,
                         'expRate': 0, 'goodsRate': 0,
                         'satMean': 0, 'revMean': 0, 'recMean': 0
                     }
@@ -150,6 +161,11 @@ for y in years:
                         'stayMean': round(float(np.average(sub['STAY_DAYS'], weights=w)), 1),
                         'spendMean': round(float(np.average(sub['TOTAL_SPEND'], weights=w)), 1),
                         'shopMean': round(float(np.average(sub['SHOP_SPEND'], weights=w)), 1),
+                        'lodgeMean': round(float(np.average(sub['LODGE_SPEND'], weights=w)), 1),
+                        'foodMean': round(float(np.average(sub['FOOD_SPEND'], weights=w)), 1),
+                        'tourMean': round(float(np.average(sub['TOUR_SPEND'], weights=w)), 1),
+                        'cultureMean': round(float(np.average(sub['CULTURE_SPEND'], weights=w)), 1),
+                        'beautyMean': round(float(np.average(sub['BEAUTY_SPEND'], weights=w)), 1),
                         'expRate': round((exp_w / tot_w * 100) if tot_w > 0 else 0, 1),
                         'goodsRate': round((goods_w / tot_w * 100) if tot_w > 0 else 0, 1),
                         'satMean': round(float(np.average(sub['SATISFACTION'], weights=w)), 2),

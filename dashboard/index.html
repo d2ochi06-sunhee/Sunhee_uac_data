@@ -338,12 +338,12 @@
       </div>
     </section>
 
-    <!-- Visual Charts Grid Row 2: 3-Year Trend Split Cards -->
+    <!-- Visual Charts Grid Row 2: Spend Density & Category Breakdown Cards -->
     <section class="chart-grid two-col">
       <div class="chart-card">
         <div class="chart-header">
-          <h3>💳 [소비 밀도 비교] 총지출액 ($) vs 쇼핑비 ($) vs 1일당 소비액 ($/일)</h3>
-          <span class="tag emerald">Spend Density & Efficiency</span>
+          <h3>💳 [소비 효율성 비교] 총지출액 ($) vs 쇼핑비 ($) vs 1일당 소비액 ($/일)</h3>
+          <span class="tag emerald">Daily Spend Efficiency</span>
         </div>
         <div class="chart-wrapper">
           <canvas id="chartStaySpend"></canvas>
@@ -352,24 +352,11 @@
 
       <div class="chart-card">
         <div class="chart-header">
-          <h3>🎁 [3개년 K-굿즈 구매율 추이] 4대 페르소나별 K-Pop·드라마 굿즈 구매 비중 변화 (%)</h3>
-          <span class="tag pink">2023-2025 Goods Purchase Rate</span>
+          <h3>🛍️ [소비 항목 세부 분석] K-굿즈/쇼핑 · 식도락 · 숙박 · K-뷰티 · 투어패키지 · K-엔터 ($)</h3>
+          <span class="tag pink">Spend Item Breakdown</span>
         </div>
         <div class="chart-wrapper">
-          <canvas id="chartYearlyRate"></canvas>
-        </div>
-      </div>
-    </section>
-
-    <!-- Visual Charts Grid Row 3: 3-Year Spend Trend -->
-    <section class="chart-grid single-col" style="margin-top: 1.5rem;">
-      <div class="chart-card">
-        <div class="chart-header">
-          <h3>💳 [3개년 지출액 비교 추이 (2023~2025)] 4대 시그니처 페르소나별 1인당 총지출액 변화 ($)</h3>
-          <span class="tag amber">2023-2025 Persona Spend Comparison</span>
-        </div>
-        <div class="chart-wrapper" style="height: 280px;">
-          <canvas id="chartYearlySpend"></canvas>
+          <canvas id="chartCategorySpend"></canvas>
         </div>
       </div>
     </section>
@@ -425,7 +412,7 @@
     </div>
   </div>
 
-  <script src="travel_data_store.js?v=20260904_FIX_SIMPSON_V2"></script>
-  <script src="app.js?v=20260904_FIX_SIMPSON_V2"></script>
+  <script src="travel_data_store.js?v=20260904_CATEGORY_SPEND_V3"></script>
+  <script src="app.js?v=20260904_CATEGORY_SPEND_V3"></script>
 </body>
 </html>
