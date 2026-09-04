@@ -72,7 +72,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let chartCountryAgeInstance = null;
   let chartExperienceGoodsInstance = null;
   let chartStaySpendInstance = null;
-  let chartYearlyTrendInstance = null;
+  let chartYearlyRateInstance = null;
+  let chartYearlySpendInstance = null;
 
   // Format Helper
   const fmtNum = (n) => Math.round(n).toLocaleString("ko-KR");
@@ -200,7 +201,8 @@ document.addEventListener("DOMContentLoaded", () => {
     renderChartCountryAge(y, a, h);
     renderChartExperienceGoods(y, c, a);
     renderChartStaySpend(y, c, a, isMedian);
-    renderChartYearlyTrend(c, a, h);
+    renderChartYearlyRate(c, a);
+    renderChartYearlySpend(c, a, h, isMedian);
 
     // 3. Table Update
     renderTable(y, c, a, h);
@@ -457,38 +459,31 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Chart 4: Yearly Trend (2023 ~ 2025)
-  function renderChartYearlyTrend(c, a, h) {
-    const ctx = document.getElementById("chartYearlyTrend").getContext("2d");
-    if (chartYearlyTrendInstance) chartYearlyTrendInstance.destroy();
+  // Chart 4A: 3-Year K-Culture Penetration Rate (%)
+  function renderChartYearlyRate(c, a) {
+    const canvas = document.getElementById("chartYearlyRate");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (chartYearlyRateInstance) chartYearlyRateInstance.destroy();
 
     const years = ["2023", "2024", "2025"];
-    // Calculate penetration rate against ALL leisure tourists to avoid 100% flatline when Hallyu filter is active
-    const hallyuRates = years.map(yr => getMetrics(yr, c, a, "ALL").hRate);
-    const spendMeans = years.map(yr => getMetrics(yr, c, a, h).spendMean);
+    const hallyuRates = years.map(yr => parseFloat(getMetrics(yr, c, a, "ALL").hRate));
 
-    chartYearlyTrendInstance = new Chart(ctx, {
+    chartYearlyRateInstance = new Chart(ctx, {
       type: "line",
       data: {
         labels: ["2023년", "2024년", "2025년"],
         datasets: [
           {
-            label: "전체 관광객 중 K-컬처 관여 비중 (%)",
+            label: "K-컬처 관여 침투율 (%)",
             data: hallyuRates,
             borderColor: "#FF2A6D",
-            backgroundColor: "rgba(255, 42, 109, 0.15)",
+            backgroundColor: "rgba(255, 42, 109, 0.2)",
+            borderWidth: 3,
+            pointRadius: 6,
+            pointBackgroundColor: "#FF2A6D",
             tension: 0.3,
-            fill: true,
-            yAxisID: "y"
-          },
-          {
-            label: "1인당 평균 총지출액 ($)",
-            data: spendMeans,
-            borderColor: "#FF9F1C",
-            backgroundColor: "transparent",
-            borderDash: [5, 5],
-            tension: 0.3,
-            yAxisID: "y1"
+            fill: true
           }
         ]
       },
@@ -496,41 +491,85 @@ document.addEventListener("DOMContentLoaded", () => {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { labels: { color: "#94A3B8" } },
+          legend: { labels: { color: "#F1F5F9", font: { size: 12, weight: 'bold' } } },
           tooltip: {
             callbacks: {
-              label: function(context) {
-                if (context.datasetIndex === 0) {
-                  return `K-컬처 관여 비중: ${context.parsed.y}%`;
-                } else {
-                  return `1인당 평균 지출: $${context.parsed.y.toLocaleString()}`;
-                }
-              }
+              label: (context) => `K-컬처 관여 비중: ${context.parsed.y}%`
             }
           }
         },
         scales: {
           x: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" } },
           y: {
-            type: "linear", display: true, position: "left",
             min: 0,
             max: 60,
             ticks: {
               color: "#FF2A6D",
+              stepSize: 10,
               callback: value => value + "%"
             },
             grid: { color: "#1E293B" },
-            title: { display: true, text: "K-컬처 관여 비중 (%)", color: "#FF2A6D" }
-          },
-          y1: {
-            type: "linear", display: true, position: "right",
+            title: { display: true, text: "관여 비중 (%) [0% ~ 60% 절대기준]", color: "#FF2A6D" }
+          }
+        }
+      }
+    });
+  }
+
+  // Chart 4B: 3-Year Average Spend Trend ($)
+  function renderChartYearlySpend(c, a, h, isMedian = false) {
+    const canvas = document.getElementById("chartYearlySpend");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (chartYearlySpendInstance) chartYearlySpendInstance.destroy();
+
+    const years = ["2023", "2024", "2025"];
+    const spendVals = years.map(yr => {
+      const m = getMetrics(yr, c, a, h);
+      return isMedian ? m.spendMedian : m.spendMean;
+    });
+
+    chartYearlySpendInstance = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ["2023년", "2024년", "2025년"],
+        datasets: [
+          {
+            label: `K-컬처 관여객 1인당 총지출액 ($) [${isMedian ? "중위수" : "평균값"}]`,
+            data: spendVals,
+            borderColor: "#FF9F1C",
+            backgroundColor: "rgba(255, 159, 28, 0.15)",
+            borderWidth: 3,
+            pointRadius: 6,
+            pointBackgroundColor: "#FF9F1C",
+            tension: 0.2,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: "#F1F5F9", font: { size: 12, weight: 'bold' } } },
+          tooltip: {
+            callbacks: {
+              label: (context) => `1인당 지출: $${context.parsed.y.toLocaleString()} (${isMedian ? "중위수" : "평균값"})`
+            }
+          }
+        },
+        scales: {
+          x: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" } },
+          y: {
             min: 0,
+            max: 2500,
             ticks: {
               color: "#FF9F1C",
+              stepSize: 500,
               callback: value => "$" + value.toLocaleString()
             },
-            grid: { drawOnChartArea: false },
-            title: { display: true, text: "1인당 평균 지출 ($)", color: "#FF9F1C" }
+            grid: { color: "#1E293B" },
+            title: { display: true, text: "1인당 총지출 ($) [$0 ~ $2,500 절대기준]", color: "#FF9F1C" }
           }
         }
       }

@@ -287,7 +287,7 @@
       </div>
     </section>
 
-    <!-- Visual Charts Grid Row 2 -->
+    <!-- Visual Charts Grid Row 2: 3-Year Trend Split Cards -->
     <section class="chart-grid two-col">
       <div class="chart-card">
         <div class="chart-header">
@@ -301,11 +301,24 @@
 
       <div class="chart-card">
         <div class="chart-header">
-          <h3>📈 [3개년 추이 (2023~2025)] 4대 페르소나 K-컬처 관여율 시계열 변화</h3>
-          <span class="tag amber">2023-2025 Trend</span>
+          <h3>📈 [3개년 침투율 추이] 전체 관광객 중 K-컬처 관여 비중 변화 (%)</h3>
+          <span class="tag pink">2023-2025 Penetration Rate</span>
         </div>
         <div class="chart-wrapper">
-          <canvas id="chartYearlyTrend"></canvas>
+          <canvas id="chartYearlyRate"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visual Charts Grid Row 3: 3-Year Spend Trend -->
+    <section class="chart-grid single-col" style="margin-top: 1.5rem;">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>💳 [3개년 지출액 추이 (2023~2025)] K-컬처 관여 관광객 1인당 평균 총지출액 변화 ($)</h3>
+          <span class="tag amber">2023-2025 Spend Trend</span>
+        </div>
+        <div class="chart-wrapper" style="height: 250px;">
+          <canvas id="chartYearlySpend"></canvas>
         </div>
       </div>
     </section>
@@ -362,6 +375,6 @@
   </div>
 
   <script src="travel_data_store.js"></script>
-  <script src="app.js?v=20260903_naming"></script>
+  <script src="app.js?v=20260904_final_trend"></script>
 </body>
 </html>
