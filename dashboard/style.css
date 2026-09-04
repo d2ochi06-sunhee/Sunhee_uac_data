@@ -802,121 +802,109 @@ body {
   border-radius: var(--radius-sm);
 }
 
-/* Interactive Hover Chart Popover for Reversals & Personas */
-.reversal-card, .market-card {
-  position: relative;
-}
-
-.hover-chart-popover {
-  display: none;
-  position: absolute;
-  top: 95%;
-  left: 0;
-  width: 100%;
-  min-width: 320px;
-  background: #0B1120;
-  border: 2px solid var(--neon-pink);
-  border-radius: var(--radius-md);
-  padding: 16px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
-  z-index: 999;
-  margin-top: 6px;
-  animation: fadeInDown 0.2s ease-out;
-}
-
-.card-reversal-2 .hover-chart-popover {
-  border-color: var(--neon-amber);
-}
-
-.market-card .hover-chart-popover {
-  border-color: var(--neon-blue);
-}
-
-.reversal-card:hover .hover-chart-popover,
-.market-card:hover .hover-chart-popover {
-  display: block;
-}
-
-.popover-header h4 {
-  font-size: 13px;
-  font-weight: 800;
-  color: #FFFFFF;
-  margin-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 6px;
-}
-
-.popover-body {
+/* Inline Metric Visualizer & Spend Grid inside Reversal Cards */
+.inline-detail-visualizer {
+  background: #090E17;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+  margin: 6px 0;
 }
 
-.pop-row {
+.vis-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vis-label-group {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
+  align-items: center;
+  font-size: 13px;
   color: var(--text-main);
 }
 
-.pop-bar {
-  height: 6px;
-  background: #1E293B;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.pop-fill.pink { background: var(--neon-pink); }
-.pop-fill.emerald { background: var(--neon-emerald); }
-.pop-fill.amber { background: var(--neon-amber); }
-.pop-fill.cyan { background: var(--neon-blue); }
-.pop-fill.grey { background: #94A3B8; }
-
-.pop-grid-6 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.pop-cat-box {
-  background: #131C2E;
-  padding: 8px 10px;
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.pop-cat-box span.cat-icon {
-  font-size: 16px;
-}
-
-.pop-cat-box label {
-  display: block;
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.pop-cat-box strong {
-  display: block;
-  font-size: 13px;
-  color: #00F5D4;
+.vis-label-group strong {
+  font-size: 15px;
   font-weight: 800;
 }
 
-.pop-info {
+.vis-label-group strong small {
   font-size: 11px;
-  color: #94A3B8;
-  background: rgba(255, 255, 255, 0.04);
-  padding: 8px 10px;
-  border-radius: 4px;
-  margin-top: 6px;
-  line-height: 1.4;
+  color: var(--text-muted);
+  font-weight: 400;
 }
 
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
+.vis-bar-bg {
+  height: 8px;
+  background: #1E293B;
+  border-radius: 4px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.vis-bar-fill.mint {
+  background: linear-gradient(90deg, #00F5D4, #05D9E8);
+  height: 100%;
+}
+
+.vis-bar-fill.grey {
+  background: #64748B;
+  height: 100%;
+}
+
+/* 6-Category Spend Grid */
+.inline-spend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  margin: 6px 0;
+}
+
+.spend-box {
+  background: #0D131F;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  transition: transform 0.2s ease;
+}
+
+.spend-box:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.box-icon {
+  font-size: 18px;
+}
+
+.box-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.box-text label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.box-text strong {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 2px 0;
+}
+
+.box-text small {
+  font-size: 10px;
+  color: #94A3B8;
+  white-space: nowrap;
 }
 

@@ -140,86 +140,93 @@
       <div class="reversal-grid">
         <!-- Reversal 1 Card -->
         <div class="reversal-card card-reversal-1">
-          <div class="reversal-badge">💡 데이터 반전 1 : 소비 밀도 2배 (🖱️ 마우스 올리면 세부 차트 표출)</div>
-          <h3>⏱️ "체재 기간은 6일 짧아도, 1일 소비 단가는 2배 높습니다!"</h3>
-          <div class="reversal-stats">
-            <div class="rev-stat-item">
-              <span>평균 체재일수</span>
-              <strong class="highlight-pink">6.0일 <small style="color:#FF2A6D;">(-2.8일 짧음)</small></strong>
+          <div class="reversal-badge">💡 데이터 반전 1: 1일 소비 단가 효율성</div>
+          <h3>⏱️ "체재 기간은 2.8일 짧아도, 1일 소비 단가는 +35% 높습니다!"</h3>
+          
+          <!-- Inline Detail Visualizer -->
+          <div class="inline-detail-visualizer">
+            <div class="vis-row">
+              <div class="vis-label-group">
+                <span>🔥 1030 K-컬처 관여층</span>
+                <strong style="color:#00F5D4;">$285 / 일 <small>(평균 6.0일 체류)</small></strong>
+              </div>
+              <div class="vis-bar-bg"><div class="vis-bar-fill mint" style="width: 100%;"></div></div>
             </div>
-            <div class="rev-stat-vs">vs</div>
-            <div class="rev-stat-item">
-              <span>1일 평균 소비단가</span>
-              <strong class="highlight-emerald">$285 / 일 <small style="color:#00F5D4;">(+35% 높음!)</small></strong>
-            </div>
-          </div>
-          <p class="reversal-desc">
-            • <strong>분석 핵심</strong>: 일반 관광객보다 일찍 귀국하는데도 총지출액이 비슷함. 즉, 짧은 여행 기간 동안 돈을 밀도 높게 쏟아붓는 <strong>고마진 알짜배기 고객</strong>입니다.
-          </p>
 
-          <!-- Interactive Hover Popover Card 1 -->
-          <div class="hover-chart-popover">
-            <div class="popover-header">
-              <h4>⚡ [마우스 오버 세부 분석] 소비 밀도 ($/일) & 체재기간</h4>
-            </div>
-            <div class="popover-body">
-              <div class="pop-row">
-                <span>🔥 K-컬처 관여층 (1030)</span>
-                <strong style="color:#00F5D4;">$285 / 일 (6.0일 체류)</strong>
+            <div class="vis-row">
+              <div class="vis-label-group">
+                <span>⚪ 일반 관광객 (비교층)</span>
+                <strong style="color:#94A3B8;">$211 / 일 <small>(평균 8.8일 체류)</small></strong>
               </div>
-              <div class="pop-bar"><div class="pop-fill emerald" style="width:100%;"></div></div>
-              
-              <div class="pop-row" style="margin-top: 8px;">
-                <span>⚪ 일반 관광객</span>
-                <strong style="color:#94A3B8;">$211 / 일 (8.8일 체류)</strong>
-              </div>
-              <div class="pop-bar"><div class="pop-fill grey" style="width:74%;"></div></div>
-              
-              <div class="pop-info">
-                💡 일반 관광객보다 2.8일 일찍 귀국하지만, 1일 소비 단가는 <strong>+35% ($285 vs $211)</strong> 더 높아 고마진 알짜 고객입니다.
-              </div>
+              <div class="vis-bar-bg"><div class="vis-bar-fill grey" style="width: 74%;"></div></div>
             </div>
           </div>
+
+          <p class="reversal-desc">
+            • <strong>분석 핵심</strong>: 일반 관광객보다 2.8일 일찍 귀국하는데도 1일 지출 단가가 <strong>$285/일 vs $211/일 (+35%)</strong>로 월등히 높은 <strong>고마진 알짜배기 고객</strong>입니다.
+          </p>
         </div>
 
         <!-- Reversal 2 Card -->
         <div class="reversal-card card-reversal-2">
-          <div class="reversal-badge">🎁 데이터 반전 2 : 고마진 품목 지출 (🖱️ 마우스 올리면 세부 차트 표출)</div>
-          <h3>🛍️ "체류비 중심 ➔ 고수익 K-굿즈·뷰티 쇼핑으로 지출 이동!"</h3>
-          <div class="reversal-stats">
-            <div class="rev-stat-item">
-              <span>쇼핑/굿즈 지출액</span>
-              <strong class="highlight-amber">$457 <small style="color:#FF9F1C;">(중국 $858)</small></strong>
+          <div class="reversal-badge">🎁 데이터 반전 2: 6대 세부 소비 항목 지출액 ($)</div>
+          <h3>🛍️ "체류비 중심 ➔ 고수익 K-굿즈·식도락·뷰티 쇼핑으로 지출 이동!"</h3>
+          
+          <!-- Inline 6-Category Spend Grid -->
+          <div class="inline-spend-grid">
+            <div class="spend-box">
+              <span class="box-icon">🛍️</span>
+              <div class="box-text">
+                <label>K-굿즈/쇼핑비</label>
+                <strong style="color:#FF9F1C;">$457</strong>
+                <small>중국 $858 / 미국 $571 / 대만 $459</small>
+              </div>
             </div>
-            <div class="rev-stat-vs">vs</div>
-            <div class="rev-stat-item">
-              <span>식도락/식음료비</span>
-              <strong class="highlight-cyan">$277 <small style="color:#05D9E8;">(미국 $423)</small></strong>
+            <div class="spend-box">
+              <span class="box-icon">🍱</span>
+              <div class="box-text">
+                <label>식도락/식음료비</label>
+                <strong style="color:#05D9E8;">$277</strong>
+                <small>미국 $423 / 중국 $385 / 대만 $166</small>
+              </div>
+            </div>
+            <div class="spend-box">
+              <span class="box-icon">🏨</span>
+              <div class="box-text">
+                <label>숙박비</label>
+                <strong style="color:#00F5D4;">$433</strong>
+                <small>미국 $619 / 중국 $384 / 대만 $206</small>
+              </div>
+            </div>
+            <div class="spend-box">
+              <span class="box-icon">💄</span>
+              <div class="box-text">
+                <label>K-뷰티/화장품</label>
+                <strong style="color:#FF2A6D;">$14</strong>
+                <small>일본 $28.5 / 중국 $23.4 / 미국 $12.6</small>
+              </div>
+            </div>
+            <div class="spend-box">
+              <span class="box-icon">🚌</span>
+              <div class="box-text">
+                <label>여행패키지/투어</label>
+                <strong style="color:#C084FC;">$157</strong>
+                <small>대만 $247 / 일본 $111 / 미국 $72</small>
+              </div>
+            </div>
+            <div class="spend-box">
+              <span class="box-icon">🎫</span>
+              <div class="box-text">
+                <label>문화/K-엔터</label>
+                <strong style="color:#38BDF8;">$20</strong>
+                <small>중국 $70 / 미국 $43 / 대만 $18</small>
+              </div>
             </div>
           </div>
-          <p class="reversal-desc">
-            • <strong>분석 핵심</strong>: 마진 적은 숙박/교통 체류비 중심 지출에서, 여행사 수수료 마진율이 비약적으로 높은 <strong>K-Pop 굿즈, 성수동 로드숍, 강남 VIP K-뷰티</strong>로 지출이 전이됩니다.
-          </p>
 
-          <!-- Interactive Hover Popover Card 2 -->
-          <div class="hover-chart-popover">
-            <div class="popover-header">
-              <h4>🛍️ [마우스 오버 세부 분석] 6대 소비 항목 지출액 ($)</h4>
-            </div>
-            <div class="popover-body">
-              <div class="pop-grid-6">
-                <div class="pop-cat-box"><span class="cat-icon">🛍️</span><div><label>K-굿즈/쇼핑</label><strong>$457</strong></div></div>
-                <div class="pop-cat-box"><span class="cat-icon">🍱</span><div><label>식도락/식음료</label><strong>$277</strong></div></div>
-                <div class="pop-cat-box"><span class="cat-icon">🏨</span><div><label>숙박비</label><strong>$433</strong></div></div>
-                <div class="pop-cat-box"><span class="cat-icon">💄</span><div><label>K-뷰티/화장품</label><strong>$14</strong></div></div>
-                <div class="pop-cat-box"><span class="cat-icon">🚌</span><div><label>투어패키지</label><strong>$157</strong></div></div>
-                <div class="pop-cat-box"><span class="cat-icon">🎫</span><div><label>문화/K-엔터</label><strong>$20</strong></div></div>
-              </div>
-              <div class="pop-info">
-                💡 단순 체류비보다 K-굿즈($457), 식도락($277), K-뷰티 등 고수익 굿즈·체험 품목 지출 비중이 매우 큽니다.
-              </div>
-            </div>
-          </div>
+          <p class="reversal-desc">
+            • <strong>분석 핵심</strong>: 단순 체류비(숙박/교통) 지출에서 벗어나, 여행사 수수료 마진율이 비약적으로 높은 <strong>K-굿즈($457), 식도락($277), K-뷰티</strong>로 지출이 이동합니다.
+          </p>
         </div>
       </div>
     </section>
@@ -433,7 +440,7 @@
     </div>
   </div>
 
-  <script src="travel_data_store.js?v=20260904_HOVER_CHARTS_V4"></script>
-  <script src="app.js?v=20260904_HOVER_CHARTS_V4"></script>
+  <script src="travel_data_store.js?v=20260904_INLINE_EMBEDDED_V5"></script>
+  <script src="app.js?v=20260904_INLINE_EMBEDDED_V5"></script>
 </body>
 </html>
