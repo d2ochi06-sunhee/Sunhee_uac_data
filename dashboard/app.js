@@ -402,7 +402,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Chart 3: Spend Density & Efficiency Comparison (All Dollar Metrics)
   function renderChartStaySpend(y, c, a, isMedian = false) {
-    const ctx = document.getElementById("chartStaySpend").getContext("2d");
+    const canvas = document.getElementById("chartStaySpend");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
     if (chartStaySpendInstance) chartStaySpendInstance.destroy();
 
     const mH = getMetrics(y, c, a, "1");
