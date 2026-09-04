@@ -429,7 +429,7 @@ document.addEventListener("DOMContentLoaded", () => {
         labels: [
           `총지출액 (${isMedian ? "중위수 $" : "평균 $"})`,
           `쇼핑 지출액 (${isMedian ? "중위수 $" : "평균 $"})`,
-          `🔥 1일당 소비액 ($/일 - 소비 밀도)`
+          `1일당 소비액 ($/일 - 하루 평균 지출)`
         ],
         datasets: [
           {
