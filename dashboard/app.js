@@ -459,7 +459,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Chart 4A: 3-Year K-Culture Penetration Rate (%)
+  // Chart 4A: 3-Year K-Goods Purchase Rate (%) - 4 Signature Personas Comparison
   function renderChartYearlyRate(c, a) {
     const canvas = document.getElementById("chartYearlyRate");
     if (!canvas) return;
@@ -467,34 +467,39 @@ document.addEventListener("DOMContentLoaded", () => {
     if (chartYearlyRateInstance) chartYearlyRateInstance.destroy();
 
     const years = ["2023", "2024", "2025"];
-    const hallyuRates = years.map(yr => parseFloat(getMetrics(yr, c, a, "ALL").hRate));
+    
+    // Get Goods Rate for each persona across 3 years
+    const getGoodsTrend = (countryCode) => years.map(yr => {
+      const m = getMetrics(yr, countryCode, a, "1");
+      return parseFloat(m.goodsRate || 0);
+    });
+
+    const dsJapan = { label: "🇯🇵 [체크인 팝스타] 일본", data: getGoodsTrend("2"), borderColor: "#FF2A6D", backgroundColor: "transparent", borderWidth: 3, pointRadius: 5 };
+    const dsChina = { label: "🇨🇳 [VIP 뷰티 퀸] 중국", data: getGoodsTrend("1"), borderColor: "#FF9F1C", backgroundColor: "transparent", borderWidth: 3, pointRadius: 5 };
+    const dsTaiwan = { label: "🇹🇼 [만점 식도락가] 대만", data: getGoodsTrend("3"), borderColor: "#05D9E8", backgroundColor: "transparent", borderWidth: 4, pointRadius: 7, pointBackgroundColor: "#05D9E8" };
+    const dsUsa = { label: "🇺🇸 [그랜드 트래블러] 미국", data: getGoodsTrend("11"), borderColor: "#00F5D4", backgroundColor: "transparent", borderWidth: 3, pointRadius: 5 };
+
+    let datasets = [];
+    if (c === "2") datasets = [dsJapan];
+    else if (c === "1") datasets = [dsChina];
+    else if (c === "3") datasets = [dsTaiwan];
+    else if (c === "11") datasets = [dsUsa];
+    else datasets = [dsJapan, dsChina, dsTaiwan, dsUsa];
 
     chartYearlyRateInstance = new Chart(ctx, {
       type: "line",
       data: {
         labels: ["2023년", "2024년", "2025년"],
-        datasets: [
-          {
-            label: "K-컬처 관여 침투율 (%)",
-            data: hallyuRates,
-            borderColor: "#FF2A6D",
-            backgroundColor: "rgba(255, 42, 109, 0.2)",
-            borderWidth: 3,
-            pointRadius: 6,
-            pointBackgroundColor: "#FF2A6D",
-            tension: 0.3,
-            fill: true
-          }
-        ]
+        datasets: datasets
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { labels: { color: "#F1F5F9", font: { size: 12, weight: 'bold' } } },
+          legend: { labels: { color: "#F1F5F9", font: { size: 11, weight: 'bold' } } },
           tooltip: {
             callbacks: {
-              label: (context) => `K-컬처 관여 비중: ${context.parsed.y}%`
+              label: (context) => `${context.dataset.label}: K-굿즈 구매율 ${context.parsed.y}%`
             }
           }
         },
@@ -502,21 +507,21 @@ document.addEventListener("DOMContentLoaded", () => {
           x: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" } },
           y: {
             min: 0,
-            max: 60,
+            max: 30,
             ticks: {
               color: "#FF2A6D",
-              stepSize: 10,
+              stepSize: 5,
               callback: value => value + "%"
             },
             grid: { color: "#1E293B" },
-            title: { display: true, text: "관여 비중 (%) [0% ~ 60% 절대기준]", color: "#FF2A6D" }
+            title: { display: true, text: "굿즈 구매 비율 (%)", color: "#FF2A6D" }
           }
         }
       }
     });
   }
 
-  // Chart 4B: 3-Year Average Spend Trend ($)
+  // Chart 4B: 3-Year Total Spend Trend ($) - 4 Signature Personas Comparison
   function renderChartYearlySpend(c, a, h, isMedian = false) {
     const canvas = document.getElementById("chartYearlySpend");
     if (!canvas) return;
@@ -524,28 +529,29 @@ document.addEventListener("DOMContentLoaded", () => {
     if (chartYearlySpendInstance) chartYearlySpendInstance.destroy();
 
     const years = ["2023", "2024", "2025"];
-    const spendVals = years.map(yr => {
-      const m = getMetrics(yr, c, a, h);
+
+    const getSpendTrend = (countryCode) => years.map(yr => {
+      const m = getMetrics(yr, countryCode, a, h);
       return isMedian ? m.spendMedian : m.spendMean;
     });
+
+    const dsJapan = { label: "🇯🇵 [체크인 팝스타] 일본 1020", data: getSpendTrend("2"), borderColor: "#FF2A6D", backgroundColor: "rgba(255, 42, 109, 0.05)", borderWidth: 3, pointRadius: 6, fill: false };
+    const dsChina = { label: "🇨🇳 [VIP 뷰티 퀸] 중국 30대", data: getSpendTrend("1"), borderColor: "#FF9F1C", backgroundColor: "rgba(255, 159, 28, 0.05)", borderWidth: 3, pointRadius: 6, fill: false };
+    const dsTaiwan = { label: "🇹🇼 [만점 식도락가] 대만 1030", data: getSpendTrend("3"), borderColor: "#05D9E8", backgroundColor: "rgba(5, 217, 232, 0.05)", borderWidth: 3, pointRadius: 6, fill: false };
+    const dsUsa = { label: "🇺🇸 [그랜드 트래블러] 미국 1030", data: getSpendTrend("11"), borderColor: "#00F5D4", backgroundColor: "rgba(0, 245, 212, 0.05)", borderWidth: 3, pointRadius: 6, fill: false };
+
+    let datasets = [];
+    if (c === "2") datasets = [dsJapan];
+    else if (c === "1") datasets = [dsChina];
+    else if (c === "3") datasets = [dsTaiwan];
+    else if (c === "11") datasets = [dsUsa];
+    else datasets = [dsJapan, dsChina, dsTaiwan, dsUsa];
 
     chartYearlySpendInstance = new Chart(ctx, {
       type: "line",
       data: {
         labels: ["2023년", "2024년", "2025년"],
-        datasets: [
-          {
-            label: `K-컬처 관여객 1인당 총지출액 ($) [${isMedian ? "중위수" : "평균값"}]`,
-            data: spendVals,
-            borderColor: "#FF9F1C",
-            backgroundColor: "rgba(255, 159, 28, 0.15)",
-            borderWidth: 3,
-            pointRadius: 6,
-            pointBackgroundColor: "#FF9F1C",
-            tension: 0.2,
-            fill: true
-          }
-        ]
+        datasets: datasets
       },
       options: {
         responsive: true,
@@ -554,7 +560,7 @@ document.addEventListener("DOMContentLoaded", () => {
           legend: { labels: { color: "#F1F5F9", font: { size: 12, weight: 'bold' } } },
           tooltip: {
             callbacks: {
-              label: (context) => `1인당 지출: $${context.parsed.y.toLocaleString()} (${isMedian ? "중위수" : "평균값"})`
+              label: (context) => `${context.dataset.label}: 1인당 지출 $${context.parsed.y.toLocaleString()} (${isMedian ? "중위수" : "평균값"})`
             }
           }
         },
@@ -562,14 +568,14 @@ document.addEventListener("DOMContentLoaded", () => {
           x: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" } },
           y: {
             min: 0,
-            max: 2500,
+            max: 3500,
             ticks: {
               color: "#FF9F1C",
               stepSize: 500,
               callback: value => "$" + value.toLocaleString()
             },
             grid: { color: "#1E293B" },
-            title: { display: true, text: "1인당 총지출 ($) [$0 ~ $2,500 절대기준]", color: "#FF9F1C" }
+            title: { display: true, text: `1인당 총지출액 ($) [0 ~ $3,500 절대기준 - ${isMedian ? "중위수" : "평균값"}]`, color: "#FF9F1C" }
           }
         }
       }
