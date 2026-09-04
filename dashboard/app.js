@@ -420,8 +420,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const shopNonH = isMedian ? mNonH.shopMedian : mNonH.shopMean;
 
     // Daily Spend Rate ($ / day) - Key Insight Metric!
-    const dailyH = Math.round(spendH / (stayH || 1));
-    const dailyNonH = Math.round(spendNonH / (stayNonH || 1));
+    // Standardize across personas when c === "ALL" to resolve Simpson's Paradox (weight distortion by US long-stayers)
+    let dailyH, dailyNonH;
+    if (c === "ALL") {
+      const targetCountries = ["2", "1", "3", "11"];
+      let sumDailyH = 0, sumDailyNonH = 0;
+      targetCountries.forEach(code => {
+        const subH = getMetrics(y, code, a, "1");
+        const subNonH = getMetrics(y, code, a, "0");
+        const sH = isMedian ? subH.spendMedian : subH.spendMean;
+        const stH = parseFloat(subH.stayMean) || 1;
+        const sNonH = isMedian ? subNonH.spendMedian : subNonH.spendMean;
+        const stNonH = parseFloat(subNonH.stayMean) || 1;
+        sumDailyH += (sH / stH);
+        sumDailyNonH += (sNonH / stNonH);
+      });
+      dailyH = Math.round(sumDailyH / targetCountries.length);
+      dailyNonH = Math.round(sumDailyNonH / targetCountries.length);
+    } else {
+      dailyH = Math.round(spendH / (stayH || 1));
+      dailyNonH = Math.round(spendNonH / (stayNonH || 1));
+    }
 
     chartStaySpendInstance = new Chart(ctx, {
       type: "bar",
