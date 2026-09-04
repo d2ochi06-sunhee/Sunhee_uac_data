@@ -463,7 +463,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (chartYearlyTrendInstance) chartYearlyTrendInstance.destroy();
 
     const years = ["2023", "2024", "2025"];
-    const hallyuRates = years.map(yr => getMetrics(yr, c, a, h).hRate);
+    // Calculate penetration rate against ALL leisure tourists to avoid 100% flatline when Hallyu filter is active
+    const hallyuRates = years.map(yr => getMetrics(yr, c, a, "ALL").hRate);
     const spendMeans = years.map(yr => getMetrics(yr, c, a, h).spendMean);
 
     chartYearlyTrendInstance = new Chart(ctx, {
@@ -472,16 +473,16 @@ document.addEventListener("DOMContentLoaded", () => {
         labels: ["2023년", "2024년", "2025년"],
         datasets: [
           {
-            label: "1030 K-컬처 관여율 (%)",
+            label: "전체 관광객 중 K-컬처 관여 비중 (%)",
             data: hallyuRates,
             borderColor: "#FF2A6D",
-            backgroundColor: "rgba(255, 42, 109, 0.1)",
+            backgroundColor: "rgba(255, 42, 109, 0.15)",
             tension: 0.3,
             fill: true,
             yAxisID: "y"
           },
           {
-            label: "1인당 평균 총지출 ($)",
+            label: "1인당 평균 총지출액 ($)",
             data: spendMeans,
             borderColor: "#FF9F1C",
             backgroundColor: "transparent",
@@ -495,17 +496,41 @@ document.addEventListener("DOMContentLoaded", () => {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { labels: { color: "#94A3B8" } }
+          legend: { labels: { color: "#94A3B8" } },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                if (context.datasetIndex === 0) {
+                  return `K-컬처 관여 비중: ${context.parsed.y}%`;
+                } else {
+                  return `1인당 평균 지출: $${context.parsed.y.toLocaleString()}`;
+                }
+              }
+            }
+          }
         },
         scales: {
           x: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" } },
           y: {
             type: "linear", display: true, position: "left",
-            ticks: { color: "#FF2A6D" }, grid: { color: "#1E293B" }
+            min: 0,
+            max: 60,
+            ticks: {
+              color: "#FF2A6D",
+              callback: value => value + "%"
+            },
+            grid: { color: "#1E293B" },
+            title: { display: true, text: "K-컬처 관여 비중 (%)", color: "#FF2A6D" }
           },
           y1: {
             type: "linear", display: true, position: "right",
-            ticks: { color: "#FF9F1C" }, grid: { drawOnChartArea: false }
+            min: 0,
+            ticks: {
+              color: "#FF9F1C",
+              callback: value => "$" + value.toLocaleString()
+            },
+            grid: { drawOnChartArea: false },
+            title: { display: true, text: "1인당 평균 지출 ($)", color: "#FF9F1C" }
           }
         }
       }
