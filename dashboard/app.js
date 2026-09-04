@@ -295,8 +295,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Chart 1: Country x Age Segment
-  function renderChartCountryAge(y, a, h) {
   // Chart 1: Country x Age Segment (Single Clean Bar per Persona)
   function renderChartCountryAge(y, a, h) {
     const ctx = document.getElementById("chartCountryAge").getContext("2d");
