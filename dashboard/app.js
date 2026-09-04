@@ -402,7 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Chart 3: Stay & Spend Efficiency
+  // Chart 3: Spend Density & Efficiency Comparison (All Dollar Metrics)
   function renderChartStaySpend(y, c, a, isMedian = false) {
     const ctx = document.getElementById("chartStaySpend").getContext("2d");
     if (chartStaySpendInstance) chartStaySpendInstance.destroy();
@@ -410,8 +410,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const mH = getMetrics(y, c, a, "1");
     const mNonH = getMetrics(y, c, a, "0");
 
-    const stayH = isMedian ? mH.stayMedian : mH.stayMean;
-    const stayNonH = isMedian ? mNonH.stayMedian : mNonH.stayMean;
+    const stayH = parseFloat(mH.stayMean) || 5.0;
+    const stayNonH = parseFloat(mNonH.stayMean) || 8.0;
 
     const spendH = isMedian ? mH.spendMedian : mH.spendMean;
     const spendNonH = isMedian ? mNonH.spendMedian : mNonH.spendMean;
@@ -419,28 +419,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const shopH = isMedian ? mH.shopMedian : mH.shopMean;
     const shopNonH = isMedian ? mNonH.shopMedian : mNonH.shopMean;
 
+    // Daily Spend Rate ($ / day) - Key Insight Metric!
+    const dailyH = Math.round(spendH / (stayH || 1));
+    const dailyNonH = Math.round(spendNonH / (stayNonH || 1));
+
     chartStaySpendInstance = new Chart(ctx, {
       type: "bar",
       data: {
         labels: [
-          `체재일수 (${isMedian ? "중위수 일" : "평균 일"})`,
           `총지출액 (${isMedian ? "중위수 $" : "평균 $"})`,
-          `쇼핑비 (${isMedian ? "중위수 $" : "평균 $"})`
+          `쇼핑 지출액 (${isMedian ? "중위수 $" : "평균 $"})`,
+          `🔥 1일당 소비액 ($/일 - 소비 밀도)`
         ],
         datasets: [
           {
             label: "🔥 1030 K-컬처 관여층",
-            data: [stayH, spendH, shopH],
+            data: [spendH, shopH, dailyH],
             backgroundColor: "rgba(0, 245, 212, 0.85)",
             borderColor: "#00F5D4",
-            borderWidth: 1
+            borderWidth: 1.5
           },
           {
             label: "⚪ 비교층 / 일반관광객",
-            data: [stayNonH, spendNonH, shopNonH],
+            data: [spendNonH, shopNonH, dailyNonH],
             backgroundColor: "rgba(148, 163, 184, 0.5)",
             borderColor: "#94A3B8",
-            borderWidth: 1
+            borderWidth: 1.5
           }
         ]
       },
@@ -449,11 +453,23 @@ document.addEventListener("DOMContentLoaded", () => {
         maintainAspectRatio: false,
         indexAxis: "y",
         plugins: {
-          legend: { labels: { color: "#94A3B8" } }
+          legend: { labels: { color: "#F1F5F9", font: { size: 12, weight: 'bold' } } },
+          tooltip: {
+            callbacks: {
+              label: (context) => `${context.dataset.label}: $${context.parsed.x.toLocaleString()}`
+            }
+          }
         },
         scales: {
-          x: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" } },
-          y: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" } }
+          x: {
+            min: 0,
+            ticks: {
+              color: "#94A3B8",
+              callback: value => "$" + value.toLocaleString()
+            },
+            grid: { color: "#1E293B" }
+          },
+          y: { ticks: { color: "#F1F5F9", font: { size: 12, weight: 'bold' } }, grid: { color: "#1E293B" } }
         }
       }
     });
