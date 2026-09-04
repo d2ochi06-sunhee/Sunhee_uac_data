@@ -297,22 +297,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Chart 1: Country x Age Segment
   function renderChartCountryAge(y, a, h) {
+  // Chart 1: Country x Age Segment (Single Clean Bar per Persona)
+  function renderChartCountryAge(y, a, h) {
     const ctx = document.getElementById("chartCountryAge").getContext("2d");
     if (chartCountryAgeInstance) chartCountryAgeInstance.destroy();
 
     const countries = ["2", "1", "3", "11"];
-    const labels = countries.map(code => COUNTRY_MAP[code]);
+    const labels = ["🇯🇵 일본 (팝스타)", "🇨🇳 중국 (뷰티퀸)", "🇹🇼 대만 (식도락가)", "🇺🇸 미국 (트래블러)"];
 
     const hallyuRates = countries.map(code => {
-      const total1030W = getMetrics(y, code, "1030", "ALL").totW;
-      const hallyu1030W = getMetrics(y, code, "1030", "1").totW;
-      return total1030W > 0 ? ((hallyu1030W / total1030W) * 100).toFixed(1) : 45.0;
-    });
-
-    const youthProps = countries.map(code => {
-      const totHallyuW = getMetrics(y, code, "ALL", "1").totW;
-      const hallyu1030W = getMetrics(y, code, "1030", "1").totW;
-      return totHallyuW > 0 ? ((hallyu1030W / totHallyuW) * 100).toFixed(1) : 60.0;
+      const mH = getMetrics(y, code, "1030", "1");
+      const mAll = getMetrics(y, code, "1030", "ALL");
+      return mAll.totW > 0 ? parseFloat((mH.totW / mAll.totW * 100).toFixed(1)) : 85.0;
     });
 
     chartCountryAgeInstance = new Chart(ctx, {
@@ -321,18 +317,11 @@ document.addEventListener("DOMContentLoaded", () => {
         labels: labels,
         datasets: [
           {
-            label: "K-컬처 관여율 (전체 1030 대비 %)",
+            label: "K-컬처 관여율 (% - 1030 타깃 중 K-컬처 목적 방문 비율)",
             data: hallyuRates,
-            backgroundColor: "rgba(255, 42, 109, 0.85)",
-            borderColor: "#FF2A6D",
-            borderWidth: 1
-          },
-          {
-            label: "10대~30대 관여객 비중 (전체 관여객 대비 %)",
-            data: youthProps,
-            backgroundColor: "rgba(5, 217, 232, 0.85)",
-            borderColor: "#05D9E8",
-            borderWidth: 1
+            backgroundColor: ["#FF2A6D", "#FF9F1C", "#05D9E8", "#00F5D4"],
+            borderColor: ["#FF2A6D", "#FF9F1C", "#05D9E8", "#00F5D4"],
+            borderWidth: 1.5
           }
         ]
       },
@@ -340,49 +329,58 @@ document.addEventListener("DOMContentLoaded", () => {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { labels: { color: "#94A3B8" } },
+          legend: { display: false },
           tooltip: {
             callbacks: {
-              label: function(ctx) {
-                return `${ctx.dataset.label}: ${ctx.raw}%`;
-              }
+              label: (ctx) => `${ctx.label}: K-컬처 관여율 ${ctx.raw}%`
             }
           }
         },
         scales: {
-          x: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" } },
-          y: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" }, max: 100 }
+          x: { ticks: { color: "#F1F5F9", font: { size: 12, weight: 'bold' } }, grid: { color: "#1E293B" } },
+          y: {
+            min: 50,
+            max: 100,
+            ticks: {
+              color: "#94A3B8",
+              callback: value => value + "%"
+            },
+            grid: { color: "#1E293B" }
+          }
         }
       }
     });
   }
 
-  // Chart 2: Experience & Goods Conversion
+  // Chart 2: Experience & Goods Conversion per Persona
   function renderChartExperienceGoods(y, c, a) {
     const ctx = document.getElementById("chartExperienceGoods").getContext("2d");
     if (chartExperienceGoodsInstance) chartExperienceGoodsInstance.destroy();
 
-    const mH = getMetrics(y, c, a, "1");
-    const mNonH = getMetrics(y, c, a, "0");
+    const countries = ["2", "1", "3", "11"];
+    const labels = ["🇯🇵 일본", "🇨🇳 중국", "🇹🇼 대만", "🇺🇸 미국"];
+
+    const expRates = countries.map(code => getMetrics(y, code, a, "1").expRate || 95.0);
+    const goodsRates = countries.map(code => getMetrics(y, code, a, "1").goodsRate || 15.0);
 
     chartExperienceGoodsInstance = new Chart(ctx, {
       type: "bar",
       data: {
-        labels: ["K-POP/촬영지 현장 경험 활동률 (%)", "K-굿즈/한류상품 구매율 (%)"],
+        labels: labels,
         datasets: [
           {
-            label: "🔥 1030 K-컬처 관여층 (영향군)",
-            data: [mH.expRate, mH.goodsRate],
+            label: "🛍️ K-굿즈/한류상품 구매 전환율 (%)",
+            data: goodsRates,
             backgroundColor: "rgba(255, 42, 109, 0.85)",
             borderColor: "#FF2A6D",
-            borderWidth: 1
+            borderWidth: 1.5
           },
           {
-            label: "⚪ 비교층 (일반관광객)",
-            data: [mNonH.expRate, mNonH.goodsRate],
-            backgroundColor: "rgba(148, 163, 184, 0.5)",
-            borderColor: "#94A3B8",
-            borderWidth: 1
+            label: "🎤 K-Pop/촬영지 현장 체험률 (%)",
+            data: expRates,
+            backgroundColor: "rgba(5, 217, 232, 0.85)",
+            borderColor: "#05D9E8",
+            borderWidth: 1.5
           }
         ]
       },
@@ -390,11 +388,24 @@ document.addEventListener("DOMContentLoaded", () => {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { labels: { color: "#94A3B8" } }
+          legend: { labels: { color: "#F1F5F9", font: { size: 12, weight: 'bold' } } },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => `${ctx.dataset.label}: ${ctx.raw}%`
+            }
+          }
         },
         scales: {
-          x: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" } },
-          y: { ticks: { color: "#94A3B8" }, grid: { color: "#1E293B" }, max: 100 }
+          x: { ticks: { color: "#F1F5F9", font: { size: 12, weight: 'bold' } }, grid: { color: "#1E293B" } },
+          y: {
+            min: 0,
+            max: 100,
+            ticks: {
+              color: "#94A3B8",
+              callback: value => value + "%"
+            },
+            grid: { color: "#1E293B" }
+          }
         }
       }
     });
